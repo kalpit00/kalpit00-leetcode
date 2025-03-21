@@ -167,7 +167,8 @@ export default class GithubService {
       ? `/version/${lang}`
       : "";
 
-    return `${this.dataConfig.REPOSITORY_URL}${this.userConfig.leetcode_tracker_username}/${this.userConfig.leetcode_tracker_repo}/contents/${this.problem.slug}${versionPath}/${fileName}`;
+    // Modified to save in leetcode-sub directory
+    return `${this.dataConfig.REPOSITORY_URL}${this.userConfig.leetcode_tracker_username}/${this.userConfig.leetcode_tracker_repo}/contents/leetcode-sub/${this.problem.slug}${versionPath}/${fileName}`;
   }
 
   async fetchWithAuth(url, method, body = null) {
