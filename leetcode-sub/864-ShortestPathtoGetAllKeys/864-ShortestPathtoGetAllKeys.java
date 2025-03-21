@@ -1,4 +1,4 @@
-// Last updated: 3/22/2025, 12:08:23 AM
+// Last updated: 3/22/2025, 12:09:19 AM
 class Solution {
     public int countSymmetricIntegers(int low, int high) {
         int count = 0; 
