@@ -1,0 +1,39 @@
+{
+  "name": "LeetCode Tracker",
+  "description": "Sync LeetCode's submissions with a GitHub repository",
+  "version": "1.5.0",
+  "manifest_version": 3,
+  "author": "Jeffrey Gbeho",
+  "action": {
+    "default_popup": "popup.html"
+  },
+  "icons": {
+    "16": "assets/logo-leetcode-tracker/Leetcode-tracker-500.png",
+    "48": "assets/logo-leetcode-tracker/Leetcode-tracker-500.png",
+    "128": "assets/logo-leetcode-tracker/Leetcode-tracker-500.png"
+  },
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  },
+  "permissions": ["unlimitedStorage", "storage"],
+  "content_scripts": [
+    {
+      "matches": ["https://leetcode.com/*", "https://github.com/*"],
+      "js": ["scripts/authorize.js", "scripts/loader.js"],
+      "run_at": "document_idle"
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "scripts/leetcode.js",
+        "scripts/models/*",
+        "scripts/utils/*",
+        "scripts/services/*",
+        "scripts/constants/*"
+      ],
+      "matches": ["https://leetcode.com/*", "https://github.com/*"]
+    }
+  ]
+}
