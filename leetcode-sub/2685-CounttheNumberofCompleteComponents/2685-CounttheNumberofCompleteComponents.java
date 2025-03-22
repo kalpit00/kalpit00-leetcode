@@ -1,29 +1,27 @@
-// Last updated: 3/22/2025, 5:58:10 AM
+// Last updated: 3/22/2025, 6:01:43 AM
 class Solution {
     public int countCompleteComponents(int n, int[][] edges) {
-        int[] edgeCount = new int[n];
+        int[] map = new int[n];
         DSU dsu = new DSU(n);
         for (int[] edge : edges) {
-            int u = edge[0], v = edge[1];
-            dsu.unionBySize(u, v);
-            int root = dsu.findParent(u);
-            edgeCount[root]++;
+            dsu.unionBySize(edge[0], edge[1]);
         }
-        int ans = 0;
+        for (int[] edge : edges) {
+            map[dsu.findParent(edge[0])]++;
+        }
+        int count = 0;
         boolean[] visited = new boolean[n];
         for (int i = 0; i < n; i++) {
             int root = dsu.findParent(i);
             if (!visited[root]) {
                 visited[root] = true;
-                int vertices = dsu.size[root];
-                int m = edgeCount[root];
-                if (m == vertices * (vertices - 1) / 2) {
-                    ans++;
+                int vertices = dsu.size[root], edgeCount = map[root];
+                if (edgeCount == vertices * (vertices - 1) / 2) {
+                    count++;
                 }
             }
         }
-        
-        return ans;
+        return count;
     }
 
     public class DSU {
