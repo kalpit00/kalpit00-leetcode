@@ -1,4 +1,4 @@
-// Last updated: 3/25/2025, 9:33:08 PM
+// Last updated: 3/25/2025, 9:33:49 PM
 class Solution {
     public int minOperations(int[][] grid, int x) {
         int m = grid.length, n = grid[0].length, k = m * n, count = 0, 
@@ -22,12 +22,11 @@ class Solution {
         return count;
     }
     public void bucketSort(int[] nums, int min, int max) {
-        int size = max - min + 1;
+        int size = max - min + 1, index = 0;
         int[] buckets = new int[size];
         for (int num : nums) {
             buckets[num - min]++;
         }
-        int index = 0;
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < buckets[i]; j++) {
                 nums[index++] = i + min;
