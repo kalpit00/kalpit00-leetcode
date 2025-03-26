@@ -1,13 +1,10 @@
-// Last updated: 3/25/2025, 9:03:20 PM
+// Last updated: 3/25/2025, 9:04:12 PM
 class Solution {
     public int minOperations(int[][] grid, int x) {
         int m = grid.length, n = grid[0].length, k = m * n, idx = 0, count = 0;
         int[] nums = new int[k];
         for (int i = 0; i < m; i++) {
             for (int j = 0; j < n; j++) {
-                if (grid[i][j] % x != grid[0][0] % x) {
-                    return -1;
-                }
                 nums[idx++] = grid[i][j];
             }
         }
