@@ -1,11 +1,11 @@
-// Last updated: 3/25/2025, 10:46:43 PM
+// Last updated: 3/25/2025, 10:47:43 PM
 class Solution {
     public int medianOfUniquenessArray(int[] nums) {
         int n = nums.length, start = 1, end = n, ans = -1;
-        long total = (long) n * (n + 1) / 2;
+        long k = (long) n * (n + 1) / 2, median = (k + 1) / 2;
         while (start <= end) {
             int mid = start + (end - start) / 2;
-            if (countCompleteSubarrays(nums, mid) >= (total + 1) / 2) {
+            if (countCompleteSubarrays(nums, mid) >= median) {
                 ans = mid;
                 end = mid - 1;
             }
