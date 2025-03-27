@@ -1,12 +1,11 @@
-// Last updated: 3/26/2025, 11:35:43 PM
+// Last updated: 3/26/2025, 11:36:10 PM
 class Solution {
     public int minimumIndex(List<Integer> nums) {
-        int n = nums.size(), max = 0, count = 0, res = -1;
+        int n = nums.size(), max = 0, count = 0, total = 0, left = 0;
         for (int num : nums) { // Boyer Moore's Algorithm
             max = count == 0 ? num : max;
             count += max == num ? 1 : -1;
         }
-        int total = 0, left = 0;
         for (int num : nums) {
             total += num == max ? 1 : 0;
         }
