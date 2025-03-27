@@ -1,4 +1,4 @@
-// Last updated: 3/26/2025, 11:10:49 PM
+// Last updated: 3/26/2025, 11:11:01 PM
 class Solution {
     public int[] resultsArray(int[][] queries, int k) {
         PriorityQueue<Integer> pq = new PriorityQueue<>((a, b) -> (b - a));
