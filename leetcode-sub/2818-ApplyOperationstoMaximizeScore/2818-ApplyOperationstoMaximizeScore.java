@@ -1,10 +1,10 @@
-// Last updated: 3/29/2025, 1:56:21 PM
+// Last updated: 3/29/2025, 1:58:19 PM
 class Solution {
     int mod = 1000000007;
     public int maximumScore(List<Integer> arr, int k) {
-        int n = arr.size(), max = Integer.MIN_VALUE, idx = 0;
-        int[] nums = new int[n], NGE = new int[n], PGE = new int[n];
-        Stack<Integer> stack = new Stack<>();
+        int n = arr.size(), max = Integer.MIN_VALUE, idx = 0, top = -1;
+        int[] nums = new int[n], NGE = new int[n], 
+        PGE = new int[n], stack = new int[n];
         Arrays.fill(NGE, n);
         Arrays.fill(PGE, -1);
         for (int num : arr) {
@@ -26,14 +26,14 @@ class Solution {
             } // If num is still greater than 1, it is a prime number itself
         }
         for (int i = 0; i < n; i++) {
-            while (!stack.isEmpty() && nums[stack.peek()] < nums[i]) {
-                int top = stack.pop();
-                NGE[top] = i;
+            while (top != -1 && nums[stack[top]] < nums[i]) {
+                int t = stack[top--];
+                NGE[t] = i;
             }
-            if (!stack.isEmpty()) {
-                PGE[i] = stack.peek();
+            if (top != -1) {
+                PGE[i] = stack[top];
             }
-            stack.push(i);
+            stack[++top] = i;
         }
         long[] count = new long[n];
         long res = 1;
