@@ -1,17 +1,23 @@
-// Last updated: 3/31/2025, 9:11:07 PM
+// Last updated: 3/31/2025, 9:14:51 PM
 class Solution {
-    public long mostPoints(int[][] questions) {
-        int n = questions.length;
-        long[] dp = new long[n];
-        dp[n - 1] = questions[n - 1][0];
-        for (int i = n - 2; i >= 0; --i) {
-            dp[i] = questions[i][0];
-            int skip = questions[i][1];
-            if (i + skip + 1 < n) {
-                dp[i] += dp[i + skip + 1];
+    public long mostPoints(int[][] nums) {
+        int n= nums.length;
+        long dp[]= new long[n];
+        long mx=0;
+        for(int i=0;i<n;i++){
+            int nxt= nums[i][1]+i+1;
+            if(i!=0)
+            dp[i]=Math.max(dp[i], dp[i-1]);
+            if(nxt>=n){
+                mx= Math.max(mx,dp[i]+nums[i][0]);
+            }else{
+                dp[nxt]=Math.max(dp[nxt], dp[i]+nums[i][0]);
             }
-            dp[i] = Math.max(dp[i], dp[i + 1]);
+            mx= Math.max(dp[i],mx);
         }
-        return dp[0];
+        // for(long val:dp){
+        //     mx= Math.max(mx,val);
+        // }
+        return mx;
     }
 }
