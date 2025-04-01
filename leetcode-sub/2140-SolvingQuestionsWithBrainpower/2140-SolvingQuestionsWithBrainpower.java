@@ -1,4 +1,4 @@
-// Last updated: 3/31/2025, 9:14:51 PM
+// Last updated: 3/31/2025, 9:16:21 PM
 class Solution {
     public long mostPoints(int[][] nums) {
         int n= nums.length;
