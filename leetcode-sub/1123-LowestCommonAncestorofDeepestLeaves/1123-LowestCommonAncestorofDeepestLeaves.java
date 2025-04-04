@@ -1,4 +1,4 @@
-// Last updated: 4/4/2025, 3:06:19 AM
+// Last updated: 4/4/2025, 3:11:08 AM
 class Solution {
     public TreeNode lcaDeepestLeaves(TreeNode root) {
         Queue<TreeNode> queue = new LinkedList<>();
@@ -8,12 +8,8 @@ class Solution {
             int size = queue.size();
             for (int i = 0; i < size; i++) {
                 TreeNode node = queue.poll();
-                if (i == 0) {
-                    leaves[0] = node;
-                }
-                if (i == size - 1) {
-                    leaves[1] = node;
-                }
+                leaves[0] = i == 0 ? node : leaves[0];
+                leaves[1] = i == size - 1 ? node : leaves[1];
                 if (node.left != null) {
                     queue.offer(node.left);
                 }
