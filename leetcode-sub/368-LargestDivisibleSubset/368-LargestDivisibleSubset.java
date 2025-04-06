@@ -1,4 +1,4 @@
-// Last updated: 4/6/2025, 4:50:25 AM
+// Last updated: 4/6/2025, 4:51:21 AM
 class Solution {
     public List<Integer> largestDivisibleSubset(int[] nums) {
         int n = nums.length, max = 1, maxIndex = 0;
@@ -9,10 +9,12 @@ class Solution {
             dp[i] = 1;
             prev[i] = new ArrayList<>();
             prev[i].add(nums[i]);
+        }
+        for (int i = 0; i < n; i++) {
             for (int j = 0; j < i; j++) {
                 if (nums[i] % nums[j] == 0 && dp[i] < 1 + dp[j]) {
                     dp[i] = 1 + dp[j];
-                    prev[i] = new ArrayList<>(prev[j]);
+                    prev[i] = new ArrayList<>(prev[j]); // deep copy
                     prev[i].add(nums[i]);
                 }
             }
