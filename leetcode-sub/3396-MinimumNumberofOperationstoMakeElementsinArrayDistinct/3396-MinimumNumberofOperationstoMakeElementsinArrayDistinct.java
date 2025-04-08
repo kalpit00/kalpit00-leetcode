@@ -1,4 +1,4 @@
-// Last updated: 4/8/2025, 4:43:00 AM
+// Last updated: 4/8/2025, 4:43:26 AM
 class Solution {
     public int minimumOperations(int[] nums) {
         int n = nums.length;
