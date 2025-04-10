@@ -1,14 +1,13 @@
-// Last updated: 4/9/2025, 9:33:42 PM
+// Last updated: 4/9/2025, 9:34:30 PM
 class Solution {
     public int findKthPositive(int[] arr, int k) {
-        Set<Integer> set = new HashSet<>();
+        boolean[] visited = new boolean[2002];
         for (int num : arr) {
-            set.add(num);
+            visited[num] = true;
         }
-
         int i = 1;
         while (k > 0) {
-            if (!set.contains(i)) {
+            if (!visited[i]) {
                 k--;
             }
             i++;
