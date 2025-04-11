@@ -1,80 +1,44 @@
-// Last updated: 4/10/2025, 11:20:46 PM
+// Last updated: 4/10/2025, 11:48:32 PM
 class Solution {
     public int countSymmetricIntegers(int low, int high) {
-        // Convert to strings to make digit access easier
-        String lowStr = String.valueOf(low - 1);
-        String highStr = String.valueOf(high);
-        
-        // Count symmetric integers up to high
-        int countHigh = countSymmetric(highStr);
-        
-        // Count symmetric integers up to low-1
-        int countLow = countSymmetric(lowStr);
-        
-        return countHigh - countLow;
+        return count(helper(high)) - count(helper(low - 1));
     }
-    
-    private int countSymmetric(String num) {
-        int n = num.length();
-        // dp[pos][leadingZeros][symmetrySum]
-        Integer[][][] dp = new Integer[n][n + 1][200]; // Offset symSum by 100
-        
-        return dfs(num, 0, true, true, 0, 0, dp);
+    private int count(int[] digits) {
+        int n = digits.length;
+        Integer[][][][] dp = new Integer[n][2][201][n + 1];
+        return solve(digits, 0, 1, 0, 0, n, dp);
     }
-    
-    private int dfs(String target, int pos, boolean isLimit, boolean isLeadingZeros, 
-                    int lenLeadingZeros, int symmetrySum, Integer[][][] dp) {
-        // Base case: we've processed all digits
-        if (pos == target.length()) {
-            // Check if number has even digits (after removing leading zeros) and is symmetric
-            return (pos - lenLeadingZeros > 0 && (pos - lenLeadingZeros) % 2 == 0 && symmetrySum == 0) ? 1 : 0;
+
+    private int solve(int[] digits, int idx, int tight, int sum, int lead, int n, Integer[][][][] dp) {
+        if (idx == n) {
+            int len = n - lead;
+            return (len > 0 && len % 2 == 0 && sum == 0) ? 1 : 0;
         }
-        
-        // Early termination: if we have odd number of non-zero digits, we can't form a symmetric integer
-        if (!isLeadingZeros && (target.length() - lenLeadingZeros) % 2 != 0) {
-            return 0;
+        if (dp[idx][tight][sum + 100][lead] != null) {
+            return dp[idx][tight][sum + 100][lead];
         }
-        
-        // Use memoization if possible
-        if (!isLeadingZeros && !isLimit && dp[pos][lenLeadingZeros][symmetrySum + 100] != null) {
-            return dp[pos][lenLeadingZeros][symmetrySum + 100];
+        int count = 0, limit = (tight == 1 ? digits[idx] : 9);
+        int len = n - lead;
+        for (int i = (lead == idx ? 1 : 0); i <= limit; i++) {
+            int isFirstHalf = (idx - lead) < len / 2 ? 1 : -1;
+            count += solve(digits, idx + 1, (tight & ((i == limit) ? 1 : 0)), sum + isFirstHalf * i, lead, n, dp);
         }
-        
-        int count = 0;
-        
-        // Handle continuing leading zeros
-        if (isLeadingZeros) {
-            count += dfs(target, pos + 1, false, true, lenLeadingZeros + 1, symmetrySum, dp);
+        if (idx == lead) {
+            count += solve(digits, idx + 1, (tight & ((0 == limit) ? 1 : 0)), sum, lead + 1, n, dp);
         }
-        
-        // Determine the range of digits we can use at this position
-        int low = isLeadingZeros ? 1 : 0;
-        int high = isLimit ? target.charAt(pos) - '0' : 9;
-        
-        // Determine if we're in the first half or second half (excluding leading zeros)
-        boolean isFirstHalf = pos - lenLeadingZeros < (target.length() - lenLeadingZeros) / 2;
-        
-        // Try each valid digit
-        for (int d = low; d <= high; d++) {
-            // Update symmetry sum: add if in first half, subtract if in second half
-            int newSymmetrySum = symmetrySum + (isFirstHalf ? d : -d);
-            
-            // Only proceed if symmetry is still possible
-            if (newSymmetrySum >= -100 && newSymmetrySum <= 100) {
-                count += dfs(target, pos + 1, 
-                           isLimit && d == high, 
-                           false, 
-                           lenLeadingZeros, 
-                           newSymmetrySum, 
-                           dp);
-            }
+        return dp[idx][tight][sum + 100][lead] = count;
+    }
+
+    private int[] helper(int num) {
+        if (num == 0) {
+            return new int[1];
         }
-        
-        // Memoize result if not constrained by limits
-        if (!isLeadingZeros && !isLimit) {
-            dp[pos][lenLeadingZeros][symmetrySum + 100] = count;
+        int m = (int) Math.log10(num) + 1;
+        int[] digits = new int[m];
+        for (int i = m - 1; i >= 0; i--) {
+            digits[i] = num % 10;
+            num /= 10;
         }
-        
-        return count;
+        return digits;
     }
 }
