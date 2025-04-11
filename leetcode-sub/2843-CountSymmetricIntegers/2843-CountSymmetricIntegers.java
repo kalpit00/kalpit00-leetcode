@@ -1,8 +1,9 @@
-// Last updated: 4/10/2025, 11:55:27 PM
+// Last updated: 4/11/2025, 12:25:14 AM
 class Solution {
     public int countSymmetricIntegers(int low, int high) {
         return count(helper(high)) - count(helper(low - 1));
     }
+    
     private int count(int[] digits) {
         int n = digits.length;
         Integer[][][][] dp = new Integer[n][2][201][n + 1];
@@ -17,16 +18,14 @@ class Solution {
         if (dp[idx][tight][sum + 100][lead] != null) {
             return dp[idx][tight][sum + 100][lead];
         }
-        int limit = tight == 1 ? digits[idx] : 9, count = 0;
+        int limit = (tight == 1 ? digits[idx] : 9), count = 0;
         for (int i = (lead == idx ? 1 : 0); i <= limit; i++) { 
-            int isFirstHalf = (idx - lead) < len / 2 ? 1 : -1;
             int newTight = tight == 1 && i == limit ? 1 : 0; 
+            int isFirstHalf = (idx - lead) < len / 2 ? 1 : -1;
             count += solve(digits, idx + 1, newTight, sum + isFirstHalf * i, lead, n, dp);
         }
-        if (idx == lead) {
-            int newTight = tight == 1 && 0 == limit ? 1 : 0; 
-            count += solve(digits, idx + 1, newTight, sum, lead + 1, n, dp);
-        }
+        count += (idx == lead) ? solve(digits, idx + 1, 0, sum, lead + 1, n, dp) : 0;
+        // count += (idx == lead) ? solve(digits, idx + 1, (tight == 1 && limit == 0 ? 1 : 0), sum, lead + 1, n, dp) : 0;
         return dp[idx][tight][sum + 100][lead] = count;
     }
 
