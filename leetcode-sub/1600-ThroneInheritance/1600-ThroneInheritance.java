@@ -1,4 +1,4 @@
-// Last updated: 4/12/2025, 3:17:03 AM
+// Last updated: 4/12/2025, 3:18:02 AM
 class Solution {
     int mod = 1000000007;
     public int sumOfPower(int[] nums, int k) {
@@ -20,7 +20,7 @@ class Solution {
         int take = solve(nums, i + 1, n, k, sum + nums[i], count + 1, dp);
         int notTake = solve(nums, i + 1, n, k, sum, count, dp);
         return dp[i][count][sum] = (take + notTake) % mod;
-    }
+    } // ftn for binary exponential, implementing 2^n with mod for overflow!
     private int helper(int n) {
         long a = 2;
         long res = 1L;
