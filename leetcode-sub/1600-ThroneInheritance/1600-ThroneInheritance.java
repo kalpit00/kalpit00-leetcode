@@ -1,7 +1,8 @@
-// Last updated: 4/12/2025, 3:18:02 AM
+// Last updated: 4/12/2025, 3:20:40 AM
 class Solution {
     int mod = 1000000007;
     public int sumOfPower(int[] nums, int k) {
+        reverseSort(nums);
         int n = nums.length;
         Integer[][][] dp = new Integer[n + 1][n + 1][k + 1];
         return solve(nums, 0, n, k, 0, 0, dp);
@@ -32,5 +33,16 @@ class Solution {
             n /= 2;
         }
         return (int) res;
+    }
+    private void reverseSort(int[] nums) {
+        Arrays.sort(nums);
+        int i = 0, j = nums.length - 1;
+        while (i < j) {
+            int temp = nums[i];
+            nums[i] = nums[j];
+            nums[j] = temp;
+            i++;
+            j--;
+        }
     }
 }
