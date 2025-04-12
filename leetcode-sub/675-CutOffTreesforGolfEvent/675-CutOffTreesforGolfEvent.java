@@ -1,9 +1,10 @@
-// Last updated: 4/11/2025, 8:18:18 PM
+// Last updated: 4/11/2025, 8:41:53 PM
 class Solution {
     int[][] dir = new int[][]{{-1, 0}, {1, 0}, {0, 1}, {0, -1}};
     public int cutOffTree(List<List<Integer>> forest) {
         int m = forest.size(), n = forest.get(0).size(), sum = 0;
         List<int[]> nums = new ArrayList<>();
+        nums.add(new int[]{0, 0, 0});
         for (int i = 0; i < m; i++) {
             for (int j = 0; j < n; j++) {
                 if (forest.get(i).get(j) <= 1) {
@@ -13,14 +14,12 @@ class Solution {
             }
         }
         Collections.sort(nums, (a, b) -> a[2] - b[2]);
-        int[] src = new int[2]; // start with <0, 0>
-        for (int i = 0; i < nums.size(); i++) {
-            int steps = bfs(forest, src, nums.get(i), m, n);
+        for (int i = 1; i < nums.size(); i++) {
+            int steps = bfs(forest, nums.get(i - 1), nums.get(i), m, n);
             if (steps == -1) {
                 return -1;
             }
             sum += steps;
-            src = nums.get(i);
         }
         return sum;
     }
