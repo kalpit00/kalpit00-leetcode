@@ -1,4 +1,4 @@
-// Last updated: 4/12/2025, 3:16:43 AM
+// Last updated: 4/12/2025, 3:17:03 AM
 class Solution {
     int mod = 1000000007;
     public int sumOfPower(int[] nums, int k) {
@@ -8,29 +8,29 @@ class Solution {
     }
     private int solve(int[] nums, int i, int n, int k, int sum, int count, 
     Integer[][][] dp) {
-        if (i == n) {
-            return sum == k ? helper(n - count) : 0;
+        if (sum == k) {
+            return helper(n - count); // ftn to calc 2^(x) with mod!
+        }
+        if (i >= n || sum > k) {
+            return 0;
         }
         if (dp[i][count][sum] != null) {
             return dp[i][count][sum];
         }
+        int take = solve(nums, i + 1, n, k, sum + nums[i], count + 1, dp);
         int notTake = solve(nums, i + 1, n, k, sum, count, dp);
-        int take = 0;
-        if (sum + nums[i] <= k) {
-            take += solve(nums, i + 1, n, k, sum + nums[i], count + 1, dp);
-        }
         return dp[i][count][sum] = (take + notTake) % mod;
     }
-    private int helper(int exp) {
-        long result = 1;
-        long b = 2;
-        while (exp > 0) {
-            if ((exp & 1) == 1) {
-                result = (result * b) % mod;
+    private int helper(int n) {
+        long a = 2;
+        long res = 1L;
+        while (n > 0) {
+            if (n % 2 == 1) {
+                res = (res * a) % mod;
             }
-            b = (b * b) % mod;
-            exp >>= 1;
-        }   
-        return (int) result;
+            a = (a * a) % mod;
+            n /= 2;
+        }
+        return (int) res;
     }
 }
