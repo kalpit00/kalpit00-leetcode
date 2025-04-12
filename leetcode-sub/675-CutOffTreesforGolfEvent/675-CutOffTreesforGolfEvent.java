@@ -1,26 +1,26 @@
-// Last updated: 4/11/2025, 7:55:05 PM
+// Last updated: 4/11/2025, 8:18:18 PM
 class Solution {
     int[][] dir = new int[][]{{-1, 0}, {1, 0}, {0, 1}, {0, -1}};
     public int cutOffTree(List<List<Integer>> forest) {
         int m = forest.size(), n = forest.get(0).size(), sum = 0;
-        PriorityQueue<int[]> pq = new PriorityQueue<>((a, b) -> a[2] - b[2]);
+        List<int[]> nums = new ArrayList<>();
         for (int i = 0; i < m; i++) {
             for (int j = 0; j < n; j++) {
                 if (forest.get(i).get(j) <= 1) {
                     continue; // skip empty or wall cells
-                }                
-                pq.offer(new int[]{i, j, forest.get(i).get(j)});
+                }
+                nums.add(new int[]{i, j, forest.get(i).get(j)});
             }
         }
+        Collections.sort(nums, (a, b) -> a[2] - b[2]);
         int[] src = new int[2]; // start with <0, 0>
-        while (!pq.isEmpty()) {
-            int[] dest = pq.poll();
-            int steps = bfs(forest, src, dest, m, n);
+        for (int i = 0; i < nums.size(); i++) {
+            int steps = bfs(forest, src, nums.get(i), m, n);
             if (steps == -1) {
                 return -1;
             }
             sum += steps;
-            src = dest;
+            src = nums.get(i);
         }
         return sum;
     }
