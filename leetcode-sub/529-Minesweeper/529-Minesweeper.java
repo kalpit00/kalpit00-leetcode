@@ -1,4 +1,4 @@
-// Last updated: 4/12/2025, 6:16:54 PM
+// Last updated: 4/12/2025, 6:18:00 PM
 class Solution {
     int[][] dir = new int[][]{{-1, -1}, {-1, 0}, {-1, 1}, {0, -1}, {0, 1}, {1, -1}, {1, 0}, {1, 1}};
     public char[][] updateBoard(char[][] board, int[] click) {
@@ -22,15 +22,16 @@ class Solution {
         return count;
     }
     private void dfs(char[][] board, int x, int y, int m, int n) {
+        if (x < 0 || x >= m || y < 0 || y >= n || board[x][y] != 'E') {
+            return; // dfs to only inbound unexplored 'E' cells!
+        }
         // check the 8 adj cells to [x][y], count if they are 'M's
         int mines = countMines(board, x, y, m, n);
         if (mines == 0) { // if none of the 8 adj were mines, reveal it and dfs
             board[x][y] = 'B'; // convert 'E' cell to 'B == revealed'
             for (int[] d : dir) {
                 int r = x + d[0], c = y + d[1];
-                if (r >= 0 && r < m && c >= 0 && c < n && board[r][c] == 'E') {
-                    dfs(board, r, c, m, n);
-                } // dfs to any unexplored 'E' cells only!
+                dfs(board, r, c, m, n);
             }
         } 
         else { // otherwise if some of the 8 adj were mines, set that count
