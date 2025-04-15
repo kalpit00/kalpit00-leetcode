@@ -1,4 +1,4 @@
-// Last updated: 4/14/2025, 11:07:00 PM
+// Last updated: 4/14/2025, 11:15:09 PM
 public class Solution {
     int mod = 1000000007;
     public int subsequencePairCount(int[] nums) {
@@ -15,12 +15,12 @@ public class Solution {
         if (dp[i][g1][g2] != null) {
             return dp[i][g1][g2];
         }
-        long take1 = dfs(i + 1, n, (g1 == 0) ? nums[i] : gcd(g1, nums[i]), g2, nums, dp);
-        long take2 = dfs(i + 1, n, g1, (g2 == 0) ? nums[i] : gcd(g2, nums[i]), nums, dp);
+        long take1 = dfs(i + 1, n, gcd(g1, nums[i]), g2, nums, dp);
+        long take2 = dfs(i + 1, n, g1, gcd(g2, nums[i]), nums, dp);
         long notTake = dfs(i + 1, n, g1, g2, nums, dp);
         return dp[i][g1][g2] = (int) ((take1 + take2 + notTake) % mod);
     }
-    private int gcd(int a, int b) {
-        return (b > 0) ? gcd(b, a % b) : a;
+    private int gcd(int x, int y) {
+        return y == 0 ? x : gcd(y, x % y);
     }
 }
