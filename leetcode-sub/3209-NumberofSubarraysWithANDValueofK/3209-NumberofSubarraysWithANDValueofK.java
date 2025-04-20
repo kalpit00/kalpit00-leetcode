@@ -1,4 +1,4 @@
-// Last updated: 4/20/2025, 2:06:21 PM
+// Last updated: 4/20/2025, 2:06:33 PM
 class Solution {
     public long countSubarrays(int[] nums, int k) {
         int n = nums.length;
@@ -15,7 +15,7 @@ class Solution {
     }
     private int search(int i, int k, SparseTable table, 
     int[] nums, boolean first) {
-        int ans = -1, start = i, end = nums.length - 1;
+        int ans = -1, start = 0, end = nums.length - 1;
         while (start <= end) {
             int mid = start + (end - start)/2;
             int target = table.query(i, mid);
