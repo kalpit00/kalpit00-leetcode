@@ -1,4 +1,4 @@
-// Last updated: 4/22/2025, 10:33:03 PM
+// Last updated: 4/22/2025, 10:37:05 PM
 class Solution {
     public int countLargestGroup(int n) {
         int[] cnt = new int[40];
