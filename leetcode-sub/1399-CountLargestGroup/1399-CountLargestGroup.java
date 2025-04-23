@@ -1,20 +1,21 @@
-// Last updated: 4/22/2025, 10:26:10 PM
+// Last updated: 4/22/2025, 10:33:03 PM
 class Solution {
     public int countLargestGroup(int n) {
-        int max = 0, count = 0;
-        int[] map = new int[37];
-        for (int i = 1; i <= n; i++) {
-            int num = i, sum = 0;
-            while (num > 0) {
-                sum += num % 10;
-                num /= 10;
+        int[] cnt = new int[40];
+        int ans = 0, mx = 0;
+        for (int i = 1; i <= n; ++i) {
+            int s = 0;
+            for (int x = i; x > 0; x /= 10) {
+                s += x % 10;
             }
-            map[sum]++;
-            max = Math.max(max, map[sum]);
+            ++cnt[s];
+            if (mx < cnt[s]) {
+                mx = cnt[s];
+                ans = 1;
+            } else if (mx == cnt[s]) {
+                ++ans;
+            }
         }
-        for (int i = 0; i < 37; i++) {
-            count += map[i] == max ? 1 : 0;
-        }
-        return count;
+        return ans;
     }
 }
