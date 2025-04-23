@@ -1,4 +1,4 @@
-// Last updated: 4/23/2025, 12:44:34 PM
+// Last updated: 4/23/2025, 1:25:46 PM
 class Solution {
     public long countSubarrays(int[] nums, int k) {
         int n = nums.length;
@@ -40,12 +40,12 @@ class Solution {
         int k, n;
         public SparseTable(int[] nums) {
             n = nums.length;
-            k = 22;
+            k = 22; // k = Math.log(n)
             table = new int[n][k];
             for (int i = 0; i < n; i++) {
                 table[i][0] = nums[i];
             }
-            for (int j = 1; j < k; j++) {
+            for (int j = 1; (1 << j) <= n; j++) {
                 for (int i = 0; i + (1 << j) <= n; i++) {
                     table[i][j] = table[i][j - 1] & table[i + (1 << (j - 1))][j - 1];
                 }
