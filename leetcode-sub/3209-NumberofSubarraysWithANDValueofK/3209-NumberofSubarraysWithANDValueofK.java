@@ -1,4 +1,4 @@
-// Last updated: 4/23/2025, 12:16:39 PM
+// Last updated: 4/23/2025, 12:39:53 PM
 class Solution {
     public long countSubarrays(int[] nums, int k) {
         int n = nums.length;
@@ -16,11 +16,11 @@ class Solution {
         int n = nums.length, ans = -1, start = 0, end = n - 1;
         while (start <= end) {
             int mid = start + (end - start)/2;
-            int target = table.query(i, mid);
-            if (target < k) {
+            int idx = table.query(i, mid);
+            if (idx < k) {
                 end = mid - 1;
             }
-            else if (target > k) {
+            else if (idx > k) {
                 start = mid + 1;
             }
             else {
