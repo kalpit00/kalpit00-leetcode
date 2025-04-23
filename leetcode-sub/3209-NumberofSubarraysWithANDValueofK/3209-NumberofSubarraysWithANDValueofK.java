@@ -1,4 +1,4 @@
-// Last updated: 4/23/2025, 12:53:37 AM
+// Last updated: 4/23/2025, 12:16:39 PM
 class Solution {
     public long countSubarrays(int[] nums, int k) {
         int n = nums.length;
@@ -7,9 +7,7 @@ class Solution {
         for (int i = 0; i < n; i++) {
             int start = search(i, k, table, nums, true);
             int end = search(i, k, table, nums, false);
-            if (table.query(i, start) == k) {
-                count += (end - start + 1);
-            }
+            count += start != -1 && end != -1 ? end - start + 1 : 0;
         }
         return count;
     }
@@ -55,7 +53,7 @@ class Solution {
         }
         public int query(int l, int r) {
             if (l > r) return Integer.MAX_VALUE;
-            int x = (int) (Math.log(r - l + 1) / Math.log(2));
+            int x = 31 - Integer.numberOfLeadingZeros(r - l + 1);
             return table[l][x] & table[r - (1 << x) + 1][x];
         }
     }
