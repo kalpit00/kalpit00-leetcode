@@ -1,4 +1,4 @@
-// Last updated: 4/23/2025, 12:39:53 PM
+// Last updated: 4/23/2025, 12:44:34 PM
 class Solution {
     public long countSubarrays(int[] nums, int k) {
         int n = nums.length;
@@ -12,15 +12,15 @@ class Solution {
         return count;
     }
     private int search(int i, int k, SparseTable table, 
-    int[] nums, boolean first) {
-        int n = nums.length, ans = -1, start = 0, end = n - 1;
+    int[] nums, boolean first) { //just b.s in [i, n - 1], so put start = i
+        int n = nums.length, ans = -1, start = i, end = n - 1;
         while (start <= end) {
             int mid = start + (end - start)/2;
-            int idx = table.query(i, mid);
-            if (idx < k) {
-                end = mid - 1;
+            int val = table.query(i, mid);
+            if (val < k) { // reverse binary search! table[i][j] is decreasing!
+                end = mid - 1; // AND(nums[i..j] == decreasing order!)
             }
-            else if (idx > k) {
+            else if (val > k) {
                 start = mid + 1;
             }
             else {
