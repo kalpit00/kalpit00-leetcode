@@ -1,4 +1,4 @@
-// Last updated: 4/27/2025, 2:15:31 PM
+// Last updated: 4/27/2025, 2:41:11 PM
 class AllOne {
     private class Node {
         int freq;
@@ -36,7 +36,7 @@ class AllOne {
         if (curr != null) {
             curr.keys.remove(key);
             if (curr.keys.isEmpty()) {
-                remove(curr);
+                delete(curr);
                 bucketMap.remove(freq);
             }
         }
@@ -60,7 +60,7 @@ class AllOne {
         }
         curr.keys.remove(key);
         if (curr.keys.isEmpty()) {
-            remove(curr);
+            delete(curr);
             bucketMap.remove(freq);
         }
     }
@@ -87,7 +87,7 @@ class AllOne {
         next.prev = node;
     }
     
-    private void remove(Node node) {
+    private void delete(Node node) {
         node.prev.next = node.next;
         node.next.prev = node.prev;
     }
