@@ -1,16 +1,14 @@
-// Last updated: 4/27/2025, 1:24:24 PM
+// Last updated: 4/27/2025, 2:15:31 PM
 class AllOne {
     private class Node {
         int freq;
         Set<String> keys;
         Node prev, next;
-        
         Node(int freq) {
             this.freq = freq;
-            this.keys = new LinkedHashSet<>();
+            this.keys = new HashSet<>();
         }
     }
-    
     private Map<String, Integer> freqMap;
     private Map<Integer, Node> bucketMap;
     private Node head, tail;
