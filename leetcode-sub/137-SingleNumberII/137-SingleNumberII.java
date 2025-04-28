@@ -1,13 +1,11 @@
-// Last updated: 4/28/2025, 5:15:36 PM
+// Last updated: 4/28/2025, 5:16:44 PM
 class Solution {
     public int singleNumber(int[] nums) {
-        Map<Integer, Integer> map = new HashMap<>();
-        for (int num : nums) {
-            map.put(num, map.getOrDefault(num, 0) + 1);
-            if (map.get(num) == 3) {
-                map.remove(num);
-            }
+        int ones = 0, twos = 0, n = nums.length;
+        for (int i = 0; i < n; i++) {
+            ones = (ones ^ nums[i]) & ~twos;
+            twos = (twos ^ nums[i]) & ~ones;
         }
-        return map.keySet().iterator().next();
+        return ones;
     }
 }
