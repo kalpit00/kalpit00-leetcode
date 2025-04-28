@@ -1,7 +1,6 @@
-// Last updated: 4/28/2025, 3:47:31 PM
+// Last updated: 4/28/2025, 3:48:13 PM
 class Solution {
     public int countPrimeSetBits(int left, int right) {
-        boolean[] notPrime = sieve(33);
         int count = 0;
         for (int i = left; i <= right; i++) {
             count += isPrime(Integer.bitCount(i)) ? 1 : 0;
