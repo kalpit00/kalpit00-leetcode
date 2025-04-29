@@ -1,18 +1,16 @@
-// Last updated: 4/14/2025, 9:07:55 PM
+// Last updated: 4/29/2025, 12:56:22 AM
 class Solution {
     public long goodTriplets(int[] nums1, int[] nums2) {
         long res = 0;
         int n = nums1.length;
-        int[] nums = new int[n];
-        Map<Integer, Integer> map = new HashMap<>();
+        int[] nums = new int[n], map = new int[100001];
+        int[] leftTree = new int[n + 1], rightTree = new int[n + 1];
         for (int i = 0; i < n; i++) {
-            map.put(nums2[i], i);
+            map[nums2[i]] = i;
         }
         for (int i = 0; i < n; i++) {
-            nums[i] = map.get(nums1[i]);
+            nums[i] = map[nums1[i]];
         }
-        int[] leftTree = new int[n + 1];
-        int[] rightTree = new int[n + 1];
         for (int num : nums) {
             update(rightTree, num, 1);
         }
