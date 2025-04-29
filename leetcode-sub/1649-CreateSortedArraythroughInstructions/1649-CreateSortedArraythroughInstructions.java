@@ -1,53 +1,53 @@
-// Last updated: 4/29/2025, 6:46:37 PM
+// Last updated: 4/29/2025, 6:47:46 PM
 class Solution {
     public int createSortedArray(int[] instructions) {
         int max = Integer.MIN_VALUE, cost = 0, mod = 1000000007;
         for (int num : instructions) {
             max = Math.max(max, num);
         }
-        FenwickTree fenwickTree = new FenwickTree(max + 1);
+        SegmentTree segmentTree = new SegmentTree(max + 1);
         for (int value : instructions) {
-            int left = fenwickTree.query(value - 1);
-            int right = fenwickTree.query(max) - fenwickTree.query(value);
+            int left = segmentTree.query(0, value);
+            int right = segmentTree.query(0, max + 1) - segmentTree.query(0, value + 1);
             cost += Math.min(left, right);
             cost %= mod;
-            fenwickTree.update(value, 1);
+            segmentTree.update(value, 1);
         }
         return cost;
     }
-    class FenwickTree {
+    class SegmentTree {
         int[] tree;
         int n;
 
-        public FenwickTree(int n) {
+        public SegmentTree(int n) {
             this.n = n;
-            this.tree = new int[n + 1];
+            this.tree = new int[2 * n];
         }
-        public int query(int index) {
+
+        public int query(int left, int right) {
+            left += n;
+            right += n;
             int sum = 0;
-            index++;
-            while (index > 0) {
-                sum += tree[index];
-                index -= index & (-index);
+            while (left < right) {
+                if ((left & 1) == 1) { // left % 2 == 1
+                    sum += tree[left++];
+                }
+                if ((right & 1) == 1) { // right % 2 == 1
+                    sum += tree[--right];
+                }
+                left >>= 1; // left /= 2
+                right >>= 1; // right /= 2
             }
             return sum;
         }
 
         public void update(int index, int val) {
-            index++;
-            while (index < tree.length) {
-                tree[index] += val;
-                index += index & (-index);
+            index += n;
+            tree[index] += val;
+            while (index > 1) {
+                index >>= 1; // index /= 2
+                tree[index] = tree[2 * index] + tree[2 * index + 1];
             }
-        }
-        public int rangeQuery(int left, int right) {
-            int sum = 0;
-            left++;
-            while (left <= right) {
-                sum += tree[right];
-                right -= right & (-right);
-            }
-            return sum;
         }
     }
 }
