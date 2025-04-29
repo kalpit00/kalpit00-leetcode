@@ -1,9 +1,9 @@
-// Last updated: 4/28/2025, 8:53:33 PM
+// Last updated: 4/28/2025, 9:19:13 PM
 class TreeAncestor {
     int[][] table;
     public TreeAncestor(int n, int[] parent) {
         int m = parent.length;
-        int k = (int) (Math.log(m) / Math.log(2)) + 1;
+        int k = 32 - Integer.numberOfLeadingZeros(m);
         table = new int[m][k]; // m x log(m)
         for (int i = 0; i < m; i++) {
             Arrays.fill(table[i], -1);
