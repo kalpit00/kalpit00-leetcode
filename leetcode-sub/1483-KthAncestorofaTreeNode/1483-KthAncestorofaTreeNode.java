@@ -1,10 +1,10 @@
-// Last updated: 4/28/2025, 8:51:43 PM
+// Last updated: 4/28/2025, 8:53:33 PM
 class TreeAncestor {
     int[][] table;
     public TreeAncestor(int n, int[] parent) {
         int m = parent.length;
         int k = (int) (Math.log(m) / Math.log(2)) + 1;
-        table = new int[m][k];
+        table = new int[m][k]; // m x log(m)
         for (int i = 0; i < m; i++) {
             Arrays.fill(table[i], -1);
         }
@@ -21,7 +21,7 @@ class TreeAncestor {
     }
     
     public int getKthAncestor(int node, int k) {
-        for (int j = 19; j >= 0; j--) {
+        for (int j = table[0].length; j >= 0; j--) {
             if (node == -1) {
                 break;
             }
