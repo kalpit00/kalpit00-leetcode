@@ -1,45 +1,34 @@
-// Last updated: 4/5/2025, 4:59:16 PM
+// Last updated: 4/28/2025, 8:51:43 PM
 class TreeAncestor {
-
-    int MAX_DEPTH = (int) (Math.log(50001) / Math.log(2) + 1); // log base 2
-    int[][] pre = new int[50001][MAX_DEPTH + 1]; // pre[i][j] stores (2^j)th ancestor of node i
-    List<List<Integer>> tree = new ArrayList<>();
-
+    int[][] table;
     public TreeAncestor(int n, int[] parent) {
-        for (int i = 0; i < n; ++i) tree.add(new ArrayList<>());
-        for (int i = 0; i < n; ++i) Arrays.fill(pre[i], -1);
-
-        // Step 1: Reconstruct tree in correct format, root to leaf
-        for (int i = 1; i < n; ++i) {
-            tree.get(parent[i]).add(i);
+        int m = parent.length;
+        int k = (int) (Math.log(m) / Math.log(2)) + 1;
+        table = new int[m][k];
+        for (int i = 0; i < m; i++) {
+            Arrays.fill(table[i], -1);
         }
-
-        // Step 2: Prefill pre[i][j]
-        preprocess(0, new int[n], 0);
-    }
-
-    private void preprocess(int cur, int[] traversal, int depth) {
-        traversal[depth] = cur;
-
-        // Fill ancestor for `cur` that are at distance of 2^i
-        for (int i = 0; depth - (1 << i) >= 0; i++) {
-            pre[cur][i] = traversal[depth - (1 << i)];
+        for (int i = 0; i < m; i++) {
+            table[i][0] = parent[i];
         }
-
-        // Recursively fill ancestors for child nodes.
-        for (int i = 0; i < tree.get(cur).size(); ++i) {
-            preprocess(tree.get(cur).get(i), traversal, depth + 1);
+        for (int j = 1; j < k; j++) {
+            for (int i = 0; i < m; i++) {
+                if (table[i][j - 1] != -1) {
+                    table[i][j] = table[table[i][j - 1]][j - 1];
+                }
+            }
         }
     }
-
+    
     public int getKthAncestor(int node, int k) {
-        if (k == 0) return node;
-        for (int i = MAX_DEPTH; i >= 0 && node != -1; --i) {
-            if ((k & (1 << i)) != 0) {
-                node = pre[node][i];
+        for (int j = 19; j >= 0; j--) {
+            if (node == -1) {
+                break;
+            }
+            if ((k & (1 << j)) != 0) {
+                node = table[node][j];
             }
         }
         return node;
     }
-
 }
