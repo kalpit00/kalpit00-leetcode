@@ -1,63 +1,47 @@
-// Last updated: 4/29/2025, 4:01:30 PM
+// Last updated: 4/29/2025, 6:23:33 PM
 class Solution {
     public int reversePairs(int[] nums) {
-        int n = nums.length, count = 0;
-        int[] arr = nums.clone();
-        Arrays.sort(arr);
-        FenwickTree fenwickTree = new FenwickTree(n);
-        for (int i = 0; i < n; i++) {
-            count += i - fenwickTree.query(floor(arr, 2L * nums[i]));
-            fenwickTree.update(floor(arr, nums[i]), 1);
+        if (nums == null || nums.length == 0) return 0;
+        return mergeSort(nums, 0, nums.length - 1);
+    }
+
+    private int mergeSort(int[] nums, int left, int right) {
+        if (left >= right) return 0;
+        
+        int mid = left + (right - left) / 2;
+        int count = mergeSort(nums, left, mid) + mergeSort(nums, mid + 1, right);
+
+        // Count reverse pairs
+        int j = mid + 1;
+        for (int i = left; i <= mid; i++) {
+            while (j <= right && (long)nums[i] > 2 * (long)nums[j]) {
+                j++;
+            }
+            count += (j - mid - 1);
         }
+
+        // Merge two sorted halves
+        merge(nums, left, mid, right);
+
         return count;
     }
-    private int floor(int[] arr, long target) {
-        int n = arr.length, start = 0, end = n - 1, ans = -1;
-        while (start <= end) {
-            int mid = start + (end - start)/2;
-            if (arr[mid] <= target) {
-                ans = mid;
-                start = mid + 1;
-            }
-            else {
-                end = mid - 1;
-            }
-        }
-        return ans;
-    }
-    class FenwickTree {
-        int[] tree;
-        int n;
 
-        public FenwickTree(int n) {
-            this.n = n;
-            this.tree = new int[n + 1];
-        }
-        public int query(int index) {
-            int sum = 0;
-            index++;
-            while (index > 0) {
-                sum += tree[index];
-                index -= index & (-index);
+    private void merge(int[] nums, int left, int mid, int right) {
+        int[] temp = new int[right - left + 1];
+        int i = left, j = mid + 1, k = 0;
+
+        while (i <= mid && j <= right) {
+            if (nums[i] <= nums[j]) {
+                temp[k++] = nums[i++];
+            } else {
+                temp[k++] = nums[j++];
             }
-            return sum;
         }
 
-        public void update(int index, int val) {
-            index++;
-            while (index < tree.length) {
-                tree[index] += val;
-                index += index & (-index);
-            }
-        }
-        public int rangeQuery(int left, int right) {
-            int sum = 0;
-            left++;
-            while (left <= right) {
-                sum += tree[right];
-                right -= right & (-right);
-            }
-            return sum;
-        }
+        while (i <= mid) temp[k++] = nums[i++];
+        while (j <= right) temp[k++] = nums[j++];
+
+        // Copy sorted temp array back into nums
+        System.arraycopy(temp, 0, nums, left, temp.length);
     }
 }
