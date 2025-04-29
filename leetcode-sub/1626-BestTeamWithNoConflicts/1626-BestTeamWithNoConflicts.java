@@ -1,4 +1,4 @@
-// Last updated: 4/29/2025, 1:26:14 AM
+// Last updated: 4/29/2025, 1:29:34 AM
 class Solution {
     public int bestTeamScore(int[] scores, int[] ages) {
         int n = scores.length, max = 0, size = 0;
@@ -10,49 +10,49 @@ class Solution {
         for (int age : ages) {
             size = Math.max(age, size);
         }
-        SegmentTree segmentTree = new SegmentTree(size + 2);
+        FenwickTree fenwickTree = new FenwickTree(size + 2);
         for (int i = 0; i < n; i++) {
             int idx = indices[i];
-            int sum = segmentTree.query(0, ages[idx] + 1);
+            int sum = fenwickTree.query(ages[idx]);
             sum += scores[idx];
             max = Math.max(max, sum);
-            segmentTree.update(ages[idx], sum);
+            fenwickTree.update(ages[idx], sum);
         }
         return max;
     }
-    class SegmentTree {
+     class FenwickTree {
         int[] tree;
         int n;
 
-        public SegmentTree(int n) {
+        public FenwickTree(int n) {
             this.n = n;
-            this.tree = new int[2 * n];
+            this.tree = new int[n + 1];
         }
-
-        public int query(int left, int right) {
-            left += n;
-            right += n;
+        public int query(int index) {
             int max = 0;
-            while (left < right) {
-                if ((left & 1) == 1) { // left % 2 == 1
-                    max = Math.max(max, tree[left++]);
-                }
-                if ((right & 1) == 1) { // right % 2 == 1
-                    max = Math.max(max, tree[--right]);
-                }
-                left >>= 1; // left /= 2
-                right >>= 1; // right /= 2
+            index++;
+            while (index > 0) {
+                max = Math.max(max, tree[index]);
+                index -= index & (-index);
             }
             return max;
         }
 
         public void update(int index, int val) {
-            index += n;
-            tree[index] = Math.max(tree[index], val);
-            while (index > 1) {
-                index >>= 1; // index /= 2
-                tree[index] = Math.max(tree[2 * index], tree[2 * index + 1]);
+            index++;
+            while (index < tree.length) {
+                tree[index] = Math.max(tree[index], val);
+                index += index & (-index);
             }
+        }
+        public int rangeQuery(int left, int right) {
+            int max = 0;
+            left++;
+            while (left <= right) {
+                max = Math.max(max, tree[right]);
+                right -= right & (-right);
+            }
+            return max;
         }
     }
 }
