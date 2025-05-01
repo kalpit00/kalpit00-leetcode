@@ -1,4 +1,4 @@
-// Last updated: 5/1/2025, 7:56:29 PM
+// Last updated: 5/1/2025, 7:58:58 PM
 class Fancy {
     long mod = 1000000007;
     FenwickTree bit;
@@ -23,48 +23,51 @@ class Fancy {
         return bit.getIndex(idx);
     }
     class FenwickTree {
-        List<long[]> tree; // each long[] = [value, multiplicand, addendum]
+        long[][] tree;
+        int size;
+
         public FenwickTree() {
-            tree = new ArrayList<>();
-            tree.add(new long[]{0, 1, 0});
+            tree = new long[100001][3];
+            tree[0][0] = 0; tree[0][1] = 1; tree[0][2] = 0;
+            size = 0;
         }
 
         public void append(long val) {
-            tree.add(new long[]{val, 1, 0}); // val, multi=1, add=0
+            size++;
+            tree[size][0] = val;
+            tree[size][1] = 1;
+            tree[size][2] = 0;
         }
+
         public void addAll(int inc) {
-            int index = tree.size() - 1;
+            int index = size;
             while (index > 0) {
-                long[] node = tree.get(index);
-                node[2] = (node[2] + inc) % mod;
+                tree[index][2] = (tree[index][2] + inc) % mod;
                 index -= index & (-index);
             }
         }
 
         public void multAll(int m) {
-            int index = tree.size() - 1;
+            int index = size;
             while (index > 0) {
-                long[] node = tree.get(index);
-                node[1] = (node[1] * m) % mod;
-                node[2] = (node[2] * m) % mod;
+                tree[index][1] = (tree[index][1] * m) % mod;
+                tree[index][2] = (tree[index][2] * m) % mod;
                 index -= index & (-index);
             }
         }
 
         public int getIndex(int index) {
-            if (index >= tree.size() - 1) {
+            if (index >= size) {
                 return -1;
             } 
             index++;
-            long res = tree.get(index)[0];
-            while (index < tree.size()) {
-                long[] node = tree.get(index);
-                res = (res * node[1]) % mod;
-                res = (res + node[2]) % mod;
+            long res = tree[index][0];
+            while (index <= size) {
+                res = (res * tree[index][1]) % mod;
+                res = (res + tree[index][2]) % mod;
                 index += index & (-index);
             }
             return (int) res;
         }
     }
-
 }
