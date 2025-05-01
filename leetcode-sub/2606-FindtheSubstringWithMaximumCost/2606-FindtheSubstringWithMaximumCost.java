@@ -1,27 +1,21 @@
-// Last updated: 5/1/2025, 5:57:48 PM
+// Last updated: 5/1/2025, 6:52:30 PM
 class Solution {
-    public int maximumCostSubstring(String s, String chars, int[] vals) {
-
-        int[] costs = new int[26];
-        for(int i = 0; i < 26; ++i)
-            costs[i] = i + 1;
-        
-        int len = chars.length();
-        for(int i = 0; i < len; ++i){
-            costs[chars.charAt(i) - 'a'] = vals[i];
+    public int maximumValue(String[] strs) {
+        int max = Integer.MIN_VALUE;
+        label:
+        for (String str : strs) {
+            int num = 0;
+            for (char c : str.toCharArray()) {
+                if (!Character.isDigit(c)) {
+                    max = Math.max(max, str.length());
+                    continue label;
+                }
+                else {
+                    num = num * 10 + (c - '0');
+                }
+            }
+            max = Math.max(max, num);
         }
-
-        int maxSum = 0;
-        int sum = 0;
-        
-        char[] cs = s.toCharArray();
-        for(char c:cs ){
-            sum += costs[c - 'a'];
-            maxSum = Math.max(maxSum, sum);
-            if(sum < 0)
-                sum = 0;
-        }
-
-        return maxSum;
+        return max;
     }
 }
