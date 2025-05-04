@@ -1,80 +1,97 @@
-// Last updated: 5/4/2025, 12:27:01 PM
-class Solution {
-    public long maxSubarraySum(int[] nums) {
-        int n = nums.length, max = nums[0];
-        boolean allNegative = true;
-        Map<Integer, List<Integer>> map = new HashMap<>();
-        for (int i = 0; i < n; i++) {
-            allNegative = nums[i] > 0 ? false : allNegative;
-            max = Math.max(max, nums[i]);
-            map.putIfAbsent(nums[i], new ArrayList<>());
-            map.get(nums[i]).add(i);
-        } // map all occurences of an ele together, get their indices in a list
-        if (allNegative) {
-            return max; // if ALL negative elements
-        } // maxSubArraySum is just the least negative ele. return max
-        SegmentTree segmentTree = new SegmentTree(nums);
-        long res = segmentTree.tree[0][0]; // [0] is root, [0][0] is the maxSubArraySum stored at each node of the segment tree!
-        for (Map.Entry<Integer, List<Integer>> entry : map.entrySet()) {
-            int val = entry.getKey();
-            List<Integer> indices = entry.getValue();
-            for (int idx : indices) {
-                segmentTree.update(0, n - 1, 0, idx, 0);
-            } // update all "indices" to 0 for this particular element!
-            res = Math.max(res, segmentTree.tree[0][0]); // max the res at root!
-            for (int idx : indices) {
-                segmentTree.update(0, n - 1, 0, idx, val);
-            } // update all indices back to original val!
-        } // using segment tree, we update entire ranges in logarithmic time!
-        return res;
-    }
+// Last updated: 5/4/2025, 12:27:29 PM
+import java.util.*;
 
-    class SegmentTree {
-        long[][] tree;
-        int n;
-        int[] arr;
-        public SegmentTree(int[] nums) {
-            this.n = nums.length;
-            this.arr = nums;
-            tree = new long[4 * n][4]; // <maxSubArrSum, prefix, suffix, total>
-            build(0, n - 1, 0);
+class Solution {
+
+    class SegmentData {
+        long totalSum, prefixSum, suffixSum, maxSum;
+
+        public SegmentData() {
+            totalSum = 0;
+            maxSum = Integer.MIN_VALUE;
+            prefixSum = Integer.MIN_VALUE;
+            suffixSum = Integer.MIN_VALUE;
         }
 
-        public void build(int l, int r, int node) {
-            if (l == r) {
-                long max = Math.max(0, arr[l]);
-                tree[node] = new long[]{max, max, max, arr[l]};
-                return;
-            }
-            int mid = l + (r - l) / 2;
-            build(l, mid, 2 * node + 1);
-            build(mid + 1, r, 2 * node + 2);
-            merge(node, 2 * node + 1, 2 * node + 2);
-        } // tree[node] = tree[2 * node + 1] + tree[2 * node + 2];
+        public SegmentData(int value) {
+            totalSum = value;
+            maxSum = value;
+            prefixSum = value;
+            suffixSum = value;
+        }
+    }
 
-        public void update(int l, int r, int node, int index, int val) {
-            if (l == r) {
-                long max = Math.max(0, val);
-                tree[node] = new long[]{max, max, max, val};
-                return;
-            }
-            int mid = l + (r - l) / 2;
-            if (index <= mid) {
-                update(l, mid, 2 * node + 1, index, val);
-            } 
-            else {
-                update(mid + 1, r, 2 * node + 2, index, val);
-            } // merge is the variation here, from std sum/min/max segment trees
-            merge(node, 2 * node + 1, 2 * node + 2);
-        } // tree[node] = tree[2 * node + 1] + tree[2 * node + 2];
+    private List<SegmentData> segmentTree;
 
-        public void merge(int node, int left, int right) {
-            long[] res = new long[4];
-            long sum = tree[left][3] + tree[right][3];
-            long max = Math.max(Math.max(tree[left][0], tree[right][0]), tree[left][2] + tree[right][1]);
-            long pre = Math.max(tree[left][1], tree[left][3] + tree[right][1]);
-            long suf = Math.max(tree[right][2], tree[right][3] + tree[left][2]);
-            tree[node] = new long[]{max, pre, suf, sum};
-        } // more about merge() in notes!
+    private SegmentData merge(SegmentData left, SegmentData right) {
+        SegmentData result = new SegmentData();
+        result.totalSum = left.totalSum + right.totalSum;
+        result.prefixSum = Math.max(left.prefixSum, left.totalSum + right.prefixSum);
+        result.suffixSum = Math.max(right.suffixSum, right.totalSum + left.suffixSum);
+        result.maxSum = Math.max(left.maxSum, right.maxSum);
+        result.maxSum = Math.max(result.maxSum, result.prefixSum);
+        result.maxSum = Math.max(result.maxSum, result.suffixSum);
+        result.maxSum = Math.max(result.maxSum, left.suffixSum + right.prefixSum);
+        return result;
+    }
+
+    private void buildTree(int left, int right, int index, int[] arr) {
+        if (left == right) {
+            segmentTree.set(index, new SegmentData(arr[left]));
+            return;
+        }
+        int mid = (left + right) / 2;
+        buildTree(left, mid, 2 * index + 1, arr);
+        buildTree(mid + 1, right, 2 * index + 2, arr);
+        segmentTree.set(index, merge(segmentTree.get(2 * index + 1), segmentTree.get(2 * index + 2)));
+    }
+
+    private void updateTree(int left, int right, int index, int position, int value) {
+        if (position < left || position > right) return;
+        if (left == right && position == left) {
+            segmentTree.get(index).totalSum = segmentTree.get(index).prefixSum = segmentTree.get(index).suffixSum = segmentTree.get(index).maxSum = value;
+            return;
+        }
+        int mid = (left + right) / 2;
+        updateTree(left, mid, 2 * index + 1, position, value);
+        updateTree(mid + 1, right, 2 * index + 2, position, value);
+        segmentTree.set(index, merge(segmentTree.get(2 * index + 1), segmentTree.get(2 * index + 2)));
+    }
+
+    public long maxSubarraySum(int[] arr) {
+        int n = arr.length;
+        segmentTree = new ArrayList<>(4 * n);
+        for (int i = 0; i < 4 * n; i++) {
+            segmentTree.add(new SegmentData());
+        }
+
+        // Using TreeMap to store indices by value
+        TreeMap<Integer, List<Integer>> valueToIndices = new TreeMap<>();
+        buildTree(0, n - 1, 0, arr);
+        long maxSubarraySum = segmentTree.get(0).maxSum;
+
+        for (int i = 0; i < n; i++) {
+            valueToIndices.computeIfAbsent(arr[i], k -> new ArrayList<>()).add(i);
+        }
+
+        // If the largest value in the map is negative, return that value
+        if (!valueToIndices.isEmpty() && valueToIndices.lastEntry().getKey() < 0) {
+            return valueToIndices.lastEntry().getKey();
+        }
+
+        for (Map.Entry<Integer, List<Integer>> entry : valueToIndices.entrySet()) {
+            int value = entry.getKey();
+            List<Integer> indices = entry.getValue();
+            if (indices.size() == n) continue;
+
+            // Set elements at indices to 0 temporarily
+            for (int idx : indices) updateTree(0, n - 1, 0, idx, 0);
+            maxSubarraySum = Math.max(maxSubarraySum, segmentTree.get(0).maxSum);
+
+            // Restore original values
+            for (int idx : indices) updateTree(0, n - 1, 0, idx, value);
+        }
+
+        return maxSubarraySum;
     }
 }
