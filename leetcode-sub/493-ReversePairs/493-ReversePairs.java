@@ -1,47 +1,63 @@
-// Last updated: 4/29/2025, 6:23:33 PM
+// Last updated: 5/5/2025, 1:41:59 AM
 class Solution {
     public int reversePairs(int[] nums) {
-        if (nums == null || nums.length == 0) return 0;
-        return mergeSort(nums, 0, nums.length - 1);
-    }
-
-    private int mergeSort(int[] nums, int left, int right) {
-        if (left >= right) return 0;
-        
-        int mid = left + (right - left) / 2;
-        int count = mergeSort(nums, left, mid) + mergeSort(nums, mid + 1, right);
-
-        // Count reverse pairs
-        int j = mid + 1;
-        for (int i = left; i <= mid; i++) {
-            while (j <= right && (long)nums[i] > 2 * (long)nums[j]) {
-                j++;
-            }
-            count += (j - mid - 1);
+        Set<Long> set = new TreeSet<>();
+        for (int num : nums) {
+            set.add(1L * num);
+            set.add(2L * num);
         }
-
-        // Merge two sorted halves
-        merge(nums, left, mid, right);
-
+        Map<Long, Integer> map = new HashMap<>();
+        int rank = 0, count = 0;
+        for (long val : set) {
+            map.put(val, rank++);
+        }
+        SegmentTree seg = new SegmentTree(rank);
+        for (int num : nums) {
+            int targetIdx = map.get(2L * num);
+            count += seg.rangeSum(targetIdx + 1, rank - 1);
+            int idx = map.get((long) num);
+            seg.pointUpdate(idx, 1);
+        }
         return count;
     }
 
-    private void merge(int[] nums, int left, int mid, int right) {
-        int[] temp = new int[right - left + 1];
-        int i = left, j = mid + 1, k = 0;
+    class SegmentTree {
+        int[] tree;
+        int size;
 
-        while (i <= mid && j <= right) {
-            if (nums[i] <= nums[j]) {
-                temp[k++] = nums[i++];
-            } else {
-                temp[k++] = nums[j++];
-            }
+        public SegmentTree(int n) {
+            size = n;
+            tree = new int[4 * n];
         }
 
-        while (i <= mid) temp[k++] = nums[i++];
-        while (j <= right) temp[k++] = nums[j++];
+        public void pointUpdate(int idx, int val) {
+            pointUpdate(1, 0, size - 1, idx, val);
+        }
 
-        // Copy sorted temp array back into nums
-        System.arraycopy(temp, 0, nums, left, temp.length);
+        private void pointUpdate(int node, int l, int r, int idx, int val) {
+            if (l == r) {
+                tree[node] += val;
+                return;
+            }
+            int mid = (l + r) / 2;
+            if (idx <= mid) {
+                pointUpdate(node * 2, l, mid, idx, val);
+            } else {
+                pointUpdate(node * 2 + 1, mid + 1, r, idx, val);
+            }
+            tree[node] = tree[node * 2] + tree[node * 2 + 1];
+        }
+
+        public int rangeSum(int ql, int qr) {
+            return rangeSum(1, 0, size - 1, ql, qr);
+        }
+
+        private int rangeSum(int node, int l, int r, int ql, int qr) {
+            if (qr < l || ql > r) return 0;
+            if (ql <= l && r <= qr) return tree[node];
+            int mid = (l + r) / 2;
+            return rangeSum(node * 2, l, mid, ql, qr) +
+                   rangeSum(node * 2 + 1, mid + 1, r, ql, qr);
+        }
     }
 }
