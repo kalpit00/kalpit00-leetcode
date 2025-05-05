@@ -1,4 +1,4 @@
-// Last updated: 5/5/2025, 1:41:59 AM
+// Last updated: 5/5/2025, 1:43:35 AM
 class Solution {
     public int reversePairs(int[] nums) {
         Set<Long> set = new TreeSet<>();
@@ -31,7 +31,7 @@ class Solution {
         }
 
         public void pointUpdate(int idx, int val) {
-            pointUpdate(1, 0, size - 1, idx, val);
+            pointUpdate(0, 0, size - 1, idx, val);
         }
 
         private void pointUpdate(int node, int l, int r, int idx, int val) {
@@ -41,23 +41,23 @@ class Solution {
             }
             int mid = (l + r) / 2;
             if (idx <= mid) {
-                pointUpdate(node * 2, l, mid, idx, val);
+                pointUpdate(node * 2 + 1, l, mid, idx, val);
             } else {
-                pointUpdate(node * 2 + 1, mid + 1, r, idx, val);
+                pointUpdate(node * 2 + 2, mid + 1, r, idx, val);
             }
-            tree[node] = tree[node * 2] + tree[node * 2 + 1];
+            tree[node] = tree[node * 2 + 1] + tree[node * 2 + 2];
         }
 
         public int rangeSum(int ql, int qr) {
-            return rangeSum(1, 0, size - 1, ql, qr);
+            return rangeSum(0, 0, size - 1, ql, qr);
         }
 
         private int rangeSum(int node, int l, int r, int ql, int qr) {
             if (qr < l || ql > r) return 0;
             if (ql <= l && r <= qr) return tree[node];
             int mid = (l + r) / 2;
-            return rangeSum(node * 2, l, mid, ql, qr) +
-                   rangeSum(node * 2 + 1, mid + 1, r, ql, qr);
+            return rangeSum(node * 2 + 1, l, mid, ql, qr) +
+                   rangeSum(node * 2 + 2, mid + 1, r, ql, qr);
         }
     }
 }
