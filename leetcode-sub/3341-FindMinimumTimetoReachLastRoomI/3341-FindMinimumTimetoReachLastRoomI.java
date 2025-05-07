@@ -1,4 +1,4 @@
-// Last updated: 5/6/2025, 8:25:21 PM
+// Last updated: 5/7/2025, 2:15:22 PM
 class Solution {
     public int minTimeToReach(int[][] grid) {
         int m = grid.length, n = grid[0].length;
@@ -22,6 +22,6 @@ class Solution {
                 }
             }
         }
-        return -1;
+        return 0;
     }
 }
