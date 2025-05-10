@@ -1,30 +1,21 @@
-// Last updated: 5/10/2025, 3:42:57 AM
+// Last updated: 5/10/2025, 3:46:25 AM
 class Solution {
     public long countSubarrays(int[] nums, int minK, int maxK) {
-        int n = nums.length, left = 0, right = 0;
         long count = 0;
-        Deque<Integer> maxDeque = new ArrayDeque<>();
-        Deque<Integer> minDeque = new ArrayDeque<>();   
+        int left = 0, right = 0, max = -1, min = -1, n = nums.length;
         while (right < n) {
-            while (!maxDeque.isEmpty() && nums[maxDeque.peekLast()] <= nums[right]) {
-                maxDeque.pollLast();
-            } // monodeque steps to carry max and mins on peek
-            while (!minDeque.isEmpty() && nums[minDeque.peekLast()] >= nums[right]) {
-                minDeque.pollLast();
-            } // offer INDICES for max and min elements, NOT elements
-            maxDeque.add(right);
-            minDeque.add(right);
-// if curr ele is outside of range [minK, maxK], ALL eles in between invalid
             if (nums[right] < minK || nums[right] > maxK) {
-                left = right + 1; // move left to right + 1
-                minDeque.clear(); // empty the deques!
-                maxDeque.clear();
-            } // SHRINK left step, no need for WHILE, a one-shot IF suffices
-            if (!minDeque.isEmpty() && !maxDeque.isEmpty() && nums[minDeque.peekFirst()] == minK && nums[maxDeque.peekFirst()] == maxK) {  
-                count += Math.min(maxDeque.peekFirst(), minDeque.peekFirst()) - left + 1; // same as doing count += (right - left)
-            } // except right = Math.min(max.peek, min.peek)
+                left = right + 1;
+            }
+            if (nums[right] == minK) {
+                min = right;
+            }
+            if (nums[right] == maxK) {
+                max = right;
+            }
+            count += Math.max(0, Math.min(max, min) - left + 1);
             right++;
-        } // and we do right++ AFTER 2nd while, so count += right - left + 1
+        }
         return count;
     }
 }
