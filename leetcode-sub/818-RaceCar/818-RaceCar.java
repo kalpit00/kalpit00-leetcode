@@ -1,37 +1,55 @@
-// Last updated: 5/11/2025, 1:20:49 PM
+// Last updated: 5/11/2025, 1:41:06 PM
 class Solution {
     public int racecar(int target) {
         int steps = 0;
-        Queue<int[]> queue = new LinkedList<>();
-        queue.offer(new int[]{0, 1}); // [position, speed]
-        Set<Pair<Integer, Integer>> visited = new HashSet<>();
-        visited.add(new Pair<>(0, 1));
+        Queue<Node> queue = new LinkedList<>();
+        queue.offer(new Node(0, 1));
+        Set<Node> visited = new HashSet<>();
+        visited.add(new Node(0, 1));
         while (!queue.isEmpty()) {
             int size = queue.size();
             for (int i = 0; i < size; i++) {
-                int[] node = queue.poll();
-                int position = node[0], speed = node[1];
+                Node node = queue.poll();
+                int position = node.position, speed = node.speed;
                 if (position == target) {
                     return steps;
                 } // Move forward
                 int nextPosition = position + speed;
                 int nextSpeed = speed * 2;
-                Pair<Integer, Integer> forward = new Pair<>(nextPosition, nextSpeed);
+                Node forward = new Node(nextPosition, nextSpeed);
                 if (!visited.contains(forward) && 
                 Math.abs(nextPosition - target) < target) {
-                    queue.offer(new int[]{nextPosition, nextSpeed});
+                    queue.offer(forward);
                     visited.add(forward);
-                }
+                } // Reverse direction
                 nextSpeed = speed > 0 ? -1 : 1;
-                Pair<Integer, Integer> reverse = new Pair<>(position, nextSpeed); // Reverse direction
+                Node reverse = new Node(position, nextSpeed);
                 if (!visited.contains(reverse) && 
                 Math.abs(position - target) < target) {
-                    queue.offer(new int[]{position, nextSpeed});
+                    queue.offer(reverse);
                     visited.add(reverse);
                 }
             }
             steps++;
         }
         return steps;
+    }
+    static class Node {
+        int position, speed;
+        Node(int position, int speed) {
+            this.position = position;
+            this.speed = speed;
+        } // must override equals() and hashcode() methods else will TLE
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (!(o instanceof Node)) return false;
+            Node other = (Node) o;
+            return position == other.position && speed == other.speed;
+        } // this method hashes based on VALUE, and not just reference!
+        @Override
+        public int hashCode() {
+            return Objects.hash(position, speed);
+        }
     }
 }
