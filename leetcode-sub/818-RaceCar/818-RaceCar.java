@@ -1,10 +1,11 @@
-// Last updated: 5/11/2025, 12:57:24 PM
+// Last updated: 5/11/2025, 1:20:49 PM
 class Solution {
     public int racecar(int target) {
         int steps = 0;
         Queue<int[]> queue = new LinkedList<>();
-        queue.offer(new int[]{0, 1});
-        Set<Integer> visited = new HashSet<>(); //mask: (speed << 14 | position)
+        queue.offer(new int[]{0, 1}); // [position, speed]
+        Set<Pair<Integer, Integer>> visited = new HashSet<>();
+        visited.add(new Pair<>(0, 1));
         while (!queue.isEmpty()) {
             int size = queue.size();
             for (int i = 0; i < size; i++) {
@@ -12,23 +13,22 @@ class Solution {
                 int position = node[0], speed = node[1];
                 if (position == target) {
                     return steps;
-                } // fwd = [nextPosition, nextSpeed]
-                int nextPosition = position + speed, nextSpeed = speed * 2;
-                int[] forward = new int[]{nextPosition, nextSpeed};
-                int fwdMask = (nextSpeed << 14) | nextPosition;
-                if (!visited.contains(fwdMask) && 
+                } // Move forward
+                int nextPosition = position + speed;
+                int nextSpeed = speed * 2;
+                Pair<Integer, Integer> forward = new Pair<>(nextPosition, nextSpeed);
+                if (!visited.contains(forward) && 
                 Math.abs(nextPosition - target) < target) {
-                    queue.offer(forward); // abs(nextPos - target) < target
-                    visited.add(fwdMask); // means we are closer to target!
-                } // rev = [position, nextReversedSpeed]
+                    queue.offer(new int[]{nextPosition, nextSpeed});
+                    visited.add(forward);
+                }
                 nextSpeed = speed > 0 ? -1 : 1;
-                int revMask = (nextSpeed << 14) | position;
-                int[] reverse = new int[]{position, nextSpeed};                
-                if (!visited.contains(revMask) && 
+                Pair<Integer, Integer> reverse = new Pair<>(position, nextSpeed); // Reverse direction
+                if (!visited.contains(reverse) && 
                 Math.abs(position - target) < target) {
-                    queue.offer(reverse); 
-                    visited.add(revMask); 
-                } // try moving both in fwd and backward directions!
+                    queue.offer(new int[]{position, nextSpeed});
+                    visited.add(reverse);
+                }
             }
             steps++;
         }
