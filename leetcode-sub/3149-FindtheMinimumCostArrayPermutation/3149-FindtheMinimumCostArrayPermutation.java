@@ -1,4 +1,4 @@
-// Last updated: 5/13/2025, 2:40:13 PM
+// Last updated: 5/13/2025, 2:58:03 PM
 class Solution {
     public int[] findPermutation(int[] nums) {
         int n = nums.length, dest = (1 << n) - 1, min = Integer.MAX_VALUE;
@@ -7,49 +7,47 @@ class Solution {
             for (int j = 0; j < n; j++) {
                 cost[i][j] = Math.abs(i - nums[j]);
             }
-        }            
-        int[][] dp = new int[1 << n][n], parent = new int[1 << n][n];
-        List<Integer>[][] paths = new ArrayList[1 << n][n];
+        }
+        Node[][] dp = new Node[1 << n][n];
         for (int i = 0; i < (1 << n); i++) {
             for (int j = 0; j < n; j++) {
-                paths[i][j] = new ArrayList<>();
+                dp[i][j] = new Node();
             }
         }
-        paths[1 << 0][0].add(0);
-        for (int[] row : dp) Arrays.fill(row, Integer.MAX_VALUE);
-        for (int[] row : parent) Arrays.fill(row, -1);
-        dp[1 << 0][0] = 0;
+        dp[1 << 0][0].path.add(0);
+        dp[1 << 0][0].cost = 0;
         for (int mask = 0; mask <= dest; mask++) {
             for (int u = 0; u < n; u++) {
-                if ((mask & (1 << u)) == 0 || dp[mask][u] == Integer.MAX_VALUE) 
+                if ((mask & (1 << u)) == 0 || 
+                        dp[mask][u].cost == Integer.MAX_VALUE) 
                     continue;
                 for (int v = 0; v < n; v++) {
                     if ((mask & (1 << v)) != 0) continue;
-                    List<Integer> nextPath = new ArrayList<>(paths[mask][u]);
+                    List<Integer> nextPath = new ArrayList<>(dp[mask][u].path);
                     nextPath.add(v);
                     int nextMask = mask | (1 << v);
-                    int nextCost = dp[mask][u] + cost[u][v];
-                    if (nextCost < dp[nextMask][v] || (nextCost == dp[nextMask][v] && helper(nextPath, paths[nextMask][v]))) {
-                        dp[nextMask][v] = nextCost;
-                        parent[nextMask][v] = u;
-                        paths[nextMask][v] = nextPath;
+                    int nextCost = dp[mask][u].cost + cost[u][v];
+                    if (nextCost < dp[nextMask][v].cost || (nextCost == dp[nextMask][v].cost && helper(nextPath, dp[nextMask][v].path))) {
+                        dp[nextMask][v].cost = nextCost;
+                        dp[nextMask][v].parent = u;
+                        dp[nextMask][v].path = nextPath;
                     }
                 }
             }
         }
         List<Integer> res = new ArrayList<>();
         for (int i = 0; i < n; i++) {
-            if (dp[dest][i] == Integer.MAX_VALUE) continue;
+            if (dp[dest][i].cost == Integer.MAX_VALUE) continue;
             List<Integer> path = new ArrayList<>();
             int last = i, mask = dest;
             while (last != -1) {
                 path.add(last);
-                int prev = parent[mask][last];
+                int prev = dp[mask][last].parent;
                 mask ^= (1 << last);
                 last = prev;
             }
             Collections.reverse(path);
-            int score = dp[dest][i] + cost[i][path.get(0)];
+            int score = dp[dest][i].cost + cost[i][path.get(0)];
             if (score < min || (score == min && helper(path, res))) {
                 min = score;
                 res = path;
@@ -69,5 +67,14 @@ class Solution {
             }
         }
         return false;
+    }
+    class Node {
+        int cost, parent;
+        List<Integer> path;
+        public Node() {
+            cost = Integer.MAX_VALUE;
+            parent = -1;
+            path = new ArrayList<>();
+        }
     }
 }
