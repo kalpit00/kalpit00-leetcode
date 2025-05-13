@@ -1,74 +1,67 @@
-// Last updated: 5/13/2025, 11:52:21 AM
+// Last updated: 5/13/2025, 12:27:43 PM
 class Solution {
-    class Node {
-        int node, state, cost;
-        String str;
-        public Node (int node, int state, int cost, String str) {
-            this.node = node;
-            this.state = state;
-            this.cost = cost;
-            this.str = str;
-        }
-    }
     public String shortestSuperstring(String[] words) {
-        int n = words.length, min = Integer.MAX_VALUE;
-        List<String> candidates = new ArrayList<>();
-        List<List<int[]>> adj = new ArrayList<>();
-        for (int i = 0; i < n; i++) {
-            adj.add(new ArrayList<>());
-        }
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < n; j++) {
-                if (i == j || words[i].equals(words[j])) {
-                    continue; // skip duplicates and edges to itself
-                }
-                adj.get(i).add(new int[]{j, helper(words[i], words[j])});
-            }
-        }
-        for (int i = 0; i < n; i++) {
-            dijkstra(adj, words, i, n, candidates);
-        }
-        String res = "";
-        for (String candidate : candidates) {
-            if (min > candidate.length()) {
-                min = candidate.length();
-                res = candidate;
-            }
-        }
-        return res;
-    }
-    private void dijkstra(List<List<int[]>> adj, String[] words, 
-    int i, int n, List<String> candidates) {
-        PriorityQueue<Node> pq = new PriorityQueue<>((a, b) -> a.cost - b.cost);
-        boolean[][] visited = new boolean[n][1 << n];
-        pq.offer(new Node(i, 1 << i, 0, words[i])); // start with cost = 0
-        visited[i][1 << i] = true; // each node initially visits itself
-        while (!pq.isEmpty()) {
-            Node node = pq.poll();
-            int parent = node.node, state = node.state, parentDist = node.cost;
-            String str = node.str;
-            if (state == (1 << n) - 1) { // all words have been joined
-                candidates.add(str); // add to the candidate strings
-            }
-            for (int[] neighbor : adj.get(parent)) {
-                int child = neighbor[0], childDist = neighbor[1];
-                int nextState = state | (1 << child);
-                if (!visited[child][nextState]) {
-                    visited[child][nextState] = true;
-                    StringBuilder sb = new StringBuilder(str);
-                    sb.append(words[child].substring(words[child].length() - childDist)); // append the suffix of child to parent!
-                    pq.offer(new Node(child, nextState, parentDist + childDist, sb.toString())); // dijkstra will poll minCost childs!
+          int n = words.length;
+        int[][] g = new int[n][n];
+        for (int i = 0; i < n; ++i) {
+            String a = words[i];
+            for (int j = 0; j < n; ++j) {
+                String b = words[j];
+                if (i != j) {
+                    for (int k = Math.min(a.length(), b.length()); k > 0; --k) {
+                        if (a.substring(a.length() - k).equals(b.substring(0, k))) {
+                            g[i][j] = k;
+                            break;
+                        }
+                    }
                 }
             }
         }
-    } // minimum chars needed to append to s to make it contain t as a suffix
-    private int helper(String s, String t) {
-        int m = s.length(), n = t.length();
-        for (int i = 0; i < m; i++) {
-            if (t.startsWith(s.substring(i))) { 
-                return n - (m - i); 
+        int[][] dp = new int[1 << n][n];
+        int[][] p = new int[1 << n][n];
+        for (int i = 0; i < 1 << n; ++i) {
+            Arrays.fill(p[i], -1);
+            for (int j = 0; j < n; ++j) {
+                if (((i >> j) & 1) == 1) {
+                    int pi = i ^ (1 << j);
+                    for (int k = 0; k < n; ++k) {
+                        if (((pi >> k) & 1) == 1) {
+                            int v = dp[pi][k] + g[k][j];
+                            if (v > dp[i][j]) {
+                                dp[i][j] = v;
+                                p[i][j] = k;
+                            }
+                        }
+                    }
+                }
             }
         }
-        return n;
+        int j = 0;
+        for (int i = 0; i < n; ++i) {
+            if (dp[(1 << n) - 1][i] > dp[(1 << n) - 1][j]) {
+                j = i;
+            }
+        }
+        List<Integer> arr = new ArrayList<>();
+        arr.add(j);
+        for (int i = (1 << n) - 1; p[i][j] != -1;) {
+            int k = i;
+            i ^= (1 << j);
+            j = p[k][j];
+            arr.add(j);
+        }
+        Set<Integer> vis = new HashSet<>(arr);
+        for (int i = 0; i < n; ++i) {
+            if (!vis.contains(i)) {
+                arr.add(i);
+            }
+        }
+        Collections.reverse(arr);
+        StringBuilder ans = new StringBuilder(words[arr.get(0)]);
+        for (int i = 1; i < n; ++i) {
+            int k = g[arr.get(i - 1)][arr.get(i)];
+            ans.append(words[arr.get(i)].substring(k));
+        }
+        return ans.toString();
     }
 }
