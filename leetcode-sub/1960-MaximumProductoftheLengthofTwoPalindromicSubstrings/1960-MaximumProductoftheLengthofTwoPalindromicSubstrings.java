@@ -1,4 +1,4 @@
-// Last updated: 5/13/2025, 10:37:34 PM
+// Last updated: 5/13/2025, 10:46:17 PM
 class Solution {
     public long maxProduct(String s) {
         s = "," + s + ".";
