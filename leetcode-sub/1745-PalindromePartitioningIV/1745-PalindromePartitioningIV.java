@@ -1,59 +1,25 @@
-// Last updated: 5/13/2025, 9:29:07 PM
+// Last updated: 5/13/2025, 9:34:08 PM
 class Solution {
+    int result = 0;
+    int start = 0;
     public int maxPalindromes(String s, int k) {
         int n = s.length();
-        int[] p = manacher(convert(s));
-        int[] dp = new int[n + 1]; // dp[i] = max count in s[0..i-1]
-        for (int i = 1; i <= n; i++) {
-            dp[i] = dp[i - 1];
-            for (int j = i - k; j >= 0; j--) {
-                if (isPalindrome(j, i - 1, p)) {
-                    dp[i] = Math.max(dp[i], dp[j] + 1);
-                    break;
-                }
-            }
+        for(int i = 0; i<n; i++){
+            extendPalindrom(s, i, i, k);
+            extendPalindrom(s, i, i+1, k);
         }
-        return dp[n];
+
+        return result;
     }
 
-    private char[] convert(String s) {
-        int n = s.length() * 2 + 3;
-        char[] arr = new char[n];
-        int idx = 0;
-        arr[idx++] = '@';
-        arr[idx++] = '#';
-        for (char c : s.toCharArray()) {
-            arr[idx++] = c;
-            arr[idx++] = '#';
+    public void extendPalindrom(String s, int left, int right, int k){
+        while(left>=start && right<s.length() && s.charAt(left) == s.charAt(right)){
+            if(right-left+1 >= k){
+                result++;
+                start = right+1;
+                break;
+            }
+            left--; right++;
         }
-        arr[n - 1] = '$';
-        return arr;
-    }
-
-    private int[] manacher(char[] arr) {
-        int n = arr.length;
-        int[] p = new int[n];
-        int center = 0, maxRight = 0;
-        for (int i = 0; i < n; i++) {
-            int mirror = 2 * center - i;
-            if (i < maxRight) {
-                p[i] = Math.min(maxRight - i, p[mirror]);
-            }
-            while (i - p[i] - 1 >= 0 && i + p[i] + 1 < n &&
-                   arr[i - p[i] - 1] == arr[i + p[i] + 1]) {
-                p[i]++;
-            }
-            if (i + p[i] > maxRight) {
-                center = i;
-                maxRight = i + p[i];
-            }
-        }
-        return p;
-    }
-
-    private boolean isPalindrome(int i, int j, int[] p) {
-        int left = 2 * i + 2, right = 2 * j + 2;
-        int center = (left + right) / 2;
-        return p[center] >= (right - left) / 2;
     }
 }
