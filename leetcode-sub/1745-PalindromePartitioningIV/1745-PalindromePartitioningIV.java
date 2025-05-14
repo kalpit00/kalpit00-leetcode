@@ -1,19 +1,21 @@
-// Last updated: 5/13/2025, 9:17:53 PM
+// Last updated: 5/13/2025, 9:29:07 PM
 class Solution {
-    public boolean checkPartitioning(String s) {
+    public int maxPalindromes(String s, int k) {
         int n = s.length();
-        int[] p = manacher(convert(s));        
-        for (int i = 1; i < n - 1; i++) {
-            for (int j = i + 1; j < n; j++) {
-                if (isPalindrome(0, i - 1, p) &&
-                    isPalindrome(i, j - 1, p) &&
-                    isPalindrome(j, n - 1, p)) {
-                    return true;
+        int[] p = manacher(convert(s));
+        int[] dp = new int[n + 1]; // dp[i] = max count in s[0..i-1]
+        for (int i = 1; i <= n; i++) {
+            dp[i] = dp[i - 1];
+            for (int j = i - k; j >= 0; j--) {
+                if (isPalindrome(j, i - 1, p)) {
+                    dp[i] = Math.max(dp[i], dp[j] + 1);
+                    break;
                 }
             }
         }
-        return false;
+        return dp[n];
     }
+
     private char[] convert(String s) {
         int n = s.length() * 2 + 3;
         char[] arr = new char[n];
