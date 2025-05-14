@@ -1,25 +1,18 @@
-// Last updated: 5/14/2025, 12:09:09 PM
+// Last updated: 5/14/2025, 12:16:56 PM
 class Solution {
-    public int[] rearrangeBarcodes(int[] barcodes) {
-        int min = Integer.MAX_VALUE, max = Integer.MIN_VALUE, 
-        n = barcodes.length, idx = 0;
-        for (int b : barcodes) {
-            min = Math.min(min, b);
-            max = Math.max(max, b);
-        }
-        int range = max - min + 1;
-        int[] freq = new int[range], res = new int[n];
-        for (int b : barcodes) {
-            freq[b - min]++;
+    public int[] rearrangeBarcodes(int[] nums) {
+        int n = nums.length, idx = 0;
+        int[] map = new int[10001], res = new int[n];
+        for (int num : nums) {
+            map[num]++;
         }
         List<Integer>[] buckets = new List[n + 1];
         for (int i = 0; i <= n; i++) {
             buckets[i] = new ArrayList<>();
         }
-
-        for (int i = 0; i < range; i++) {
-            if (freq[i] > 0) {
-                buckets[freq[i]].add(i + min);
+        for (int i = 0; i < map.length; i++) {
+            if (map[i] > 0) {
+                buckets[map[i]].add(i);
             }
         }
         for (int i = n; i >= 1; i--) {
