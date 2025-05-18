@@ -1,4 +1,4 @@
-// Last updated: 5/18/2025, 12:54:02 PM
+// Last updated: 5/18/2025, 1:03:11 PM
 class Solution {
     public long minimumTotalDistance(List<Integer> robots, int[][] factories) {
         Collections.sort(robots);
