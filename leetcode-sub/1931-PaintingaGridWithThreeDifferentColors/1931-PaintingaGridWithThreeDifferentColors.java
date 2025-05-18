@@ -1,78 +1,37 @@
-// Last updated: 5/17/2025, 8:22:35 PM
+// Last updated: 5/17/2025, 8:23:30 PM
 class Solution {
-
-    static final int mod = 1000000007;
+    private int[][] memo = new int[1000][1024];
+    private int m, n;
+    private final int MOD = 1_000_000_007;
 
     public int colorTheGrid(int m, int n) {
-        // Hash mapping stores all valid coloration schemes for a single row that meet the requirements
-        Map<Integer, List<Integer>> valid = new HashMap<>();
-        // Enumerate masks that meet the requirements within the range [0, 3^m)
-        int maskEnd = (int) Math.pow(3, m);
-        for (int mask = 0; mask < maskEnd; ++mask) {
-            List<Integer> color = new ArrayList<>();
-            int mm = mask;
-            for (int i = 0; i < m; ++i) {
-                color.add(mm % 3);
-                mm /= 3;
-            }
-            boolean check = true;
-            for (int i = 0; i < m - 1; ++i) {
-                if (color.get(i).equals(color.get(i + 1))) {
-                    check = false;
-                    break;
-                }
-            }
-            if (check) {
-                valid.put(mask, color);
-            }
-        }
+        this.m = m;
+        this.n = n;
+        return dp(0, 0, 0, 0);
+    }
 
-        // Preprocess all (mask1, mask2) binary tuples, satisfying mask1 and mask2 When adjacent rows, the colors of the two cells in the same column are different
-        Map<Integer, List<Integer>> adjacent = new HashMap<>();
-        for (int mask1 : valid.keySet()) {
-            for (int mask2 : valid.keySet()) {
-                boolean check = true;
-                for (int i = 0; i < m; ++i) {
-                    if (
-                        valid.get(mask1).get(i).equals(valid.get(mask2).get(i))
-                    ) {
-                        check = false;
-                        break;
-                    }
-                }
-                if (check) {
-                    adjacent
-                        .computeIfAbsent(mask1, k -> new ArrayList<>())
-                        .add(mask2);
-                }
-            }
-        }
-
-        Map<Integer, Integer> f = new HashMap<>();
-        for (int mask : valid.keySet()) {
-            f.put(mask, 1);
-        }
-        for (int i = 1; i < n; ++i) {
-            Map<Integer, Integer> g = new HashMap<>();
-            for (int mask2 : valid.keySet()) {
-                for (int mask1 : adjacent.getOrDefault(
-                    mask2,
-                    new ArrayList<>()
-                )) {
-                    g.put(
-                        mask2,
-                        (g.getOrDefault(mask2, 0) + f.getOrDefault(mask1, 0)) %
-                        mod
-                    );
-                }
-            }
-            f = g;
-        }
+    private int dp(int c, int prevColMask, int r, int curColMask) {
+        if (c == n) return 1;
+        if (r == 0 && memo[c][prevColMask] != 0) return memo[c][prevColMask];
+        if (r == m) return dp(c + 1, curColMask, 0, 0);
 
         int ans = 0;
-        for (int num : f.values()) {
-            ans = (ans + num) % mod;
+        for (int i = 1; i <= 3; ++i) { // Colors: 1 = RED, 2 = GREEN, 3 = BLUE
+            if (getColor(prevColMask, r) != i && (r == 0 || getColor(curColMask, r - 1) != i)) {
+                int newMask = setColor(curColMask, r, i);
+                ans = (ans + dp(c, prevColMask, r + 1, newMask)) % MOD;
+            }
         }
+
+        if (r == 0) memo[c][prevColMask] = ans;
         return ans;
+    }
+
+    private int getColor(int mask, int pos) {
+        return (mask >> (2 * pos)) & 3;
+    }
+
+    private int setColor(int mask, int pos, int color) {
+        return mask | (color << (2 * pos));
     }
 }
