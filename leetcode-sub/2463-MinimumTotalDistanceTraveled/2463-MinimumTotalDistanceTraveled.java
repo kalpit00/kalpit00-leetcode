@@ -1,10 +1,10 @@
-// Last updated: 5/18/2025, 1:03:11 PM
+// Last updated: 5/18/2025, 1:03:41 PM
 class Solution {
     public long minimumTotalDistance(List<Integer> robots, int[][] factories) {
         Collections.sort(robots);
         Arrays.sort(factories, (a, b) -> a[0] - b[0]);
         List<Integer> nums = new ArrayList<>();
-        for (int[] factory : factories) {
+        for (int[] factory : factories) { // flatten 2d[][] -> 1d[]
             for (int i = 0; i < factory[1]; i++) {
                 nums.add(factory[0]);
             }
@@ -24,7 +24,8 @@ class Solution {
         if (dp[i][j] != null) {
             return dp[i][j];
         }
-        long take = solve(i + 1, j + 1, m, n, robots, nums, dp) + Math.abs(robots.get(i) - nums.get(j));
+        long take = solve(i + 1, j + 1, m, n, robots, nums, dp) + 
+        Math.abs(robots.get(i) - nums.get(j));
         long notTake = solve(i, j + 1, m, n, robots, nums, dp);
         return dp[i][j] = Math.min(take, notTake);
     }
