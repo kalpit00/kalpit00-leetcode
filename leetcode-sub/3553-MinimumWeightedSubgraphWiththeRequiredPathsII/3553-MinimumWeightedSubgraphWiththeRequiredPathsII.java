@@ -1,12 +1,15 @@
-// Last updated: 5/19/2025, 1:10:55 AM
+// Last updated: 5/19/2025, 1:24:07 AM
 class Solution {
-    public int minimizeArrayValue(int[] nums) {
-        long sum = 0, max = 0; // max the prefixSum Average!
-        int n = nums.length;
-        for (int i = 0; i < n; i++) {
-            sum += nums[i]; // there are (i + 1) elements in sum[0..i]
-            max = Math.max(max, (sum + i) / (i + 1));
-        } // avg is simply sum / i + 1, get the ceiling!
-        return (int) max;
+    public int maxSum(int[][] grid) {
+        int max = 0, m = grid.length, n = grid[0].length;
+        for (int i = 0;i < m - 2; i++) {
+            for (int j = 0; j < n - 2; j++) {
+                int sum = grid[i][j] + grid[i][j + 1] + grid[i][j + 2] +
+                grid[i + 1][j + 1] + 
+                grid[i + 2][j] + grid[i + 2][j + 1] + grid[i + 2][j + 2];
+                max = Math.max(max, sum);
+            }
+        }
+        return max;
     }
 }
