@@ -1,15 +1,10 @@
-// Last updated: 5/18/2025, 10:17:25 PM
+// Last updated: 5/18/2025, 10:17:56 PM
 class Solution {
     public String triangleType(int[] nums) {
-        Arrays.sort(nums);
-        if (nums[0] + nums[1] <= nums[2]) {
-            return "none";
-        } else if (nums[0] == nums[2]) {
-            return "equilateral";
-        } else if (nums[0] == nums[1] || nums[1] == nums[2]) {
-            return "isosceles";
-        } else {
-            return "scalene";
-        }
+        int a = nums[0], b = nums[1], c = nums[2];
+        if (a + b <= c || a + c <= b || b + c <= a) return "none";
+        if (a == b && b == c) return "equilateral";
+        if (a == b || b == c || a == c) return "isosceles";
+        return "scalene";
     }
 }
