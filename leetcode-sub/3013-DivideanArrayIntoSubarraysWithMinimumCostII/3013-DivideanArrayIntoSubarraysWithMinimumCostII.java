@@ -1,8 +1,10 @@
-// Last updated: 5/20/2025, 6:37:15 PM
+// Last updated: 5/20/2025, 6:40:32 PM
+import java.math.BigInteger;
 class Solution {
     int mod = 1000000007;
     public int countSteppingNumbers(String low, String high) {
-        String a = helper(low), b = high;
+        String a = new BigInteger(low).subtract(BigInteger.ONE).toString();
+        String b = high;
         int m = a.equals("0") ? 0 : a.length(), n = b.length();
         Long[][][][] dp2 = new Long[n][2][11][2];
         long res2 = solve(b, n, 0, 1, -1, 1, dp2);
@@ -32,20 +34,5 @@ class Solution {
             }
         }
         return dp[idx][tight][prev + 1][leadingZero] = count % mod;
-    }
-    private String helper(String s) {
-        StringBuilder sb = new StringBuilder(s);
-        int i = sb.length() - 1;
-        while (i >= 0 && sb.charAt(i) == '0') {
-            sb.setCharAt(i, '9');
-            i--;
-        }
-        if (i >= 0) {
-            sb.setCharAt(i, (char)(sb.charAt(i) - 1));
-        }
-        if (sb.charAt(0) == '0') {
-            sb.deleteCharAt(0);
-        }
-        return sb.toString();
     }
 }
