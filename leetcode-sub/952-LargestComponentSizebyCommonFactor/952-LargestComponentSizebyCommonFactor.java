@@ -1,4 +1,4 @@
-// Last updated: 5/19/2025, 7:22:39 PM
+// Last updated: 5/19/2025, 9:08:45 PM
 class Solution {
     public int largestComponentSize(int[] nums) {
         int n = nums.length, size = 0, max = 0;
@@ -11,19 +11,18 @@ class Solution {
         DSU dsu = new DSU(n);
         for (int i = 0; i < n; i++) {
             map[nums[i]] = i;
-        }
+        } // DSU on indices, not element vals
         for (int i : primes) {
-            int idx = -1;
-            for (int j = 1; i * j <= size; j++) {
-                if (map[i * j] == -1) continue;
-                idx = idx == -1 ? map[i * j] : idx;
-                dsu.union(idx, map[i * j]);
-            }
-        }  
-        for (int i = 0; i < n; i++) {
-            max = Math.max(max, dsu.size[dsu.findParent(i)]);
-        } // or also dsu.max will work, it maxes each size[pu, pv] when unioning
-        return max; // but for NO unions, we have to take max of all size[]
+            int firstIdx = -1; // get first multiple of prime 'i' in nums
+            for (int j = 1; i * j <= size; j++) { // start j = 1, NOT 2
+                if (map[i * j] == -1) {
+                    continue; // if multiple (i * j) does not exist in nums[]
+                } // use firstIdx as anchor, similar to groupAnagrams!
+                firstIdx = firstIdx == -1 ? map[i * j] : firstIdx;
+                dsu.union(firstIdx, map[i * j]);
+            } // union the following multiple (i * j) to the 'first' multiple
+        }  // and use indices to union, hence map, not i -> i*j
+        return dsu.max;
     }
     public List<Integer> sieve(int n) {
         List<Integer> primes = new ArrayList<>();
@@ -47,7 +46,7 @@ class Solution {
             size = new int[n];
             parent = new int[n];
             componentCount = n;
-            max = 0;
+            max = 1;
             for (int i = 0; i < n; i++) {
                 size[i] = 1;
                 parent[i] = i;
