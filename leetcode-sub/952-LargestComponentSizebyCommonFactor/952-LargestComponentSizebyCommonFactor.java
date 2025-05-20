@@ -1,27 +1,29 @@
-// Last updated: 5/19/2025, 9:08:45 PM
+// Last updated: 5/20/2025, 3:31:33 AM
 class Solution {
     public int largestComponentSize(int[] nums) {
         int n = nums.length, size = 0, max = 0;
         for (int num : nums) {
             size = Math.max(size, num);
         }
-        int[] map = new int[size + 1];
-        Arrays.fill(map, -1);
+        Map<Integer, List<Integer>> map = new HashMap<>();
+        for (int i = 0; i < n; i++) {
+            map.putIfAbsent(nums[i], new ArrayList<>());
+            map.get(nums[i]).add(i);
+        }
         List<Integer> primes = sieve(size + 1);;
         DSU dsu = new DSU(n);
-        for (int i = 0; i < n; i++) {
-            map[nums[i]] = i;
-        } // DSU on indices, not element vals
         for (int i : primes) {
-            int firstIdx = -1; // get first multiple of prime 'i' in nums
-            for (int j = 1; i * j <= size; j++) { // start j = 1, NOT 2
-                if (map[i * j] == -1) {
-                    continue; // if multiple (i * j) does not exist in nums[]
-                } // use firstIdx as anchor, similar to groupAnagrams!
-                firstIdx = firstIdx == -1 ? map[i * j] : firstIdx;
-                dsu.union(firstIdx, map[i * j]);
-            } // union the following multiple (i * j) to the 'first' multiple
-        }  // and use indices to union, hence map, not i -> i*j
+            int firstIdx = -1;
+            for (int j = 1; i * j <= size; j++) {
+                if (!map.containsKey(i * j)) {
+                    continue;
+                }
+                for (int idx : map.get(i * j)) {
+                    firstIdx = firstIdx == -1 ? idx : firstIdx;
+                    dsu.union(firstIdx, idx);
+                }
+            } 
+        }
         return dsu.max;
     }
     public List<Integer> sieve(int n) {
