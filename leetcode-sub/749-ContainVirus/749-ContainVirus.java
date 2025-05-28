@@ -1,4 +1,4 @@
-// Last updated: 5/28/2025, 5:29:31 AM
+// Last updated: 5/28/2025, 5:33:06 AM
 class Solution {
     public int containVirus(int[][] isInfected) {
 
