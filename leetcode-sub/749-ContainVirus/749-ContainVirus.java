@@ -1,86 +1,70 @@
-// Last updated: 5/28/2025, 5:33:06 AM
+// Last updated: 5/29/2025, 3:34:03 AM
 class Solution {
-    public int containVirus(int[][] isInfected) {
-
-        final int m = isInfected.length;
-        final int n = isInfected[0].length;
-        int totalWalls = 0;
-
-        while (true) {
+    public int containVirus(int[][] grid) {
+        int m = grid.length, n = grid[0].length, count = 0;
+        List<Region> list = new ArrayList<>();
+        list.add(new Region()); // add dummy region or use while true loop
+        while (!list.isEmpty()) {
             List<Region> regions = new ArrayList<>();
             boolean[][] visited = new boolean[m][n];
-
-            // Identify all regions
-            for (int i = 0; i < m; ++i) {
-                for (int j = 0; j < n; ++j) {
-                    if (isInfected[i][j] == 1 && !visited[i][j]) {
+            for (int i = 0; i < m; i++) {
+                for (int j = 0; j < n; j++) {
+                    if (grid[i][j] == 1 && !visited[i][j]) {
                         Region region = new Region();
-                        dfs(isInfected, i, j, region, visited, m, n);
-                        if (!region.nonInfected.isEmpty()) {
+                        dfs(grid, i, j, m, n, region, visited);
+                        if (!region.unInfected.isEmpty()) {
                             regions.add(region);
                         }
                     }
                 }
             }
-
             if (regions.isEmpty()) {
-                break; // No more regions to process
+                break; // prune if all regions contained!
             }
-
-            // Find the region with the most threats
-            int maxThreatIndex = 0;
-            for (int i = 1; i < regions.size(); ++i) {
-                if (regions.get(i).nonInfected.size() > regions.get(maxThreatIndex).nonInfected.size()) {
-                    maxThreatIndex = i;
+            int max = 0;
+            for (int i = 0; i < regions.size(); i++) {
+                if (regions.get(i).unInfected.size() > 
+                regions.get(max).unInfected.size()) {
+                    max = i;
                 }
             }
-
-            // Build walls around the most threatening region
-            totalWalls += regions.get(maxThreatIndex).wallsRequired;
-            for (int pos : regions.get(maxThreatIndex).infected) {
-                int x = pos / n;
-                int y = pos % n;
-                isInfected[x][y] = 2; // Mark as contained
-            }
-
-            // Spread the virus for other regions
-            for (int i = 0; i < regions.size(); ++i) {
-                if (i == maxThreatIndex) continue;
-                for (int pos : regions.get(i).nonInfected) {
-                    int x = pos / n;
-                    int y = pos % n;
-                    isInfected[x][y] = 1;
+            count += regions.get(max).count;
+            for (int idx : regions.get(max).infected) {
+                int i = idx / n, j = idx % n;
+                grid[i][j] = -1;
+            } 
+            for (int i = 0; i < regions.size(); i++) {
+                if (i == max) continue;
+                for (int idx : regions.get(i).unInfected) {
+                    int r = idx / n, c = idx % n;
+                    grid[r][c] = 1; 
                 }
             }
+            list = regions;
         }
-
-        return totalWalls;
+        return count;
     }
-
-    private void dfs(int[][] grid, int i, int j, Region region, boolean[][] visited, int m, int n) {
-        if (i < 0 || i >= m || j < 0 || j >= n || visited[i][j]) {
+    private void dfs(int[][] grid, int i, int j, int m, int n,
+    Region region, boolean[][] visited) {
+        if (i < 0 || j < 0 || i >= m || j >= n || visited[i][j] || 
+        grid[i][j] == -1) {
             return;
         }
         if (grid[i][j] == 0) {
-            region.nonInfected.add(i * n + j);
-            region.wallsRequired++;
+            region.unInfected.add(i * n + j); // idx = i * n + j trick!
+            region.count++; // increase wall count for this region
             return;
         }
-        if (grid[i][j] != 1) {
-            return;
-        }
-
         visited[i][j] = true;
         region.infected.add(i * n + j);
-
-        dfs(grid, i + 1, j, region, visited, m, n);
-        dfs(grid, i - 1, j, region, visited, m, n);
-        dfs(grid, i, j + 1, region, visited, m, n);
-        dfs(grid, i, j - 1, region, visited, m, n);        
+        dfs(grid, i + 1, j, m, n, region, visited);
+        dfs(grid, i - 1, j, m, n, region, visited);
+        dfs(grid, i, j + 1, m, n, region, visited);
+        dfs(grid, i, j - 1, m, n, region, visited);
     }
     class Region {
-        Set<Integer> infected = new HashSet<>();
-        Set<Integer> nonInfected = new HashSet<>();
-        int wallsRequired = 0;
-    }    
+        Set<Integer> infected = new HashSet<>(); // infected cells in region
+        Set<Integer> unInfected = new HashSet<>(); // uninfected neighbors
+        int count = 0; // count of walls needed to contain region
+    }
 }
