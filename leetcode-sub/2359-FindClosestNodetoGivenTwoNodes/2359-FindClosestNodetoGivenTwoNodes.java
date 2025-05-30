@@ -1,4 +1,4 @@
-// Last updated: 5/29/2025, 10:49:45 PM
+// Last updated: 5/30/2025, 2:44:33 AM
 class Solution {
     public int closestMeetingNode(int[] edges, int node1, int node2) {
         int n = edges.length;
@@ -11,10 +11,10 @@ class Solution {
             int u = i, v = edges[i], wt = 1;
             adj.get(u).add(new int[]{v, wt});
         }
-        int[] dist1 = bfs(n, adj, node1), dist2 = bfs(n, adj, node2);
+        Integer[] dist1 = bfs(n, adj, node1), dist2 = bfs(n, adj, node2);
         int min = Integer.MAX_VALUE, ans = -1;
         for (int i = 0; i < n; i++) {
-            if (dist1[i] == Integer.MAX_VALUE || dist2[i] == Integer.MAX_VALUE){
+            if (dist1[i] == null || dist2[i] == null) {
                 continue;
             }
             if (min > Math.max(dist1[i], dist2[i])) {
@@ -24,9 +24,8 @@ class Solution {
         }
         return min == Integer.MAX_VALUE ? -1 : ans;
     }
-    private int[] bfs(int n, List<List<int[]>> adj, int src) {
-        int[] dist = new int[n];
-        Arrays.fill(dist, Integer.MAX_VALUE);
+    private Integer[] bfs(int n, List<List<int[]>> adj, int src) {
+        Integer[] dist = new Integer[n];
         Queue<Integer> queue = new LinkedList<>();
         dist[src] = 0;
         queue.offer(src);
@@ -34,7 +33,7 @@ class Solution {
             int parent = queue.poll();
             for (int[] neighbor : adj.get(parent)) {
                 int child = neighbor[0], wt = neighbor[1]; // wt = 1
-                if (dist[child] > dist[parent] + wt) {
+                if (dist[child] == null) {
                     dist[child] = dist[parent] + wt;
                     queue.offer(child);
                 }
