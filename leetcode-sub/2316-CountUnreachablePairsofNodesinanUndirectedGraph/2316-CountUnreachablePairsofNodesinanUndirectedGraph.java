@@ -1,4 +1,4 @@
-// Last updated: 5/30/2025, 2:44:23 PM
+// Last updated: 5/30/2025, 2:54:14 PM
 class Solution {
     public int[] timeTaken(int[][] edges) {
         int n = edges.length + 1;
@@ -16,7 +16,8 @@ class Solution {
         int dist1[] = bfs(n, adj, max), secondMax = getMax(dist1);
         int dist2[] = bfs(n, adj, secondMax);
         for (int i = 0; i < n; i++) {
-            ans[i] = Math.max(dist1[i], dist2[i]) - (2 - (i % 2));
+            int wt = i % 2 == 1 ? 1 : 2;
+            ans[i] = Math.max(dist1[i], dist2[i]) - wt;
         }
         return ans;
     }
