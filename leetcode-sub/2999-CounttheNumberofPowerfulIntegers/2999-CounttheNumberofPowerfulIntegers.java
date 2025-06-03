@@ -1,10 +1,10 @@
-// Last updated: 6/3/2025, 1:54:13 AM
+// Last updated: 6/3/2025, 2:05:50 AM
 class Solution {
     public long numberOfPowerfulInt(long start, long finish, int threshold, String s) {
         for (char c : s.toCharArray()) {
             if (c - '0' > threshold) {
-                return 0;
-            }
+                return 0; // if any of the suffix digits are beyond threshold
+            } // no possible generation as each digit must be atmost threshold!
         }
         String b = String.valueOf(finish), a = String.valueOf(start - 1);
         int m = a.length(), n = b.length(), k = s.length();
@@ -22,21 +22,18 @@ class Solution {
             return dp[idx][tight];
         }
         long count = 0;
-        if (idx >= m - k) {
-            int digit = s.charAt(idx - (m - k)) - '0';
-            if (digit <= threshold) {
-                int limit = tight == 1 ? num.charAt(idx) - '0' : threshold;
-                if (digit <= limit) {
-                    int newTight = (tight == 1 && 
-                    digit == num.charAt(idx) - '0') ? 1 : 0;
-                    count += solve(idx + 1, newTight, num, s, threshold, 
-                    m, k, dp);
-                }
+        int limit = tight == 1 ? num.charAt(idx) - '0' : 9;
+        limit = Math.min(limit, threshold); // digit is within threshold!
+        if (idx >= m - k) { // for last 'k' indices, match exact char in 's'
+            int i = s.charAt(idx - (m - k)) - '0'; // take the char from 's'!
+            if (i <= limit) { // dfs if this in within threshold!
+                int newTight = (tight == 1 && 
+                i == num.charAt(idx) - '0') ? 1 : 0;
+                count += solve(idx + 1, newTight, num, s, threshold, 
+                m, k, dp);
             }
-        } 
-        else {
-            int limit = tight == 1 ? Math.min(threshold, num.charAt(idx) - '0')
-            : threshold;
+        } // otherwise, we are in first 'm - k' indices, choices [0, threshold]
+        else { // traditional digit DP, try all with tight constraint!
             for (int i = 0; i <= limit; i++) {
                 int newTight = (tight == 1 && i == num.charAt(idx) - '0') 
                 ? 1 : 0;
