@@ -1,40 +1,28 @@
-// Last updated: 6/2/2025, 9:35:07 PM
+// Last updated: 6/2/2025, 9:37:09 PM
 class Solution {
     public int maxCandies(int[] status, int[] candies, int[][] keys, int[][] containedBoxes, int[] initialBoxes) {
-        int n = status.length, count = 0;
-        boolean[] canOpen = new boolean[n], hasBox = new boolean[n], 
-        visited = new boolean[n];
-        for (int i = 0; i < n; ++i) {
-            canOpen[i] = (status[i] == 1);
+        Queue<Integer> queue= new LinkedList<>();
+        for(int i: initialBoxes){
+            queue.add(i);
         }
-        Queue<Integer> queue = new LinkedList<>();
-        for (int box : initialBoxes) {
-            hasBox[box] = true;
-            if (canOpen[box]) {
-                queue.offer(box);
-                visited[box] = true;
-                count += candies[box];
-            }
-        }
-        while (!queue.isEmpty()) {
-            int parent = queue.poll();
-            for (int key : keys[parent]) {
-                canOpen[key] = true;
-                if (!visited[key] && hasBox[key]) {
-                    queue.offer(key);
-                    visited[key] = true;
-                    count += candies[key];
+        int result=0;
+        while(!queue.isEmpty()){
+            int box=queue.remove();
+            if(status[box]==0){
+                if(queue.isEmpty()){
+                    return result;
                 }
-            }
-            for (int box : containedBoxes[parent]) {
-                hasBox[box] = true;
-                if (!visited[box] && canOpen[box]) {
-                    queue.offer(box);
-                    visited[box] = true;
-                    count += candies[box];
+                queue.add(box);
+            }else{
+                result+=candies[box];
+                for(int key: keys[box]){
+                    status[key]=1;
+                }
+                for(int containedBox: containedBoxes[box]){
+                    queue.add(containedBox);
                 }
             }
         }
-        return count;
+        return result;
     }
 }
