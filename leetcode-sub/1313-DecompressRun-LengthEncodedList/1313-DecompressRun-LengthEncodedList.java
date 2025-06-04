@@ -1,9 +1,9 @@
-// Last updated: 6/4/2025, 2:07:59 AM
+// Last updated: 6/4/2025, 2:29:51 AM
 class Solution {
     public int longestValidSubstring(String word, List<String> forbidden) {
         Trie trie = new Trie();
         for (String str : forbidden) {
-            trie.insert(str);
+            trie.insert(str.toCharArray());
         }
         char[] s = word.toCharArray();
         int n = s.length, left = 0, right = 0, max = 0;
@@ -24,15 +24,14 @@ class Solution {
             root = new TrieNode();
         }
         
-        public void insert(String word) {
-            int n = word.length();
+        public void insert(char[] s) {
+            int n = s.length;
             TrieNode node = root;
             for (int i = n - 1; i >= 0; i--) {
-                char ch = word.charAt(i);
-                if (node.child[ch - 'a'] == null) {
-                    node.child[ch - 'a'] = new TrieNode();
+                if (node.child[s[i] - 'a'] == null) {
+                    node.child[s[i] - 'a'] = new TrieNode();
                 }
-                node = node.child[ch - 'a'];
+                node = node.child[s[i] - 'a'];
             }
             node.isEnd = true;
         } 
