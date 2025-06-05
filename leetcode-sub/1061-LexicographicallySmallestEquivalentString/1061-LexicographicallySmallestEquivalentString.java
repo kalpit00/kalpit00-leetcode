@@ -1,4 +1,4 @@
-// Last updated: 6/4/2025, 9:10:13 PM
+// Last updated: 6/4/2025, 9:11:27 PM
 class Solution {
     public String smallestEquivalentString(String s1, String s2, String baseStr) {
         DSU dsu = new DSU(26);
@@ -17,7 +17,7 @@ class Solution {
         for (char ch : baseStr.toCharArray()) {
             int parent = dsu.findParent(ch - 'a');
             TreeSet<Character> set = map.get(parent);
-            sb.append(set.first());
+            sb.append(set.iterator().next());
         }
         return sb.toString();
     }
