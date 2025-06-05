@@ -1,4 +1,4 @@
-// Last updated: 6/4/2025, 11:33:08 PM
+// Last updated: 6/4/2025, 11:39:33 PM
 class Solution {
     public String smallestEquivalentString(String s1, String s2, String baseStr) {
         DSU dsu = new DSU(26);
@@ -7,17 +7,15 @@ class Solution {
             int u = s1.charAt(i) - 'a', v = s2.charAt(i) - 'a';
             dsu.union(u, v);
         }
-        Map<Integer, PriorityQueue<Character>> map = new HashMap<>();
-        for (char ch = 'a'; ch <= 'z'; ch++) {
+        Map<Integer, Character> map = new HashMap<>();
+        for (char ch = 'z'; ch >= 'a'; ch--) {
             int parent = dsu.findParent(ch - 'a');
-            map.putIfAbsent(parent, new PriorityQueue<>());
-            map.get(parent).offer(ch);
+            map.put(parent, ch);
         }
         StringBuilder sb = new StringBuilder();
         for (char ch : baseStr.toCharArray()) {
             int parent = dsu.findParent(ch - 'a');
-            PriorityQueue<Character> pq = map.get(parent);
-            sb.append(pq.peek());
+            sb.append(map.get(parent));
         }
         return sb.toString();
     }
