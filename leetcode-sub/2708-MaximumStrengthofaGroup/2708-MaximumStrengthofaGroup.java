@@ -1,4 +1,4 @@
-// Last updated: 6/5/2025, 5:20:40 PM
+// Last updated: 6/5/2025, 5:21:34 PM
 class Solution {
     public long maxStrength(int[] nums) {
         if (nums.length == 1) return nums[0];
@@ -15,7 +15,7 @@ class Solution {
                 min = Math.min(min, -num);
             }
         }
-        if (max == 0 && count <= 1) return 0;
-        return !flag ? 0 : prod >= 0 ? prod : -prod / min;
+        return !flag || (max == 0 && count <= 1) ? 0 : 
+        prod >= 0 ? prod : -prod / min;
     }
 }
