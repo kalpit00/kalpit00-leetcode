@@ -1,4 +1,4 @@
-// Last updated: 6/6/2025, 11:56:08 PM
+// Last updated: 6/7/2025, 12:32:45 AM
 import java.math.BigInteger;
 class Solution {
     int mod = 1000000007;
@@ -17,7 +17,7 @@ class Solution {
         for (int i = 1; i <= maxValue; i++) {
             dp[1][i] = 1;
         }
-        for (int i = 2; i <= n && i <= 14; i++) {
+        for (int i = 2; i <= Math.min(14, n); i++) {
             for (int j = 1; j <= maxValue; j++) {
                 for (int k : map.get(j)) {
                     dp[i][j] += dp[i - 1][k];
@@ -25,14 +25,14 @@ class Solution {
                 }
             }
         }
-        for (int i = 1; i <= n && i <= 14; i++) {
+        for (int i = 1; i <= Math.min(14, n); i++) {
             for (int j = 1; j <= maxValue; j++) {
                 dp[i][0] += dp[i][j];
                 dp[i][0] %= mod;
             }
         }        
-        for (int i = 1; i <= n && i <= 14; i++) {
-            res = res.add(nCk(n - 1, i - 1).multiply(BigInteger.valueOf(dp[i][0])));
+        for (int i = 1; i <= Math.min(14, n); i++) {
+            res = res.add(nCk(n - 1, i - 1).multiply(BigInteger.valueOf(dp[i][0]))); // res += C(n - 1, i - 1) * dp[i][0]
             res = res.mod(BigInteger.valueOf(mod));
         }
         return res.intValue();
