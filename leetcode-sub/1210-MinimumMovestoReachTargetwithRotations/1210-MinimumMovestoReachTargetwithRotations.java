@@ -1,4 +1,4 @@
-// Last updated: 6/7/2025, 7:37:17 PM
+// Last updated: 6/7/2025, 7:37:42 PM
 class Solution {
     public int minimumMoves(int[][] grid) {
         int n = grid.length, steps = 0;
@@ -17,7 +17,7 @@ class Solution {
                 if (visited.add(r + "," + c + "," + dir)) {
                     if (dir == 0) { // horizontal
                         if (r + 1 < n && c + 1 < n && 
-                        grid[r + 1][c] + grid[r + 1][c + 1] == 0) {
+                        grid[r + 1][c] == 0 && grid[r + 1][c + 1] == 0) {
                             int[] horizontal_down = new int[]{r + 1, c, 0};
                             int[] verticalRotate = new int[]{r, c, 1};
                             queue.offer(horizontal_down);
