@@ -1,10 +1,9 @@
-// Last updated: 6/7/2025, 10:04:19 PM
+// Last updated: 6/7/2025, 10:05:09 PM
 class Solution {
     public int minimumMoves(int[][] grid) {
         int n = grid.length, steps = 0;
-        int[] start = {0, 0, 0}, target = {n - 1, n - 2};
         Queue<int[]> queue = new LinkedList<>();
-        queue.offer(start);
+        queue.offer(new int[]{0, 0, 0});
         boolean[][][] visited = new boolean[n][n][2];
         while (!queue.isEmpty()) {
             int size = queue.size();
