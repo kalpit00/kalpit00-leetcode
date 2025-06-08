@@ -1,41 +1,41 @@
-// Last updated: 6/8/2025, 12:52:27 AM
+// Last updated: 6/8/2025, 12:53:24 AM
 class Solution {
     public double[] medianSlidingWindow(int[] nums, int k) {
-        int n = nums.length;
+        int n = nums.length, idx = 1;
         double[] res = new double[n - k + 1];
-        Comparator<Integer> comparator = (a, b) -> nums[a] != nums[b] ? 
-        Integer.compare(nums[a], nums[b]) : a - b; // use .compare for overflow
-        TreeSet<Integer> left = new TreeSet<>(comparator.reversed()); // maxHeap
-        TreeSet<Integer> right = new TreeSet<>(comparator); // minHeap!
+        TreeSet<int[]> left = new TreeSet<>((a, b) -> a[0] != b[0] ? 
+        Integer.compare(b[0], a[0]) : b[1] - a[1]); // maxHeap
+        TreeSet<int[]> right = new TreeSet<>((a, b) -> a[0] != b[0] ? 
+        Integer.compare(a[0], b[0]) : a[1] - b[1]); // minHeap
         for (int i = 0; i < k; i++) {
-            left.add(i); // add the first "k" elements and balance
-        }
+            left.add(new int[]{nums[i], i}); 
+        } // add the first "k" elements and balance
         balance(left, right);
         res[0] = median(k, nums, left, right); // get median for first k
-        int idx = 1; // now, slide through remaining n - k elements
         for (int i = k; i < n; i++) {
-            if (!left.remove(i - k)) { // trick to know which set the old (i-k)
-                right.remove(i - k); // element belongs!
+            int[] key = new int[]{nums[i - k], i - k};
+            if (!left.remove(key)) { 
+                right.remove(key);
             }
-            right.add(i); // similar to median of data stream logic!
+            right.add(new int[]{nums[i], i});
             left.add(right.pollFirst());
             balance(left, right);
             res[idx++] = median(k, nums, left, right);
         }
         return res;
     }
-    private void balance(TreeSet<Integer> left, TreeSet<Integer> right) {
+    private void balance(TreeSet<int[]> left, TreeSet<int[]> right) {
         while (left.size() > right.size()) {
             right.add(left.pollFirst());
         }
     }
-    private double median(int k, int[] nums, TreeSet<Integer> left, 
-    TreeSet<Integer> right) {
+    private double median(int k, int[] nums, TreeSet<int[]> left, 
+    TreeSet<int[]> right) {
         if (k % 2 == 0) {
-            return ((double) nums[left.first()] + nums[right.first()]) / 2;
+            return ((double) left.first()[0] + right.first()[0]) / 2;
         }
         else {
-            return (double) nums[right.first()];
+            return (double) right.first()[0];
         }
     }
 }
