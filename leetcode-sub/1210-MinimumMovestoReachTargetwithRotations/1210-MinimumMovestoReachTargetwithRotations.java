@@ -1,11 +1,11 @@
-// Last updated: 6/7/2025, 7:37:42 PM
+// Last updated: 6/7/2025, 10:04:19 PM
 class Solution {
     public int minimumMoves(int[][] grid) {
         int n = grid.length, steps = 0;
         int[] start = {0, 0, 0}, target = {n - 1, n - 2};
         Queue<int[]> queue = new LinkedList<>();
         queue.offer(start);
-        Set<String> visited = new HashSet<>();
+        boolean[][][] visited = new boolean[n][n][2];
         while (!queue.isEmpty()) {
             int size = queue.size();
             for (int i = 0; i < size; i++) {
@@ -14,7 +14,8 @@ class Solution {
                 if (r == n - 1 && c == n - 2 && dir == 0) {
                     return steps;
                 }
-                if (visited.add(r + "," + c + "," + dir)) {
+                if (!visited[r][c][dir]) {
+                    visited[r][c][dir] = true;
                     if (dir == 0) { // horizontal
                         if (r + 1 < n && c + 1 < n && 
                         grid[r + 1][c] == 0 && grid[r + 1][c + 1] == 0) {
