@@ -1,8 +1,7 @@
-// Last updated: 6/8/2025, 2:19:18 AM
+// Last updated: 6/8/2025, 2:19:48 AM
 class MedianFinder {
     PriorityQueue<Integer> minHeap = new PriorityQueue<>((a, b) -> a - b);
     PriorityQueue<Integer> maxHeap = new PriorityQueue<>((a, b) -> b - a);
-    boolean even = true;
     public MedianFinder() {
         
     }
@@ -12,9 +11,8 @@ class MedianFinder {
         if (minHeap.size() > maxHeap.size()) {
             maxHeap.add(minHeap.poll());
         }
-        even = !even;
     }
     public double findMedian() {
-        return (!even) ? maxHeap.peek() : (maxHeap.peek() + minHeap.peek()) / 2.0;
+        return (maxHeap.size() > minHeap.size()) ? maxHeap.peek() : (maxHeap.peek() + minHeap.peek()) / 2.0;
     }
 }
