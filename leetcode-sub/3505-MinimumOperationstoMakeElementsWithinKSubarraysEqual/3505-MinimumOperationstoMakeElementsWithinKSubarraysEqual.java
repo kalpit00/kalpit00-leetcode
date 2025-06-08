@@ -1,25 +1,26 @@
-// Last updated: 6/8/2025, 4:29:41 AM
+// Last updated: 6/8/2025, 12:58:14 PM
 class Solution {
     public long minOperations(int[] nums, int x, int k) {
         long[] cost = medianSlidingWindow(nums, x);
         int m = cost.length;
         Long[][] dp = new Long[m][k + 1];
-        return solve(cost, 0, m, x, k, dp);
+        return solve(cost, 0, m, x, 0, k, dp);
     }
 
-    private long solve(long[] cost, int i, int m, int x, int k, Long[][] dp) {
-        if (k == 0) {
+    private long solve(long[] cost, int i, int m, int x, int count,
+    int k, Long[][] dp) {
+        if (count == k) {
             return 0;
         }
         if (i >= m) {
             return (long)1e14;
         }
-        if (dp[i][k] != null) {
-            return dp[i][k];
+        if (dp[i][count] != null) {
+            return dp[i][count];
         }
-        long notTake = solve(cost, i + 1, m, x, k, dp);
-        long take = cost[i] + solve(cost, i + x, m, x, k - 1, dp);
-        return dp[i][k] = Math.min(take, notTake);
+        long notTake = solve(cost, i + 1, m, x, count, k, dp);
+        long take = cost[i] + solve(cost, i + x, m, x, count + 1, k, dp);
+        return dp[i][count] = Math.min(take, notTake);
     }
     public long[] medianSlidingWindow(int[] nums, int k) {
         int n = nums.length, idx = 1;
