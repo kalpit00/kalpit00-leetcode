@@ -1,41 +1,15 @@
-// Last updated: 6/8/2025, 1:47:03 AM
+// Last updated: 6/8/2025, 4:19:59 AM
 class Solution {
-    public double[] medianSlidingWindow(int[] nums, int k) {
-        int n = nums.length, idx = 1;
-        double[] res = new double[n - k + 1];
-        TreeSet<int[]> maxHeap = new TreeSet<>((a, b) -> a[0] != b[0] ? 
-        Integer.compare(b[0], a[0]) : b[1] - a[1]); // left
-        TreeSet<int[]> minHeap = new TreeSet<>((a, b) -> a[0] != b[0] ? 
-        Integer.compare(a[0], b[0]) : a[1] - b[1]); // right
-        for (int i = 0; i < k; i++) {
-            add(maxHeap, minHeap, nums, i);
+    public long minOperationsToMakeMedianK(int[] nums, int k) {
+        int n = nums.length;
+        long count = 0;
+        Arrays.sort(nums);
+        for (int i = 0; i <= n / 2; i++) {
+            count += Math.max(0, nums[i] - k);
         }
-        res[0] = median(k, nums, maxHeap, minHeap);
-        for (int i = k; i < n; i++) {
-            int[] old = new int[]{nums[i - k], i - k};
-            if (!maxHeap.remove(old)) { // min/maxHeaps swappable here!
-                minHeap.remove(old);
-            }
-            add(maxHeap, minHeap, nums, i);
-            res[idx++] = median(k, nums, maxHeap, minHeap);
+        for (int i = n / 2; i < n; i++) {
+            count += Math.max(0, -nums[i] + k);
         }
-        return res;
-    }
-    private void add(TreeSet<int[]> maxHeap, TreeSet<int[]> minHeap, 
-    int[] nums, int i) {
-        maxHeap.add(new int[]{nums[i], i});
-        minHeap.add(maxHeap.pollFirst());
-        if (minHeap.size() > maxHeap.size()) { // single 'if' will also work
-            maxHeap.add(minHeap.pollFirst());
-        } // no need for while loop if we rebalance after each insertion!
-    }
-    private double median(int k, int[] nums, TreeSet<int[]> maxHeap, 
-    TreeSet<int[]> minHeap) {
-        if (k % 2 == 0) {
-            return ((double) maxHeap.first()[0] + minHeap.first()[0]) / 2;
-        }
-        else {
-            return (double) maxHeap.first()[0];
-        }
+        return count;
     }
 }
