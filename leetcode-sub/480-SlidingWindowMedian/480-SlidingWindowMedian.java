@@ -1,4 +1,4 @@
-// Last updated: 6/8/2025, 1:27:07 AM
+// Last updated: 6/8/2025, 1:47:03 AM
 class Solution {
     public double[] medianSlidingWindow(int[] nums, int k) {
         int n = nums.length, idx = 1;
@@ -25,9 +25,9 @@ class Solution {
     int[] nums, int i) {
         maxHeap.add(new int[]{nums[i], i});
         minHeap.add(maxHeap.pollFirst());
-        while (minHeap.size() > maxHeap.size()) {
+        if (minHeap.size() > maxHeap.size()) { // single 'if' will also work
             maxHeap.add(minHeap.pollFirst());
-        }
+        } // no need for while loop if we rebalance after each insertion!
     }
     private double median(int k, int[] nums, TreeSet<int[]> maxHeap, 
     TreeSet<int[]> minHeap) {
