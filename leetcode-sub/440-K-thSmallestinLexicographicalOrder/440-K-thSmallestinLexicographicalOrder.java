@@ -1,4 +1,4 @@
-// Last updated: 6/8/2025, 8:36:53 PM
+// Last updated: 6/8/2025, 8:37:11 PM
 class Solution {
     public int findKthNumber(int n, int k) {
         int curr = 1;
