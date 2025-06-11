@@ -1,21 +1,22 @@
-// Last updated: 6/11/2025, 2:32:13 PM
+// Last updated: 6/11/2025, 2:45:17 PM
 class Solution {
     public int getMoneyAmount(int n) {
-        Integer[][] dp = new Integer[n + 1][n + 1];
-        return solve(1, n, dp);
-    }
-    private int solve(int i, int j, Integer[][] dp) {
-        if (i >= j) {
-            return 0;
+        int[][] dp = new int[n + 2][n + 2];
+
+        for (int len = 2; len <= n; len++) {
+            for (int start = 1; start <= n - len + 1; start++) {
+                int end = start + len - 1;
+                dp[start][end] = Integer.MAX_VALUE;
+                for (int x = start; x <= end; x++) {
+                    int cost = x + Math.max(
+                        (x - 1 >= start) ? dp[start][x - 1] : 0,
+                        (x + 1 <= end) ? dp[x + 1][end] : 0
+                    );
+                    dp[start][end] = Math.min(dp[start][end], cost);
+                }
+            }
         }
-        if (dp[i][j] != null) {
-            return dp[i][j];
-        }
-        int min = Integer.MAX_VALUE;
-        for (int k = i; k <= j; k++) {
-            int max = Math.max(solve(i, k - 1, dp), solve(k + 1, j, dp));
-            min = Math.min(min, max + k);
-        }
-        return dp[i][j] = min;
+
+        return dp[1][n];
     }
 }
