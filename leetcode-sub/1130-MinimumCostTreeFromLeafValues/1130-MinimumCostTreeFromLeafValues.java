@@ -1,61 +1,28 @@
-// Last updated: 6/9/2025, 3:51:17 PM
+// Last updated: 6/11/2025, 2:16:19 AM
 class Solution {
-   public static int[] concatenatedDivisibility(int[] nums, int k) {
-        int n = nums.length;
-        int total = (1 << n) - 1;
-
-        int[] multiplicationWithLen = new int[n];
-        for (int i = 0; i < n; i++) {
-            int x = nums[i];
-            int digits = (x == 0 ? 1 : (int) Math.log10(x) + 1);
-            long m = 1;
-            for (int d = 0; d < digits; d++) m = (m * 10) % k;
-            multiplicationWithLen[i] = (int) m;
-        }
-
-        Map<Long, List<Integer>> dp = new HashMap<>();
-        List<Integer> list = solve(0, 0, n, k, total, nums, multiplicationWithLen, dp);
-        if (list == null) return new int[0];
-
-        int[] ans = new int[n];
-        for (int i = 0; i < n; i++) ans[i] = list.get(i);
-        return ans;
+    public int mctFromLeafValues(int[] arr) {
+        int n = arr.length;
+        Integer[][] dp = new Integer[n + 1][n + 1];
+        return solve(0, n - 1, arr, dp);
     }
-
-    private static List<Integer> solve(int mask, int rem, int n, int k, int total, int[] nums, int[] multiplicationWithLen,
-            Map<Long, List<Integer>> dp) {
-        if (mask == total) return rem == 0 ? new ArrayList<>() : null;
-        long key = mask * 100L + rem;
-        if (dp.containsKey(key)) return dp.get(key);
-
-        List<Integer> best = null;
-        for (int i = 0; i < n; i++) {
-            int bit = 1 << i;
-            if ((mask & bit) != 0) continue;
-
-            int newRem;
-            if (mask == 0) newRem = nums[i] % k;
-            else newRem = (int) ((rem * multiplicationWithLen[i] + nums[i]) % k);
-    
-            List<Integer> tail = solve(mask | bit, newRem, n, k, total, nums, multiplicationWithLen, dp);
-            if (tail != null) {
-                List<Integer> cand = new ArrayList<>();
-                cand.add(nums[i]);
-                cand.addAll(tail);
-                if (best == null || compare(cand, best)) best = cand;
+    private int solve(int i, int j, int[] arr, Integer[][] dp) {
+        if (i >= j) {
+            return 0;
+        }
+        if (dp[i][j] != null) {
+            return dp[i][j];
+        }
+        int min = Integer.MAX_VALUE;
+        for (int k = i; k < j; k++) {
+            int left = arr[i], right = arr[j];
+            for (int t = i; t <= k; t++) {
+                left = Math.max(left, arr[t]);
             }
+            for (int t = k + 1; t <= j; t++) {
+                right = Math.max(right, arr[t]);
+            }
+            min = Math.min(min, left * right + solve(i, k, arr, dp) + solve(k + 1, j, arr, dp));
         }
-
-        dp.put(key, best);
-        return best;
-    }
-
-    private static boolean compare(List<Integer> a, List<Integer> b) {
-       int n = a.size();
-      for (int i = 0; i < n; i++) {
-            if(a.get(i) < b.get(i)) return true;
-            else if(a.get(i) > b.get(i)) return false;
-       }
-       return true;
+        return dp[i][j] = min;
     }
 }
