@@ -1,4 +1,4 @@
-// Last updated: 6/11/2025, 2:21:28 PM
+// Last updated: 6/11/2025, 2:24:00 PM
 class Solution {
     public List<Integer> diffWaysToCompute(String s) {
         int m = s.length();
@@ -9,14 +9,14 @@ class Solution {
     private List<Integer> solve(int i, int j, char[] s, 
     List<Integer>[][] dp) {
         List<Integer> res = new ArrayList<>();
-        if (i == j) { // j - i == 0 : single digit number
-            res.add(s[i] - '0');
+        if (i == j && Character.isDigit(s[i])) { 
+            res.add(s[i] - '0'); // j - i == 0 : single digit number
             return res;
         }
-        if (j - i == 1 && Character.isDigit(s[i])) { // two digit number
-            res.add(10 * (s[i] - '0') + (s[j] - '0'));
+        if (j - i == 1 && Character.isDigit(s[i]) && Character.isDigit(s[j])) {
+            res.add(10 * (s[i] - '0') + (s[j] - '0')); // two digit number
             return res;
-        } // since constraints only have nums in [0, 99], capture them manually
+        }
         if (dp[i][j] != null) {
             return dp[i][j];
         }
