@@ -1,4 +1,4 @@
-// Last updated: 6/14/2025, 11:57:31 PM
+// Last updated: 6/14/2025, 11:58:11 PM
 class Solution {
     public String largestMultipleOfThree(int[] digits) {
         int n = digits.length, sum = 0, count = 0;
@@ -12,8 +12,8 @@ class Solution {
         for (int i = 0; i < n; i++) {
             String key1 = (i + 1) + "," + (sum % 3);
             String key2 = (i + 1) + "," + ((sum + digits[i]) % 3);
-            int val1 = dp.getOrDefault(key1, -1000000000);
-            int val2 = dp.getOrDefault(key2, -1000000000);
+            int val1 = dp.getOrDefault(key1, Integer.MIN_VALUE);
+            int val2 = dp.getOrDefault(key2, Integer.MIN_VALUE);
             if (val1 > 1 + val2) {
                 continue;
             } else {
@@ -42,8 +42,8 @@ class Solution {
                 return 0;
             }
             String key = i + "," + sum;
-            dp.put(key, -1000000000);
-            return -1000000000;
+            dp.put(key, Integer.MIN_VALUE);
+            return Integer.MIN_VALUE;
         }
         String key = i + "," + sum;
         if (dp.containsKey(key)) {
