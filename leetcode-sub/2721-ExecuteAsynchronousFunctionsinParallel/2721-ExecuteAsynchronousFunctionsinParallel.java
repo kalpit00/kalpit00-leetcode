@@ -1,23 +1,24 @@
-// Last updated: 6/14/2025, 11:58:11 PM
+// Last updated: 6/15/2025, 12:03:33 AM
 class Solution {
     public String largestMultipleOfThree(int[] digits) {
         int n = digits.length, sum = 0, count = 0;
         reverseSort(digits);
-        Map<String, Integer> dp = new HashMap<>();
+        Integer[][] dp = new Integer[n + 1][3];
         if (digits[0] == 0) {
             return "0";
         }
         int ans = solve(0, n, 0, digits, dp);
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < n; i++) {
-            String key1 = (i + 1) + "," + (sum % 3);
-            String key2 = (i + 1) + "," + ((sum + digits[i]) % 3);
-            int val1 = dp.getOrDefault(key1, Integer.MIN_VALUE);
-            int val2 = dp.getOrDefault(key2, Integer.MIN_VALUE);
-            if (val1 > 1 + val2) {
+            int notTake = dp[i + 1][sum % 3] != null ? 
+            dp[i + 1][sum % 3] : Integer.MIN_VALUE;
+            int take = dp[i + 1][(sum + digits[i]) % 3] != null ? 
+            dp[i + 1][(sum + digits[i]) % 3] : Integer.MIN_VALUE;
+            if (notTake > 1 + take) {
                 continue;
-            } else {
-                sb.append((char)('0' + digits[i]));
+            } 
+            else {
+                sb.append((char)(digits[i] + '0'));
                 sum += digits[i];
                 sum %= 3;
             }
@@ -33,28 +34,18 @@ class Solution {
         return sb.toString();
     }
     
-    private int solve(int i, int n, int sum, int[] digits, 
-    Map<String, Integer> dp) {
+    private int solve(int i, int n, int sum, int[] digits, Integer[][] dp) {
         if (i == n) {
-            if (sum == 0) {
-                String key = i + "," + sum;
-                dp.put(key, 0);
-                return 0;
-            }
-            String key = i + "," + sum;
-            dp.put(key, Integer.MIN_VALUE);
-            return Integer.MIN_VALUE;
+            return dp[i][sum] = sum == 0 ? 0 : Integer.MIN_VALUE;
         }
-        String key = i + "," + sum;
-        if (dp.containsKey(key)) {
-            return dp.get(key);
+        if (dp[i][sum] != null) {
+            return dp[i][sum];
         }
         int take = 1 + solve(i + 1, n, (sum + digits[i]) % 3, digits, dp);
         int notTake = solve(i + 1, n, sum % 3, digits, dp);
-        int max = Math.max(take, notTake);
-        dp.put(key, max);
-        return max;
+        return dp[i][sum] = Math.max(take, notTake);
     }
+    
     private void reverseSort(int[] nums) {
         Arrays.sort(nums);
         int n = nums.length, i = 0, j = n - 1;
