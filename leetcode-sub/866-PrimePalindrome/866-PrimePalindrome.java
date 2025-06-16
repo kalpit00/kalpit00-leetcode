@@ -1,64 +1,33 @@
-// Last updated: 6/16/2025, 7:36:27 PM
+// Last updated: 6/16/2025, 7:54:36 PM
 class Solution {
     public int primePalindrome(int n) {
-        if (TLE(n) != -1) {
-            return TLE(n);
-        }
-        int m = (int) Math.pow(10, 7);
-        boolean[] notPrime = sieve(m + 1);
-        for (int i = n; i < m; i++) {
-            if (!notPrime[i] && isPalindrome(i)) {
-                return i;
+        while (true) {
+            if (n == reverse(n) && isPrime(n)) {
+                return n;
             }
-        }
-        return -1;
+            n++;
+            if (10000000 < n && n < 100000000) {
+                n = 100000000;
+            } // Any even length palindrome must be divisble by 11
+        } // so we will skip numbers N = [10,000,000, 99,999,999]
     }
-    public boolean[] sieve(int n) {
-        boolean[] notPrime = new boolean[n];
-        notPrime[0] = notPrime[1] = true;
-        for (int i = 2; i < n; i++) {
-            if (!notPrime[i]) {
-                for (int j = 2; i*j < n; j++) {
-                    notPrime[i*j] = true;
-                }
-            }
-        }
-        return notPrime;
-    }
-    private boolean isPalindrome(int num) {
-        String s = Integer.toString(num);
-        int i = 0, j = s.length() - 1;
-        while (i < j) {
-            if (s.charAt(i) != s.charAt(j)) {
+
+    public boolean isPrime(int n) {
+        if (n < 2) return false;
+        for (int i = 2; i * i <= n; i++)
+            if (n % i == 0) {
                 return false;
-            }
-            i++;
-            j--;
-        }
+            } 
         return true;
     }
-    private int TLE(int n) {
-        if (n >= 9989900 && n <= 100030001) {
-            return 100030001;
+
+    public int reverse(int n) {
+        int num = 0;
+        while (n > 0) {
+            int d = n % 10;
+            num = 10 * num + d;
+            n /= 10;
         }
-        if (n >= 9988777 && n <= 1003001) {
-            return 1003001;
-        }
-        if (n >= 9999666 && n <= 100030001) {
-            return 100030001;
-        }
-        if (n >= 10000000 && n <= 10000099) {
-            return 10000099;
-        }
-        if (n >= 10100000 && n <= 10110101) {
-            return 10110101;
-        }
-        if (n >= 9989900 && n <= 100030001) {
-            return 100030001;
-        }
-        if (n >= 99990000 && n <= 100030001) {
-            return 100030001;
-        }
-        return -1;
+        return num;
     }
 }
