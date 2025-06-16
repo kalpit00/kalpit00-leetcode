@@ -1,4 +1,4 @@
-// Last updated: 5/5/2025, 6:07:46 PM
+// Last updated: 6/15/2025, 8:31:20 PM
 class Solution {
     public int maximumDifference(int[] nums) {
         int n = nums.length, max = -1;
