@@ -1,4 +1,4 @@
-// Last updated: 6/15/2025, 8:45:43 PM
+// Last updated: 6/15/2025, 8:47:21 PM
 class Solution {
     public int maxScoreSightseeingPair(int[] nums) {
         int n = nums.length, max = Integer.MIN_VALUE;
@@ -11,8 +11,8 @@ class Solution {
         for (int i = n - 2; i >= 0; i--) {
             suf[i] = Math.max(suf[i + 1], nums[i] - i);
         }
-        for (int i = 1; i < n; i++) {
-            max = Math.max(max, pre[i - 1] + suf[i]);
+        for (int i = 0; i < n - 1; i++) {
+            max = Math.max(max, pre[i] + suf[i + 1]);
         }
         return max;
     }
