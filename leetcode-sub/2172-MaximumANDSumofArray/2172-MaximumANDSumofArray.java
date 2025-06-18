@@ -1,90 +1,106 @@
-// Last updated: 6/18/2025, 4:15:13 PM
+// Last updated: 6/18/2025, 4:24:21 PM
 class Solution {
     public int maximumANDSum(int[] nums, int numSlots) {
         int n = nums.length;
-        int m = 2 * numSlots;
-        int[][] cost = buildCostMatrix(nums, numSlots, n, m);
-        return -hungarian(cost, true);
+        int totalNodes = n + numSlots + 2; // nums + slots + source + sink
+        List<List<Edge>> adj = new ArrayList<>();
+        for (int i = 0; i < totalNodes; i++) {
+            adj.add(new ArrayList<>());
+        }
+        buildFlowNetwork(nums, numSlots, adj, n, totalNodes);
+        boolean[] inQueue = new boolean[totalNodes];
+        int[] mf = minCostMaxFlow(0, totalNodes - 1, inQueue, adj, totalNodes);
+        return -mf[1];
     }
     
-    private int[][] buildCostMatrix(int[] nums, int numSlots, int n, int m) {
-        int size = Math.max(n, m);
-        int[][] cost = new int[size][size];
-        for (int i = 0; i < size; i++) {
-            for (int j = 0; j < size; j++) {
-                if (i < n && j < m) {  // Position j belongs to slot (j/2 + 1)
-                    int slotNumber = (j / 2) + 1;
-                    cost[i][j] = -(nums[i] & slotNumber); 
-                } 
-                else { // Negative for maximization
-                    cost[i][j] = 0;
-                } // Dummy assignment with cost 0
+    private void buildFlowNetwork(int[] nums, int numSlots, List<List<Edge>> adj, int n, int totalNodes) {
+        int source = 0, sink = totalNodes - 1;
+        // Source to each number: capacity 1, cost 0
+        for (int i = 0; i < n; i++) {
+            addEdge(source, i + 1, 1, 0, adj);
+        }
+        
+        // Each number to each slot: capacity 1, cost = -(nums[i] & slotNumber)
+        for (int i = 0; i < n; i++) {
+            for (int slot = 1; slot <= numSlots; slot++) {
+                int cost = -(nums[i] & slot); // Negative for maximization
+                addEdge(i + 1, n + slot, 1, cost, adj);
             }
         }
-        return cost;
+        
+        // Each slot to sink: capacity 2 (each slot can hold 2 numbers), cost 0
+        for (int slot = 1; slot <= numSlots; slot++) {
+            addEdge(n + slot, sink, 2, 0, adj);
+        }
     }
     
-    private int hungarian(int[][] cost, boolean minimize) {
-        int m = cost.length, n = cost[0].length;
-        if (m > n) {
-            int[][] transposed = new int[n][m];
-            for (int i = 0; i < m; i++) {
-                for (int j = 0; j < n; j++) {
-                    transposed[j][i] = cost[i][j];
+    private int[] minCostMaxFlow(int source, int sink, 
+    boolean[] inQueue, List<List<Edge>> adj, int n) {
+        int maxFlow = 0, minCost = 0;
+        int[] dist = new int[n];
+        Edge[] parentEdge = new Edge[n];
+        while (spfa(source, sink, dist, parentEdge, inQueue, adj, n)) {
+            int flow = Integer.MAX_VALUE;
+            for (int v = sink; v != source; v = parentEdge[v].u) {
+                flow = Math.min(flow, parentEdge[v].cap - parentEdge[v].flow);
+            }
+            for (int v = sink; v != source; v = parentEdge[v].u) {
+                parentEdge[v].flow += flow;
+                parentEdge[v].rev.flow -= flow;
+                minCost += flow * parentEdge[v].cost;
+            }
+            maxFlow += flow;
+        }
+        return new int[]{maxFlow, minCost};
+    }
+
+    private boolean spfa(int source, int sink, int[] dist,
+    Edge[] parentEdge, boolean[] inQueue, List<List<Edge>> adj, int n) {
+        Arrays.fill(dist, Integer.MAX_VALUE);
+        dist[source] = 0;
+        inQueue[source] = true;
+        Queue<Integer> queue = new LinkedList<>();
+        queue.offer(source);
+        
+        while (!queue.isEmpty()) {
+            int parent = queue.poll();
+            inQueue[parent] = false;
+            for (Edge edge : adj.get(parent)) {
+                int child = edge.v;
+                int childDist = dist[parent] + edge.cost;
+                if (edge.flow < edge.cap && childDist < dist[child]) {
+                    dist[child] = childDist;
+                    parentEdge[child] = edge;                    
+                    if (!inQueue[child]) {
+                        queue.offer(child);
+                        inQueue[child] = true;
+                    }
                 }
             }
-            cost = transposed;
-            int temp = m;
-            m = n;
-            n = temp;
         }
-        if (!minimize) {
-            for (int i = 0; i < m; i++) {
-                for (int j = 0; j < n; j++) {
-                    cost[i][j] *= -1;
-                }
-            }   
+        return dist[sink] != Integer.MAX_VALUE;
+    }
+    
+    private void addEdge(int u, int v, int cap, int cost, 
+    List<List<Edge>> adj) {
+        Edge edge = new Edge(u, v, cap, cost);
+        Edge revEdge = new Edge(v, u, 0, -cost);
+        edge.rev = revEdge;
+        revEdge.rev = edge;
+        adj.get(u).add(edge);
+        adj.get(v).add(revEdge);
+    }
+    
+    class Edge {
+        int u, v, cap, cost, flow;
+        Edge rev;
+        
+        public Edge(int u, int v, int cap, int cost) {
+            this.u = u;
+            this.v = v;
+            this.cap = cap;
+            this.cost = cost;
+            this.flow = 0;
         }
-        int[] u = new int[m + 1], v = new int[n + 1];
-        int[] p = new int[n + 1], way = new int[n + 1];
-        for (int i = 1; i <= m; i++) {
-            p[0] = i;
-            int[] minv = new int[n + 1];
-            boolean[] used = new boolean[n + 1];
-            Arrays.fill(minv, Integer.MAX_VALUE);
-            int j0 = 0;
-            do {
-                used[j0] = true;
-                int i0 = p[j0], delta = Integer.MAX_VALUE, j1 = -1;
-                for (int j = 1; j <= n; j++) {
-                    if (!used[j]) {
-                        int cur = cost[i0 - 1][j - 1] - u[i0] - v[j];
-                        if (cur < minv[j]) {
-                            minv[j] = cur;
-                            way[j] = j0;
-                        }
-                        if (minv[j] < delta) {
-                            delta = minv[j];
-                            j1 = j;
-                        }
-                    }
-                }
-                for (int j = 0; j <= n; j++) {
-                    if (used[j]) {
-                        u[p[j]] += delta;
-                        v[j] -= delta;
-                    } else {
-                        minv[j] -= delta;
-                    }
-                }
-                j0 = j1;
-            } while (p[j0] != 0);
-            do {
-                int j1 = way[j0];
-                p[j0] = p[j1];
-                j0 = j1;
-            } while (j0 != 0);
-        }
-        return minimize ? -v[0] : v[0];
     }
 }
