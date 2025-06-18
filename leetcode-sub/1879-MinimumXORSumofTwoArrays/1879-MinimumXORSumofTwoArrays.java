@@ -1,82 +1,105 @@
-// Last updated: 6/18/2025, 4:14:33 PM
+// Last updated: 6/18/2025, 4:30:57 PM
 class Solution {
     public int minimumXORSum(int[] nums1, int[] nums2) {
-        int n = nums1.length;        
-        int[][] cost = buildCostMatrix(nums1, nums2, n);
-        return hungarian(cost, true);
+        int n = nums1.length;
+        int totalNodes = 2 * n + 2; // nums1 + nums2 + source + sink
+        List<List<Edge>> adj = new ArrayList<>();
+        for (int i = 0; i < totalNodes; i++) {
+            adj.add(new ArrayList<>());
+        }
+        buildFlowNetwork(nums1, nums2, adj, n, totalNodes);
+        int[] potential = new int[totalNodes];
+        int[] mf = minCostMaxFlow(0, totalNodes - 1, potential, adj, totalNodes);
+        return mf[1];
     }
     
-    private int[][] buildCostMatrix(int[] nums1, int[] nums2, int n) {
-        int[][] cost = new int[n][n];
+    private void buildFlowNetwork(int[] nums1, int[] nums2, List<List<Edge>> adj, int n, int totalNodes) {
+        int source = 0, sink = totalNodes - 1;
+        // Source to each nums1 element: capacity 1, cost 0
+        for (int i = 0; i < n; i++) {
+            addEdge(source, i + 1, 1, 0, adj);
+        }
+        // Each nums1 element to each nums2 element: capacity 1, cost = XOR
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < n; j++) {
-                // Cost of assigning nums1[i] to nums2[j]
-                cost[i][j] = nums1[i] ^ nums2[j];
+                int cost = nums1[i] ^ nums2[j];
+                addEdge(i + 1, n + j + 1, 1, cost, adj);
             }
         }
-        return cost;
+        // Each nums2 element to sink: capacity 1, cost 0
+        for (int j = 0; j < n; j++) {
+            addEdge(n + j + 1, sink, 1, 0, adj);
+        }
     }
-    private int hungarian(int[][] cost, boolean minimize) {
-        int m = cost.length, n = cost[0].length;
-        if (m > n) {
-            int[][] transposed = new int[n][m];
-            for (int i = 0; i < m; i++) {
-                for (int j = 0; j < n; j++) {
-                    transposed[j][i] = cost[i][j];
+    private int[] minCostMaxFlow(int source, int sink, 
+    int[] potential, List<List<Edge>> adj, int n) {
+        int maxFlow = 0, minCost = 0;
+        int[] dist = new int[n];
+        Edge[] parentEdge = new Edge[n];
+        while (dijkstra(source, sink, dist, parentEdge, potential, adj, n)) {
+            int flow = Integer.MAX_VALUE;
+            for (int v = sink; v != source; v = parentEdge[v].u) {
+                flow = Math.min(flow, parentEdge[v].cap - parentEdge[v].flow);
+            }
+            for (int v = sink; v != source; v = parentEdge[v].u) {
+                parentEdge[v].flow += flow;
+                parentEdge[v].rev.flow -= flow;
+                minCost += flow * parentEdge[v].cost;
+            }
+            maxFlow += flow;
+        }
+        return new int[]{maxFlow, minCost};
+    }
+
+    private boolean dijkstra(int source, int sink, int[] dist,
+    Edge[] parentEdge, int[] potential, List<List<Edge>> adj, int n) {
+        Arrays.fill(dist, Integer.MAX_VALUE);
+        dist[source] = 0;
+        PriorityQueue<int[]> pq = new PriorityQueue<>((a, b) -> a[1] - b[1]);
+        pq.offer(new int[]{source, 0});
+        while (!pq.isEmpty()) {
+            int[] node = pq.poll();
+            int parent = node[0], parentDist = node[1];
+            if (parentDist > dist[parent]) continue; // dijkstra pruning step
+            for (Edge edge : adj.get(parent)) {
+                int child = edge.v;
+                int childDist = dist[parent] + edge.cost + 
+                potential[parent] - potential[child];
+                if (edge.flow < edge.cap && childDist < dist[child]) {
+                    dist[child] = childDist;
+                    parentEdge[child] = edge;
+                    pq.offer(new int[]{child, dist[child]});
                 }
             }
-            cost = transposed;
-            int temp = m;
-            m = n;
-            n = temp;
         }
-        if (!minimize) {
-            for (int i = 0; i < m; i++) {
-                for (int j = 0; j < n; j++) {
-                    cost[i][j] *= -1;
-                }
-            }   
+        for (int i = 0; i < n; i++) {
+            if (dist[i] != Integer.MAX_VALUE) {
+                potential[i] += dist[i];
+            }
         }
-        int[] u = new int[m + 1], v = new int[n + 1];
-        int[] p = new int[n + 1], way = new int[n + 1];
-        for (int i = 1; i <= m; i++) {
-            p[0] = i;
-            int[] minv = new int[n + 1];
-            boolean[] used = new boolean[n + 1];
-            Arrays.fill(minv, Integer.MAX_VALUE);
-            int j0 = 0;
-            do {
-                used[j0] = true;
-                int i0 = p[j0], delta = Integer.MAX_VALUE, j1 = -1;
-                for (int j = 1; j <= n; j++) {
-                    if (!used[j]) {
-                        int cur = cost[i0 - 1][j - 1] - u[i0] - v[j];
-                        if (cur < minv[j]) {
-                            minv[j] = cur;
-                            way[j] = j0;
-                        }
-                        if (minv[j] < delta) {
-                            delta = minv[j];
-                            j1 = j;
-                        }
-                    }
-                }
-                for (int j = 0; j <= n; j++) {
-                    if (used[j]) {
-                        u[p[j]] += delta;
-                        v[j] -= delta;
-                    } else {
-                        minv[j] -= delta;
-                    }
-                }
-                j0 = j1;
-            } while (p[j0] != 0);
-            do {
-                int j1 = way[j0];
-                p[j0] = p[j1];
-                j0 = j1;
-            } while (j0 != 0);
+        return dist[sink] != Integer.MAX_VALUE;
+    }
+    
+    private void addEdge(int u, int v, int cap, int cost, 
+    List<List<Edge>> adj) {
+        Edge edge = new Edge(u, v, cap, cost);
+        Edge revEdge = new Edge(v, u, 0, -cost);
+        edge.rev = revEdge;
+        revEdge.rev = edge;
+        adj.get(u).add(edge);
+        adj.get(v).add(revEdge);
+    }
+    
+    class Edge {
+        int u, v, cap, cost, flow;
+        Edge rev;
+        
+        public Edge(int u, int v, int cap, int cost) {
+            this.u = u;
+            this.v = v;
+            this.cap = cap;
+            this.cost = cost;
+            this.flow = 0;
         }
-        return minimize ? -v[0] : v[0];
     }
 }
