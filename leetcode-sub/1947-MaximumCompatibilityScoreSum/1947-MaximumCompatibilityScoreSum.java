@@ -1,4 +1,4 @@
-// Last updated: 6/18/2025, 4:36:06 PM
+// Last updated: 6/18/2025, 4:37:18 PM
 class Solution {
     public int maxCompatibilitySum(int[][] students, int[][] mentors) {
         int m = students.length;
@@ -8,8 +8,8 @@ class Solution {
             adj.add(new ArrayList<>());
         }
         buildFlowNetwork(students, mentors, adj, m, totalNodes);
-        boolean[] inQueue = new boolean[totalNodes];
-        int[] mf = minCostMaxFlow(0, totalNodes - 1, inQueue, adj, totalNodes);
+        int[] potential = new int[totalNodes];
+        int[] mf = minCostMaxFlow(0, totalNodes - 1, potential, adj, totalNodes);
         return -mf[1];
     }
     private void buildFlowNetwork(int[][] students, int[][] mentors, List<List<Edge>> adj, int m, int totalNodes) {
@@ -41,11 +41,11 @@ class Solution {
         return score;
     }
     private int[] minCostMaxFlow(int source, int sink, 
-    boolean[] inQueue, List<List<Edge>> adj, int n) {
+    int[] potential, List<List<Edge>> adj, int n) {
         int maxFlow = 0, minCost = 0;
         int[] dist = new int[n];
         Edge[] parentEdge = new Edge[n];
-        while (spfa(source, sink, dist, parentEdge, inQueue, adj, n)) {
+        while (dijkstra(source, sink, dist, parentEdge, potential, adj, n)) {
             int flow = Integer.MAX_VALUE;
             for (int v = sink; v != source; v = parentEdge[v].u) {
                 flow = Math.min(flow, parentEdge[v].cap - parentEdge[v].flow);
@@ -60,28 +60,30 @@ class Solution {
         return new int[]{maxFlow, minCost};
     }
 
-    private boolean spfa(int source, int sink, int[] dist,
-    Edge[] parentEdge, boolean[] inQueue, List<List<Edge>> adj, int n) {
+    private boolean dijkstra(int source, int sink, int[] dist,
+    Edge[] parentEdge, int[] potential, List<List<Edge>> adj, int n) {
         Arrays.fill(dist, Integer.MAX_VALUE);
         dist[source] = 0;
-        inQueue[source] = true;
-        Queue<Integer> queue = new LinkedList<>();
-        queue.offer(source);
-        
-        while (!queue.isEmpty()) {
-            int parent = queue.poll();
-            inQueue[parent] = false;
+        PriorityQueue<int[]> pq = new PriorityQueue<>((a, b) -> a[1] - b[1]);
+        pq.offer(new int[]{source, 0});
+        while (!pq.isEmpty()) {
+            int[] node = pq.poll();
+            int parent = node[0], parentDist = node[1];
+            if (parentDist > dist[parent]) continue; // dijkstra pruning step
             for (Edge edge : adj.get(parent)) {
                 int child = edge.v;
-                int childDist = dist[parent] + edge.cost;
+                int childDist = dist[parent] + edge.cost + 
+                potential[parent] - potential[child];
                 if (edge.flow < edge.cap && childDist < dist[child]) {
                     dist[child] = childDist;
-                    parentEdge[child] = edge;                    
-                    if (!inQueue[child]) {
-                        queue.offer(child);
-                        inQueue[child] = true;
-                    }
+                    parentEdge[child] = edge;
+                    pq.offer(new int[]{child, dist[child]});
                 }
+            }
+        }
+        for (int i = 0; i < n; i++) {
+            if (dist[i] != Integer.MAX_VALUE) {
+                potential[i] += dist[i];
             }
         }
         return dist[sink] != Integer.MAX_VALUE;
