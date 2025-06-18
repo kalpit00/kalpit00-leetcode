@@ -1,4 +1,4 @@
-// Last updated: 6/18/2025, 1:46:41 AM
+// Last updated: 6/18/2025, 1:48:22 AM
 class Solution {
     public int maxStudents(char[][] seats) {
         int m = seats.length, n = seats[0].length, count = 0;
@@ -70,10 +70,9 @@ class Solution {
         int maxFlow = 0;
         int[] levels = new int[n];
         while (bfs(source, sink, levels, adj, n)) {
-            int[] iter = new int[n]; // iteration pointer for each node
             int flow;
-            while ((flow = dfs(source, sink, Integer.MAX_VALUE, levels,
-            iter, adj)) > 0) {
+            while ((flow = dfs(source, sink, Integer.MAX_VALUE, levels, 
+            adj)) > 0) {
                 maxFlow += flow;
             }
         }
@@ -106,24 +105,22 @@ class Solution {
     }
     
     // Find blocking flow using DFS with level constraints
-    private int dfs(int u, int sink, int minCap, int[] levels, 
-    int[] iter, List<List<Edge>> adj) {
-        if (u == sink) return minCap;
-        for (int i = iter[u]; i < adj.get(u).size(); i++) {
-            Edge edge = adj.get(u).get(i);
+    private int dfs(int u, int sink, int minCap, int[] levels,
+    List<List<Edge>> adj) {
+        if (u == sink) return minCap;        
+        for (Edge edge : adj.get(u)) {
             int v = edge.v;
             int residualCap = edge.cap - edge.flow;
             // Only follow edges that go to next level and have capacity
             if (levels[v] == levels[u] + 1 && residualCap > 0) {
                 int flow = dfs(v, sink, Math.min(minCap, residualCap), 
-                levels, iter, adj);
+                levels, adj);
                 if (flow > 0) {
                     edge.flow += flow;
                     edge.rev.flow -= flow;
                     return flow;
                 }
             }
-            iter[u]++; // optimization: skip this edge in future calls
         }
         return 0;
     }
