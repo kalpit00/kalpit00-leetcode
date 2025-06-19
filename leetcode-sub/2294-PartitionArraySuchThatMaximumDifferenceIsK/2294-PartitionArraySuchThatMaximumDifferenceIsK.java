@@ -1,16 +1,11 @@
-// Last updated: 6/3/2025, 3:09:37 AM
+// Last updated: 6/18/2025, 9:33:33 PM
 class Solution {
     public int partitionArray(int[] nums, int k) {
+        int count = 1, n = nums.length, prev = 0;
         Arrays.sort(nums);
-        int count = 1, max = nums[0], min = nums[0];
-        for (int num : nums) {
-            min = Math.min(min, num);
-            max = Math.max(max, num);
-            if (max - min > k) {
-                count++;
-                max = num;
-                min = num;
-            }
+        for (int i = 0; i < n; i++) { 
+            count += nums[i] - nums[prev] > k ? 1 : 0;
+            prev = nums[i] - nums[prev] > k ? i : prev; 
         }
         return count;
     }
