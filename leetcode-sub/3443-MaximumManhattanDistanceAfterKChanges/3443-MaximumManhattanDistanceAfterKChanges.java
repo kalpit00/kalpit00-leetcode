@@ -1,4 +1,4 @@
-// Last updated: 6/15/2025, 4:39:26 PM
+// Last updated: 6/19/2025, 8:06:38 PM
 class Solution {
     public int maxDistance(String str, int k) {
         int n = 0, s = 0, e = 0, w = 0, max = 0;
