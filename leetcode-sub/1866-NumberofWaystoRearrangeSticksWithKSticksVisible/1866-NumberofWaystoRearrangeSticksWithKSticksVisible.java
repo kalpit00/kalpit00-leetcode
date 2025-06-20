@@ -1,22 +1,19 @@
-// Last updated: 6/20/2025, 1:14:48 AM
+// Last updated: 6/20/2025, 1:44:21 AM
 class Solution {
-    int mod = 1000000007;
-    public int rearrangeSticks(int n, int k) {
-        Long[][] dp = new Long[n + 1][k + 1];
-        return (int) solve(n, k, dp);
-    }
-    private long solve(int n, int k, Long[][] dp) {
-        if (k == 0 || k > n) {
-            return 0;
+    public int[] findIndices(int[] nums, int indexDifference, int valueDifference) {
+        int min = 0, max = 0, n = nums.length, i = indexDifference, j = 0;
+        while (i < n) {
+            min = nums[min] < nums[j] ? min : j;
+            max = nums[max] > nums[j] ? max : j;
+            if (Math.abs(nums[i] - nums[min]) >= valueDifference) {
+                return new int[] {min, i};
+            }
+            if (Math.abs(nums[i] - nums[max]) >= valueDifference) {
+                return new int[] {max, i};
+            }
+            i++;
+            j++;
         }
-        if (n <= 2) {
-            return 1;
-        }
-        if (dp[n][k] != null) {
-            return dp[n][k];
-        }
-        long notTake = (solve(n - 1, k - 1, dp)) % mod;
-        long take = ((n - 1) * solve(n - 1, k, dp)) % mod;
-        return dp[n][k] = (take + notTake) % mod;
+        return new int[]{-1, -1};
     }
 }
