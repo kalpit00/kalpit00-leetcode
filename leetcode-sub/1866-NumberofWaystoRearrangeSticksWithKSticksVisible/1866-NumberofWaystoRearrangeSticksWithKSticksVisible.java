@@ -1,19 +1,24 @@
-// Last updated: 6/20/2025, 1:44:21 AM
+// Last updated: 6/20/2025, 1:47:23 AM
 class Solution {
     public int[] findIndices(int[] nums, int indexDifference, int valueDifference) {
-        int min = 0, max = 0, n = nums.length, i = indexDifference, j = 0;
-        while (i < n) {
-            min = nums[min] < nums[j] ? min : j;
-            max = nums[max] > nums[j] ? max : j;
-            if (Math.abs(nums[i] - nums[min]) >= valueDifference) {
-                return new int[] {min, i};
+        int minIdx = 0, maxIdx = 0;
+        for (int i = indexDifference; i < nums.length; i++) {
+            // Update valid min/max, which is based on nums[i - indexDifference]
+            if (nums[i - indexDifference] > nums[maxIdx]) {
+                maxIdx = i - indexDifference;
+            } 
+            if (nums[i - indexDifference] < nums[minIdx]) {
+                minIdx = i - indexDifference;
             }
-            if (Math.abs(nums[i] - nums[max]) >= valueDifference) {
-                return new int[] {max, i};
+            // Check if current number nums[i] and min/max are valid pair
+            if (nums[i] >= nums[minIdx] + valueDifference) {
+                return new int[] {i, minIdx};
+            } 
+            if (nums[i] <= nums[maxIdx] - valueDifference) {
+                return new int[] {i, maxIdx};
             }
-            i++;
-            j++;
         }
-        return new int[]{-1, -1};
+
+        return new int[] {-1, -1};
     }
 }
