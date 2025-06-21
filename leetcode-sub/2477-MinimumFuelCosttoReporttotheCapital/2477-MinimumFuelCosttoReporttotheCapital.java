@@ -1,4 +1,4 @@
-// Last updated: 6/21/2025, 6:18:43 PM
+// Last updated: 6/21/2025, 6:20:56 PM
 class Solution {
     public long minimumFuelCost(int[][] roads, int seats) {
         int n = roads.length + 1;
