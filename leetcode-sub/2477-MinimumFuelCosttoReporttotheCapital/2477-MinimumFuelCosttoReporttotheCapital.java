@@ -1,4 +1,4 @@
-// Last updated: 6/21/2025, 6:20:56 PM
+// Last updated: 6/21/2025, 6:22:51 PM
 class Solution {
     public long minimumFuelCost(int[][] roads, int seats) {
         int n = roads.length + 1;
@@ -15,6 +15,7 @@ class Solution {
             indegree[v]++;
         }
         long[] dp = new long[n];
+        boolean[] visited = new boolean[n];
         Arrays.fill(dp, 1);
         Queue<long[]> queue = new LinkedList<>();
         for (int i = 1; i < n; i++) {
@@ -26,16 +27,18 @@ class Solution {
         while (!queue.isEmpty()) {
             long[] item = queue.poll();
             int node = (int) item[0];
+            if (visited[node]) continue;
+            visited[node] = true;
             long dist = item[1];
             for (int neighbor : adj.get(node)) {
-                if (indegree[neighbor] == 0) continue;
-                dp[neighbor] += dist;
-                indegree[neighbor]--;
-                if (indegree[neighbor] == 1 && neighbor != 0) {
-                    queue.offer(new long[]{neighbor, dp[neighbor]});
+                if (!visited[neighbor]) {
+                    dp[neighbor] += dist;
+                    indegree[neighbor]--;
+                    if (indegree[neighbor] == 1 && neighbor != 0) {
+                        queue.offer(new long[]{neighbor, dp[neighbor]});
+                    }
                 }
             }
-            indegree[node] = 0;
         }
         for (int i = 1; i < n; i++) {
             sum += Math.ceil((double) dp[i] / seats);
