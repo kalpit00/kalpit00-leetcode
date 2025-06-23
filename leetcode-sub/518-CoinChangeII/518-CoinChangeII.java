@@ -1,6 +1,5 @@
-// Last updated: 5/18/2025, 1:20:04 PM
+// Last updated: 6/23/2025, 2:23:46 PM
 class Solution {
-    int limit = 5000;
     public int change(int amount, int[] coins) {
         int n = coins.length;
         Integer[][] dp = new Integer[n][amount + 1];
@@ -19,9 +18,8 @@ class Solution {
         }
         int notTake = solve(i + 1, n, sum, amount, coins, dp);
         int take = 0;
-        for (int j = 1; j <= limit; j++) {
-            if (sum + j * coins[i] > amount) break;
-            take += solve(i + 1, n, sum + (j * coins[i]), amount, coins, dp);
+        if (sum + coins[i] <= amount) {
+            take += solve(i, n, sum + coins[i], amount, coins, dp);
         }
         return dp[i][sum] = take + notTake;
     }
