@@ -1,4 +1,4 @@
-// Last updated: 6/23/2025, 1:28:02 PM
+// Last updated: 6/23/2025, 2:31:32 PM
 class Solution {
     public int combinationSum4(int[] nums, int target) {
         int n = nums.length;
@@ -17,7 +17,10 @@ class Solution {
             return dp[i][sum];
         }
         int notTake = solve(i + 1, n, nums, sum, target, dp);
-        int take = solve(0, n, nums, sum + nums[i], target, dp);
+        int take = 0;
+        if (sum + nums[i] <= target) {
+            take += solve(0, n, nums, sum + nums[i], target, dp);
+        }
         return dp[i][sum] = take + notTake;
     }
 }
