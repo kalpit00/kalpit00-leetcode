@@ -1,4 +1,4 @@
-// Last updated: 6/24/2025, 4:06:11 PM
+// Last updated: 6/24/2025, 4:06:40 PM
 class Solution {
     public int numSquares(int num) {
         int n = (int) Math.sqrt(num);
@@ -6,7 +6,7 @@ class Solution {
         for (int i = 0; i < n; i++) {
             nums[i] = (i + 1) * (i + 1);
         }
-        Integer[][] dp = new Integer[n][num + 1];
+        Integer[][] dp = new Integer[n][num];
         return solve(0, nums, 0, num, dp);
     }
     
@@ -14,7 +14,7 @@ class Solution {
         if (sum == target) {
             return 0;
         }
-        if (i >= nums.length || sum > target) {
+        if (i >= nums.length || sum >= target) {
             return Integer.MAX_VALUE;
         }
         if (dp[i][sum] != null) {
