@@ -1,4 +1,4 @@
-// Last updated: 6/24/2025, 2:37:03 PM
+// Last updated: 6/24/2025, 3:41:15 PM
 class Solution {
     int mod = 1000000007;
     public int numberOfWays(int a, int b) {
@@ -6,23 +6,19 @@ class Solution {
         int[] nums = new int[n];
         for (int i = 0; i < n; i++) {
             nums[i] = (int) Math.pow(i + 1, b);
+        }        
+        int[][] dp = new int[n + 1][a + 1];   
+        dp[n][a] = 1;
+        for (int i = n - 1; i >= 0; i--) {
+            for (int sum = 0; sum <= a; sum++) {
+                int notTake = dp[i + 1][sum];
+                int take = 0;
+                if (sum + nums[i] <= a) {
+                    take = dp[i + 1][sum + nums[i]];
+                }
+                dp[i][sum] = (take + notTake) % mod;
+            }
         }
-        Integer[][] dp = new Integer[n][a];
-        return solve(0, nums, 0, a, dp);
-    }
-
-    private int solve(int i, int[] nums, int sum, int target, Integer[][] dp) {
-        if (sum == target) {
-            return 1;
-        }
-        if (i >= nums.length || sum >= target) {
-            return 0;
-        }
-        if (dp[i][sum] != null) {
-            return dp[i][sum];
-        } 
-        int notTake = solve(i + 1, nums, sum, target, dp);
-        int take = solve(i + 1, nums, sum + nums[i], target, dp);
-        return dp[i][sum] = (take + notTake) % mod;
+        return dp[0][0];
     }
 }
