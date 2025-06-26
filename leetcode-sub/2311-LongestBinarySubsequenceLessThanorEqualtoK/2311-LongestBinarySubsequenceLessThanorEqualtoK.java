@@ -1,18 +1,19 @@
-// Last updated: 6/25/2025, 8:28:55 PM
+// Last updated: 6/25/2025, 8:31:10 PM
 class Solution {
+    // Take all zeros and as many ones as possible from right to left.
     public int longestSubsequence(String s, int k) {
-        char[] arr = s.toCharArray();
-        int n = arr.length, count = 0, pow = 1, val = 0;
-        for (int i = n - 1; i >= 0 && val + pow <= k; i--) {
-            if (arr[i] == '1') {
-                count++;
-                val += pow;
+        int sum = 0, numOfOnes = 0, numOfZeros = 0;
+        for (int i = s.length() - 1; i >= 0; i--) {
+            char c = s.charAt(i);
+            if (c == '0') {
+                numOfZeros++;
+            } else {
+                sum += Math.pow(2, s.length() - 1 - i);
+                if (sum <= k) {
+                    numOfOnes++;
+                }
             }
-            pow <<= 1;
         }
-        for (int c : arr) {
-            count += c == '0' ? 1 : 0;
-        }
-        return count;
+        return numOfOnes + numOfZeros;
     }
 }
