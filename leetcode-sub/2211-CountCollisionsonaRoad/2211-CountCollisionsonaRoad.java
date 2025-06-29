@@ -1,4 +1,4 @@
-// Last updated: 6/29/2025, 2:12:32 AM
+// Last updated: 6/29/2025, 2:12:40 AM
 class Solution {
     public boolean isPrintable(int[][] grid) {
         int m = grid.length, n = grid[0].length, count = 0;
@@ -19,7 +19,6 @@ class Solution {
                         max[1] = Math.max(max[1], j);
                     }
                 }
-                if (min[0] == Integer.MAX_VALUE) continue;
             }
             for (int i = min[0]; i <= max[0]; i++) {
                 for (int j = min[1]; j <= max[1]; j++) {
