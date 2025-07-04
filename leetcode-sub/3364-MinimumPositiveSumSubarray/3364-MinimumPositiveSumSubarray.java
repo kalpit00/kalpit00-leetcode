@@ -1,4 +1,4 @@
-// Last updated: 7/4/2025, 12:49:53 PM
+// Last updated: 7/4/2025, 12:52:22 PM
 class Solution {
     public int minimumSumSubarray(List<Integer> nums, int l, int r) {
         boolean val = false;
