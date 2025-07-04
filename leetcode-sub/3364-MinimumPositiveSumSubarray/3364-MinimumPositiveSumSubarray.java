@@ -1,25 +1,33 @@
-// Last updated: 7/4/2025, 12:52:22 PM
+// Last updated: 7/4/2025, 1:07:01 PM
 class Solution {
+    private int[] prefix;
     public int minimumSumSubarray(List<Integer> nums, int l, int r) {
-        boolean val = false;
-        int min = Integer.MAX_VALUE;
-        for (int k = l; k <= r; k++) {
-            int sum = 0;
-            for (int i = 0; i < k; i++) {
-                sum += nums.get(i);
-            }
-            if (sum > 0) {
-                min = Math.min(min, sum);
-                val = true;
-            }
-            for (int i = k; i < nums.size(); i++) {
-                sum = sum + nums.get(i) - nums.get(i - k);
-                if (sum > 0) {
-                    min = Math.min(min, sum);
-                    val = true;
-                }
-            }
+        int n = nums.size();
+        prefix = new int[n+1];
+        prefix[0] = 0;
+        int min = 0;
+        for(int i = 1; i<=n; i++){
+            prefix[i] = prefix[i-1] + nums.get(i-1);
+            if (i>=l){
+                int pivot = i-l;
+                do{
+                    int value = prefix[i]-prefix[pivot];
+                    if ((min == 0 && value>0) || (value>0 && min != 0 && value<min)){
+                        min = value;
+                    };
+                    pivot--;
+                }while (pivot>=0 && i-pivot<=r);
+            };
+
+        };
+        if (min == 0){
+            return -1;
         }
-        return val ? min : -1;
+        else{
+            return min;
+        }
+
+
+
     }
 }
