@@ -1,12 +1,17 @@
-// Last updated: 7/3/2025, 8:07:30 PM
+// Last updated: 7/3/2025, 8:07:44 PM
 class Solution {
 
     public char kthCharacter(long k, int[] operations) {
         int ans = 0;
-        k--;
-        for (int i = 63 - Long.numberOfLeadingZeros(k); i >= 0; i--) {
-            if (((k >> i) & 1) == 1) {
-                ans += operations[i];
+        int t;
+        while (k != 1) {
+            t = 63 - Long.numberOfLeadingZeros(k);
+            if ((1L << t) == k) {
+                t--;
+            }
+            k = k - (1L << t);
+            if (operations[t] != 0) {
+                ans++;
             }
         }
         return (char) ('a' + (ans % 26));
