@@ -1,29 +1,40 @@
-// Last updated: 7/5/2025, 8:28:38 PM
+// Last updated: 7/5/2025, 8:30:25 PM
 class FindSumPairs {
-    private int[] nums1, nums2;
-    private Map<Integer, Integer> map;
+
+    private int[] nums1;
+    private int[] nums2;
+    private Map<Integer, Integer> nums2Freqs;
 
     public FindSumPairs(int[] nums1, int[] nums2) {
         this.nums1 = nums1;
         this.nums2 = nums2;
-        this.map = new HashMap<>();
+        this.nums2Freqs = new HashMap<>();
         for (int num : nums2) {
-            map.put(num, map.getOrDefault(num, 0) + 1);
+            nums2Freqs.put(num, nums2Freqs.getOrDefault(num, 0) + 1);
         }
     }
-
+    
     public void add(int index, int val) {
-        int oldVal = nums2[index];
-        map.put(oldVal, map.get(oldVal) - 1);
-        nums2[index] += val;
-        map.put(nums2[index], map.getOrDefault(nums2[index], 0) + 1);
+        int prevValue = nums2[index];
+        nums2Freqs.put(prevValue, nums2Freqs.get(prevValue) - 1);
+        int newValue = prevValue + val;
+        nums2Freqs.put(newValue, nums2Freqs.getOrDefault(newValue, 0) + 1);
+        nums2[index] = newValue;
     }
-
-    public int count(int total) {
-        int ans = 0;
+    
+    public int count(int tot) {
+        int cnt = 0;
         for (int num : nums1) {
-            ans += map.getOrDefault(total - num, 0);
+            int diff = tot - num;
+            cnt += nums2Freqs.getOrDefault(diff, 0);
         }
-        return ans;
+        return cnt;
     }
 }
+
+/**
+ * Your FindSumPairs object will be instantiated and called as such:
+ * FindSumPairs obj = new FindSumPairs(nums1, nums2);
+ * obj.add(index,val);
+ * int param_2 = obj.count(tot);
+ */
