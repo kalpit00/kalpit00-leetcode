@@ -1,4 +1,4 @@
-// Last updated: 7/12/2025, 11:28:40 PM
+// Last updated: 7/13/2025, 7:43:58 PM
 class Solution {
     public int matchPlayersAndTrainers(int[] players, int[] trainers) {
         Arrays.sort(players);
@@ -7,12 +7,9 @@ class Solution {
         while (i < m && j < n) {
             if (players[i] <= trainers[j]) {
                 i++;
-                j++;
                 count++;
             }
-            else {
-                j++;
-            }
+            j++;
         }
         return count;
     }
