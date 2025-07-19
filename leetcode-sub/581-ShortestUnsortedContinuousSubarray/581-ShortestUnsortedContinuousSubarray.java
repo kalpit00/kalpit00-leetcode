@@ -1,4 +1,4 @@
-// Last updated: 7/19/2025, 5:01:46 PM
+// Last updated: 7/19/2025, 5:13:05 PM
 class Solution {
     public int findUnsortedSubarray(int[] nums) {
         int n = nums.length, left = n, right = -1;
@@ -21,12 +21,18 @@ class Solution {
                 PGE[i] = stack.peek();
             }
             stack.push(i);
-        } // find leftmost and rightmost element which has a PGE or NSE
+        } // find first and last element which has a PGE or NSE
         for (int i = 0; i < n; i++) {
             if (NSE[i] != n || PGE[i] != -1) {
-                left = Math.min(left, i);
-                right = Math.max(right, i);
-            } // just take the indexes : i
+                left = i;
+                break;
+            }
+        }
+        for (int i = n - 1; i >= 0; i--) {
+            if (NSE[i] != n || PGE[i] != -1) {
+                right = i;
+                break;
+            }
         } // subarr : [left .. right] is unsorted! its length = r - l + 1
         return left < right ? right - left + 1 : 0;
     }
