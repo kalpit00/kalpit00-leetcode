@@ -1,26 +1,25 @@
-// Last updated: 7/19/2025, 5:13:05 PM
+// Last updated: 7/19/2025, 5:16:27 PM
 class Solution {
     public int findUnsortedSubarray(int[] nums) {
-        int n = nums.length, left = n, right = -1;
-        Stack<Integer> stack = new Stack<>();
-        int[] NSE = new int[n], PGE = new int[n];
+        int n = nums.length, left = n, right = -1, top = -1;
+        int[] NSE = new int[n], PGE = new int[n], stack = new int[n];
         Arrays.fill(NSE, n);
         Arrays.fill(PGE, -1);
         for (int i = 0; i < n; i++) {
-            while (!stack.isEmpty() && nums[stack.peek()] > nums[i]) {
-                NSE[stack.pop()] = i;
+            while (top >= 0 && nums[stack[top]] > nums[i]) {
+                NSE[stack[top--]] = i;
             }
-            stack.push(i);
+            stack[++top] = i;
         }
-        stack.clear();
+        top = -1;
         for (int i = 0; i < n; i++) {
-            while (!stack.isEmpty() && nums[stack.peek()] <= nums[i]) {
-                stack.pop();
+            while (top >= 0 && nums[stack[top]] <= nums[i]) {
+                top--;
             }
-            if (!stack.isEmpty()) {
-                PGE[i] = stack.peek();
+            if (top >= 0) {
+                PGE[i] = stack[top];
             }
-            stack.push(i);
+            stack[++top] = i;
         } // find first and last element which has a PGE or NSE
         for (int i = 0; i < n; i++) {
             if (NSE[i] != n || PGE[i] != -1) {
