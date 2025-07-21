@@ -1,24 +1,22 @@
-// Last updated: 3/30/2025, 7:26:01 PM
+// Last updated: 7/20/2025, 10:44:15 PM
 class Solution {
-    public long findScore(int[] nums) {
-        long sum = 0;
-        int n = nums.length;
-        int[][] mat = new int[n][2];
-        boolean[] visited = new boolean[n + 2];
-        for (int i = 0; i < n; i++) {
-            mat[i][0] = nums[i];
-            mat[i][1] = i + 1;
-        }
-        Arrays.sort(mat, (a, b) -> a[0] - b[0]);
-        for (int i = 0; i < n; i++) {
-            int val = mat[i][0], idx = mat[i][1];
-            if (!visited[idx]) {
-                sum += val;
-                visited[idx] = true;
-                visited[idx - 1] = true;
-                visited[idx + 1] = true;
+    public String makeFancyString(String s) {
+        char[] chars = s.toCharArray();
+        StringBuilder sb = new StringBuilder();
+        int n = chars.length, i = 0;
+        while (i < n) {
+            int streak = 1;
+            char c = chars[i];
+            while (i < n - 1 && chars[i] == chars[i + 1]) {
+                streak++;
+                i++;
+            } // append 'c' twice if streak > 1, or append only once
+            sb.append(c);
+            if (streak > 1) {
+                sb.append(c);
             }
+            i++;
         }
-        return sum;
+        return sb.toString();
     }
 }
