@@ -1,10 +1,9 @@
-// Last updated: 7/21/2025, 9:27:03 PM
+// Last updated: 7/21/2025, 9:28:04 PM
 class Solution {
     public int lengthOfLongestSubstring(String s) {
         int[] map = new int[128];
         char[] arr = s.toCharArray();
-        int n = arr.length, max = Integer.MIN_VALUE,
-        left = 0, right = 0, counter = 0;
+        int n = arr.length, max = 0, left = 0, right = 0, counter = 0;
         while (right < n) {
             if (map[arr[right]] > 0) {
                 counter++;
@@ -20,6 +19,6 @@ class Solution {
             }
             max = Math.max(max, right - left);
         }
-        return n == 0 ? 0 : max;
+        return max;
     }
 }
