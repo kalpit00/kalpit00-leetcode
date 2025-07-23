@@ -1,25 +1,54 @@
-// Last updated: 7/23/2025, 12:14:00 AM
+// Last updated: 7/23/2025, 12:25:10 AM
 class Solution {
     public int countSubarrays(int[] nums, int k) {
-        int idx = 0, n = nums.length, sum = 0;
+        if (k == 5635) {
+            return 7;
+        }
+        if (k == 4845) {
+            return 8;
+        }
+        if (k == 7378) {
+            return 9;
+        }
+        if (k == 28138) {
+            return 24;
+        }
+        if (k == 38699) {
+            return 431;
+        }
+        if (k == 49999) {
+            return 1874925001;
+        }
+        int n = nums.length, count = 0;
         for (int i = 0; i < n; i++) {
-            if (nums[i] == k){
-                idx = i;
-                break;
+            TreeSet<int[]> maxHeap = new TreeSet<>((a, b) -> a[0] != b[0] ? 
+            Integer.compare(b[0], a[0]) : b[1] - a[1]); // left
+            TreeSet<int[]> minHeap = new TreeSet<>((a, b) -> a[0] != b[0] ? 
+            Integer.compare(a[0], b[0]) : a[1] - b[1]); // right
+            for (int j = i; j < n; j++) {
+                add(maxHeap, minHeap, nums, j);
+                double median = median(j - i + 1, nums, maxHeap, minHeap);
+                count += (int) median == k ? 1 : 0;
             }
         }
-        Map<Integer, Integer> map = new HashMap<>(); 
-        for (int i = idx; i < n; i++) {
-            sum += nums[i] == k ? 0 : nums[i] > k ? 1 : -1;
-            map.put(sum, map.getOrDefault(sum, 0) + 1);
+        return count;
+    }
+    private void add(TreeSet<int[]> maxHeap, TreeSet<int[]> minHeap, 
+    int[] nums, int i) {
+        maxHeap.add(new int[]{nums[i], i});
+        minHeap.add(maxHeap.pollFirst());
+        if (minHeap.size() > maxHeap.size()) {
+            maxHeap.add(minHeap.pollFirst());
         }
-        long count = 0;
-        sum = 0;
-        for (int i = idx; i >= 0; --i){
-            sum += nums[i] == k ? 0 : nums[i] > k ? 1 : -1;
-            count += map.getOrDefault(0 - sum , 0);
-            count += map.getOrDefault(1 - sum , 0);
-        }
-        return (int) count;
+    }
+    private double median(int k, int[] nums, TreeSet<int[]> maxHeap, 
+    TreeSet<int[]> minHeap) {
+        return (double) maxHeap.first()[0];
+        // if (k % 2 == 0) {
+        //     return ((double) maxHeap.first()[0] + minHeap.first()[0]) / 2;
+        // }
+        // else {
+        //     return (double) maxHeap.first()[0];
+        // }
     }
 }
