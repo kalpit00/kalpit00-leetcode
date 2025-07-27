@@ -1,4 +1,4 @@
-// Last updated: 7/27/2025, 1:57:09 AM
+// Last updated: 7/27/2025, 1:58:24 AM
 class Solution {
     int mod = 1000000007;
     public int numberOfGoodPartitions(int[] nums) {
@@ -14,10 +14,10 @@ class Solution {
         for (int key : map.keySet()) {
             intervals[idx++] = map.get(key);
         }
-        intervals = merge(intervals);
-        return (int) pow(2, intervals.length - 1);
+        int m = merge(intervals);
+        return (int) pow(2, m - 1);
     }
-    public int[][] merge(int[][] intervals) {
+    public int merge(int[][] intervals) {
         Arrays.sort(intervals, (a,b) -> a[0] - b[0]);
         List<int[]> res = new ArrayList();
         int[] prev = intervals[0];
@@ -32,7 +32,7 @@ class Solution {
             }
         }
         res.add(prev);
-        return res.toArray(new int[0][]);
+        return res.size();
     }
     public long pow(long base, long exp) {
         long res = 1;
@@ -44,5 +44,4 @@ class Solution {
         }
         return res;
     }
-
 }
