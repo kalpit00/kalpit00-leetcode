@@ -1,64 +1,15 @@
-// Last updated: 7/27/2025, 1:35:01 AM
-class Bitset {
-    private char[] a;
-    private char[] b;
-    private int cnt;
-
-    public Bitset(int size) {
-        a = new char[size];
-        b = new char[size];
-        Arrays.fill(a, '0');
-        Arrays.fill(b, '1');
-    }
-
-    public void fix(int idx) {
-        if (a[idx] == '0') {
-            a[idx] = '1';
-            ++cnt;
+// Last updated: 7/27/2025, 1:42:11 AM
+class Solution {
+    public int minElement(int[] nums) {
+        int min = Integer.MAX_VALUE;
+        for (int num : nums) {
+            int sum = 0, n = num;
+            while (n > 0) {
+                sum += n % 10;
+                n /= 10;
+            }
+            min = Math.min(min, sum);
         }
-        b[idx] = '0';
-    }
-
-    public void unfix(int idx) {
-        if (a[idx] == '1') {
-            a[idx] = '0';
-            --cnt;
-        }
-        b[idx] = '1';
-    }
-
-    public void flip() {
-        char[] t = a;
-        a = b;
-        b = t;
-        cnt = a.length - cnt;
-    }
-
-    public boolean all() {
-        return cnt == a.length;
-    }
-
-    public boolean one() {
-        return cnt > 0;
-    }
-
-    public int count() {
-        return cnt;
-    }
-
-    public String toString() {
-        return String.valueOf(a);
+        return min;
     }
 }
-
-/**
- * Your Bitset object will be instantiated and called as such:
- * Bitset obj = new Bitset(size);
- * obj.fix(idx);
- * obj.unfix(idx);
- * obj.flip();
- * boolean param_4 = obj.all();
- * boolean param_5 = obj.one();
- * int param_6 = obj.count();
- * String param_7 = obj.toString();
- */
