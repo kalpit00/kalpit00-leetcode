@@ -1,75 +1,64 @@
-// Last updated: 7/27/2025, 1:33:10 AM
+// Last updated: 7/27/2025, 1:35:01 AM
 class Bitset {
-    char[] arr;
-    int zeroes, ones;
-    boolean flag;
+    private char[] a;
+    private char[] b;
+    private int cnt;
 
     public Bitset(int size) {
-        arr = new char[size];
-        Arrays.fill(arr, '0');
-        zeroes = size;
-        ones = 0;
-        flag = true;
+        a = new char[size];
+        b = new char[size];
+        Arrays.fill(a, '0');
+        Arrays.fill(b, '1');
     }
 
     public void fix(int idx) {
-        if (flag) {
-            if (arr[idx] == '0') {
-                arr[idx] = '1';
-                ones++;
-                zeroes--;
-            }
-        } else {
-            if (arr[idx] == '1') {
-                arr[idx] = '0';
-                ones++;
-                zeroes--;
-            }
+        if (a[idx] == '0') {
+            a[idx] = '1';
+            ++cnt;
         }
+        b[idx] = '0';
     }
 
     public void unfix(int idx) {
-        if (flag) {
-            if (arr[idx] == '1') {
-                arr[idx] = '0';
-                ones--;
-                zeroes++;
-            }
-        } else {
-            if (arr[idx] == '0') {
-                arr[idx] = '1';
-                ones--;
-                zeroes++;
-            }
+        if (a[idx] == '1') {
+            a[idx] = '0';
+            --cnt;
         }
+        b[idx] = '1';
     }
 
     public void flip() {
-        flag = !flag;
-        int temp = zeroes;
-        zeroes = ones;
-        ones = temp;
+        char[] t = a;
+        a = b;
+        b = t;
+        cnt = a.length - cnt;
     }
 
     public boolean all() {
-        return zeroes == 0;
+        return cnt == a.length;
     }
 
     public boolean one() {
-        return ones > 0;
+        return cnt > 0;
     }
 
     public int count() {
-        return ones;
+        return cnt;
     }
 
     public String toString() {
-        if (flag) return new String(arr);
-
-        StringBuilder sb = new StringBuilder();
-        for (char c : arr) {
-            sb.append(c == '0' ? '1' : '0');
-        }
-        return sb.toString();
+        return String.valueOf(a);
     }
 }
+
+/**
+ * Your Bitset object will be instantiated and called as such:
+ * Bitset obj = new Bitset(size);
+ * obj.fix(idx);
+ * obj.unfix(idx);
+ * obj.flip();
+ * boolean param_4 = obj.all();
+ * boolean param_5 = obj.one();
+ * int param_6 = obj.count();
+ * String param_7 = obj.toString();
+ */
