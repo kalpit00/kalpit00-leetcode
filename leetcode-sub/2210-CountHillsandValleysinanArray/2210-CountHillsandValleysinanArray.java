@@ -1,18 +1,20 @@
-// Last updated: 7/26/2025, 9:17:09 PM
+// Last updated: 7/26/2025, 9:20:52 PM
 class Solution {
     public int countHillValley(int[] nums) {
-        int count = 0, n = nums.length;
-        for (int i = 1; i < n - 1; i++) {
-            if (nums[i] == nums[i - 1]) continue;            
-            int l = i - 1, r = i + 1;
-            while (l > 0 && nums[i] == nums[l]) {
-                l--;
+        int n = nums.length, count = 0;
+        List<Integer> compressed = new ArrayList<>();
+        compressed.add(nums[0]);
+        for (int i = 1; i < n; i++) {
+            if (nums[i] != nums[i - 1]) {
+                compressed.add(nums[i]);
             }
-            while (r < n - 1 && nums[i] == nums[r]) {
-                r++;
-            }
-            count += (nums[i] > nums[l] && nums[i] > nums[r]) || 
-            (nums[i] < nums[l] && nums[i] < nums[r]) ? 1 : 0;
+        }
+        for (int i = 1; i < compressed.size() - 1; i++) {
+            int prev = compressed.get(i - 1);
+            int curr = compressed.get(i);
+            int next = compressed.get(i + 1);
+            if (curr > prev && curr > next) count++; // hill
+            else if (curr < prev && curr < next) count++; // valley
         }
         return count;
     }
