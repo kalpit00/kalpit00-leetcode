@@ -1,22 +1,19 @@
-// Last updated: 7/28/2025, 11:57:58 PM
-class Solution { // logN * logN
+// Last updated: 7/29/2025, 12:13:15 AM
+class Solution {
     public int countNodes(TreeNode root) {
         if (root == null) {
             return 0;
         }
-        int left = depth(root, true), right = depth(root, false);
-        if (left == right) { // its complete BT, there are 2^h - 1 nodes
-            return (1 << left) - 1;
-        } // else, using normal O(N) dfs to count
-        return 1 + countNodes(root.left) + countNodes(root.right);
-    }
-    
-    public int depth(TreeNode root, boolean isLeft) {
-        int count = 0;
-        while (root != null) {
-            count++;
-            root = isLeft ? root.left : root.right;
+        TreeNode left = root.right, right = root.right;
+        int height = 0;
+        while (right != null) { // go till right is null
+            left = left.left;
+            right = right.right;
+            height++;
         }
-        return count;
+        if (left == null && right == null) { // left == right, 2^h - 1
+            return (1 << height) + countNodes(root.left);
+        }
+        return (1 << (height + 1)) + countNodes(root.right);
     }
 }
