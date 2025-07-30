@@ -1,4 +1,4 @@
-// Last updated: 7/30/2025, 4:32:39 PM
+// Last updated: 7/30/2025, 5:01:19 PM
 class Solution {
     public int[] smallestTrimmedNumbers(String[] arr, int[][] queries) {
         int x = arr[0].length(), n = arr.length, m = queries.length;
