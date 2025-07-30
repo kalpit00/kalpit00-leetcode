@@ -1,4 +1,4 @@
-// Last updated: 7/30/2025, 12:01:35 AM
+// Last updated: 7/30/2025, 12:49:12 AM
 class Solution {
     public int[] sortArray(int[] nums) {
         int n = nums.length, k = 0, t = 0, j = 0, idx = 0;
@@ -31,10 +31,10 @@ class Solution {
             max = Math.max(max, nums[i]);
         }
         for (int exp = 1; max / exp > 0; exp *= 10) {
-            countSort(nums, n, exp);
+            digitSort(nums, n, exp);
         }
     }
-    private void countSort(int[] nums, int n, int exp) {
+    private void digitSort(int[] nums, int n, int exp) {
         int[] res = new int[n], map = new int[10];
         for (int i = 0; i < n; i++) {
             int d = (nums[i] / exp) % 10;
