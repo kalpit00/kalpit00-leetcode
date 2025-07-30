@@ -1,33 +1,29 @@
-// Last updated: 7/30/2025, 5:50:33 PM
+// Last updated: 7/30/2025, 6:01:13 PM
 class Solution {
     public int firstMissingPositive(int[] nums) {
         cycleSort(nums);
-        for (int n : nums) {
-            System.out.print(n + ", ");
-        }
-        for (int i = 0; i < nums.length; i++) {
-            if (nums[i] != i+1) {
-                return i+1;
+        int n = nums.length;
+        for (int i = 0; i < n; i++) {
+            if (nums[i] != i + 1) {
+                return i + 1;
             }
         }
-        return nums.length+1;
+        return n + 1;
     }
-    public static void cycleSort(int[] arr) {
-        int i = 0;
-        while (i < arr.length) {
-            int correctIndex = arr[i] - 1;
-            if (arr[i] > 0 && arr[i] <= arr.length && arr[i] != arr[correctIndex]) {
-            swap(arr, i, correctIndex);
-            }
-            else {
+    private void cycleSort(int[] nums) {
+        int n = nums.length, i = 0;
+        while (i < n) {
+            if (nums[i] <= 0 || nums[i] >= n || nums[i] == nums[nums[i] - 1]) {
                 i++;
-            }
+            } // repeatedly check if nums[i] is on the index : nums[i] - 1
+            else {
+                swap(nums, i, nums[i] - 1);
+            } // if not, swap to place [1] on idx 0, [2] on idx 1, and so on ..
         }
     }
-
-    static void swap (int[] arr, int first, int second) {
-        int temp = arr[first];
-        arr[first] = arr[second];
-        arr[second] = temp;
+    private void swap(int[] nums, int i, int j) {
+        int temp = nums[i];
+        nums[i] = nums[j];
+        nums[j] = temp;
     }
 }
