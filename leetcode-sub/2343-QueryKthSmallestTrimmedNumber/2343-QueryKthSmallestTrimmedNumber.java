@@ -1,4 +1,4 @@
-// Last updated: 7/30/2025, 1:41:37 AM
+// Last updated: 7/30/2025, 1:44:32 AM
 // String[] nums of equal length and consists of only digits.
 //queries[k, trim] -> trim each number to rightmost trim digits and determine the kth smallest trimmed number.
 /**
