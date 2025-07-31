@@ -1,6 +1,9 @@
-// Last updated: 7/31/2025, 5:39:14 PM
+// Last updated: 7/31/2025, 5:40:21 PM
 class Solution {
     public int[] sortArray(int[] nums) {
+        return mergeSort(nums);
+    }
+    private int[] mergeSort(int[] nums) {
         if (nums.length <= 1) {
             return nums;
         }
@@ -12,8 +15,8 @@ class Solution {
         for (int i = k; i < n; i++) {
             right[i - k] = nums[i];
         }
-        left = sortArray(left);
-        right = sortArray(right);
+        left = mergeSort(left);
+        right = mergeSort(right);
         return merge(left, right);
     }
     
