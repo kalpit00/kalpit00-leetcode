@@ -1,15 +1,15 @@
-// Last updated: 8/1/2025, 2:20:10 PM
+// Last updated: 8/1/2025, 2:29:29 PM
 class Solution {
     public int findKthLargest(int[] nums, int k) {
         int n = nums.length;
-        return quickSelect(nums, 0, n - 1, n - k);
-    } // [n - k]th smallest = k'th largest
+        return quickSelect(nums, 0, n - 1, k - 1);
+    }
 
     private int quickSelect(int[] nums, int start, int end, int k) {
         if (start == end) {
             return nums[start];
-        } // take mid as pivot choice between index [start .. end]
-        int pivotIndex = start + (end - start) / 2;
+        } // take random pivot choice between index [start .. end]
+        int pivotIndex = start + new Random().nextInt(end - start + 1);
         int pivot = partition(nums, start, end, pivotIndex);
         if (pivot == k) {
             return nums[k];
@@ -26,13 +26,13 @@ class Solution {
         swap(nums, pivotIndex, end); // temporarily put pivot on end
         int j = start;
         for (int i = start; i < end; i++) { // nums[start ... end]
-            if (nums[i] < pivot) {
+            if (nums[i] > pivot) {
                 swap(nums, i, j++);
-            } // place all elements < pivot in front, in [start .. j .. end]
-        } // [start .. j] now has all nums < pivot
+            } // place all elements > pivot in front, in [start .. j .. end]
+        } // [start .. j] now has all nums > pivot
         swap(nums, j, end); // move pivot just AFTER the 'j'th pos
         return j;
-    } // return 'j' which is summing elements < k, thereby O(N) sort
+    } // return 'j' which is summing elements > k, thereby O(N) sort
     private void swap(int[] nums, int i, int j) {
         int temp = nums[i];
         nums[i] = nums[j];
