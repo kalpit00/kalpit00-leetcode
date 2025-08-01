@@ -1,4 +1,4 @@
-// Last updated: 8/1/2025, 1:06:44 AM
+// Last updated: 8/1/2025, 1:14:35 AM
 class Solution {    
     public int[] sortArray(int[] nums) {
         return quickSort(nums);
@@ -10,39 +10,34 @@ class Solution {
             return nums;
         }
         int pivot = nums[new Random().nextInt(n)];
-        int l = 0, e = 0, r = 0,  a = 0, b = 0, c = 0;        
+        int l = 0, r = 0, m = 0, k = 0, j = 0;
         for (int i = 0; i < n; i++) {
-            if (nums[i] < pivot) {
-                a++;
-            } else if (nums[i] == pivot) {
-                b++;
-            } else {
-                c++;
-            }
+            k += nums[i] == pivot ? 1 : 0;
+            m += nums[i] < pivot ? 1 : 0;
         }
-        int[] left = new int[a], equal = new int[b], right = new int[c];
+        int[] left = new int[m], mid = new int[k], right = new int[n - m - k];
         for (int i = 0; i < n; i++) {
             if (nums[i] < pivot) {
                 left[l++] = nums[i];
             } else if (nums[i] == pivot) {
-                equal[e++] = nums[i];
+                mid[j++] = nums[i];
             } else {
                 right[r++] = nums[i];
             }
         }
         left = quickSort(left);
         right = quickSort(right);        
-        return merge(left, equal, right);
+        return merge(left, mid, right);
     }
     
-    private int[] merge(int[] left, int[] equal, int[] right) {
-        int m = left.length, e = equal.length, n = right.length, k = 0;
-        int[] res = new int[m + e + n];
+    private int[] merge(int[] left, int[] mid, int[] right) {
+        int m = left.length, j = mid.length, n = right.length, k = 0;
+        int[] res = new int[m + j + n];
         for (int i = 0; i < m; i++) {
             res[k++] = left[i];
         }        
-        for (int i = 0; i < e; i++) {
-            res[k++] = equal[i];
+        for (int i = 0; i < j; i++) {
+            res[k++] = mid[i];
         }        
         for (int i = 0; i < n; i++) {
             res[k++] = right[i];
