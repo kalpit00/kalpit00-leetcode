@@ -1,4 +1,4 @@
-// Last updated: 8/1/2025, 7:10:56 PM
+// Last updated: 8/1/2025, 7:11:23 PM
 class Solution {
     public int findKthLargest(int[] nums, int k) {
         int n = nums.length;
@@ -6,7 +6,7 @@ class Solution {
     } // [n - k]th smallest = k'th largest
 
     private int quickSelect(int[] nums, int start, int end, int k) {
-        if (start == end) {
+        if (start >= end) {
             return nums[start];
         } // take random pivot choice between index [start .. end]
         int pivotIndex = start + new Random().nextInt(end - start + 1);
