@@ -1,9 +1,9 @@
-// Last updated: 8/1/2025, 2:50:12 PM
+// Last updated: 8/1/2025, 7:10:56 PM
 class Solution {
     public int findKthLargest(int[] nums, int k) {
         int n = nums.length;
-        return quickSelect(nums, 0, n - 1, k - 1);
-    }
+        return quickSelect(nums, 0, n - 1, n - k);
+    } // [n - k]th smallest = k'th largest
 
     private int quickSelect(int[] nums, int start, int end, int k) {
         if (start == end) {
@@ -26,13 +26,13 @@ class Solution {
         swap(nums, pivotIndex, end); // temporarily put pivot on end
         int j = start;
         for (int i = start; i < end; i++) { // nums[start ... end]
-            if (nums[i] > pivot) {
+            if (nums[i] < pivot) {
                 swap(nums, i, j++);
-            } // place all elements > pivot in front, in [start .. j .. end]
-        } // [start .. j] now has all nums > pivot
+            } // place all elements < pivot in front, in [start .. j .. end]
+        } // [start .. j] now has all nums < pivot
         swap(nums, j, end); // move pivot just AFTER the 'j'th pos
         return j;
-    } // return 'j' which is summing elements > k, thereby O(N) sort
+    } // return 'j' which is summing elements < k, thereby O(N) sort
     private void swap(int[] nums, int i, int j) {
         int temp = nums[i];
         nums[i] = nums[j];
