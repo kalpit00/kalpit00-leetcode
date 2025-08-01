@@ -1,4 +1,4 @@
-// Last updated: 8/1/2025, 7:11:23 PM
+// Last updated: 8/1/2025, 7:24:30 PM
 class Solution {
     public int findKthLargest(int[] nums, int k) {
         int n = nums.length;
@@ -10,29 +10,34 @@ class Solution {
             return nums[start];
         } // take random pivot choice between index [start .. end]
         int pivotIndex = start + new Random().nextInt(end - start + 1);
-        int pivot = partition(nums, start, end, pivotIndex);
-        if (pivot == k) {
-            return nums[k];
+        int pivot[] = partition(nums, start, end, pivotIndex);
+        if (pivot[0] > k) {
+            return quickSelect(nums, start, pivot[0] - 1, k);
         }
-        else if (pivot > k) {
-            return quickSelect(nums, start, pivot - 1, k);
+        else if (pivot[1] < k) {
+            return quickSelect(nums, pivot[1] + 1, end, k);
         }
         else {
-            return quickSelect(nums, pivot + 1, end, k);
+            return nums[k];
         }
     }
-    private int partition(int[] nums, int start, int end, int pivotIndex) {
+    // Dutch National Flag Algorithm
+    private int[] partition(int[] nums, int start, int end, int pivotIndex) {
         int pivot = nums[pivotIndex]; 
-        swap(nums, pivotIndex, end); // temporarily put pivot on end
-        int j = start;
-        for (int i = start; i < end; i++) { // nums[start ... end]
-            if (nums[i] < pivot) {
-                swap(nums, i, j++);
-            } // place all elements < pivot in front, in [start .. j .. end]
-        } // [start .. j] now has all nums < pivot
-        swap(nums, j, end); // move pivot just AFTER the 'j'th pos
-        return j;
-    } // return 'j' which is summing elements < k, thereby O(N) sort
+        int i = start, idx = start, j = end;
+        while (idx <= j && i < j) {
+            if (nums[idx] < pivot) {
+                swap(nums, i++, idx++);
+            }
+            else if (nums[idx] > pivot) {
+                swap(nums, j--, idx);
+            }
+            else {
+                idx++;
+            }
+        }
+        return new int[]{i, j};
+    }
     private void swap(int[] nums, int i, int j) {
         int temp = nums[i];
         nums[i] = nums[j];
