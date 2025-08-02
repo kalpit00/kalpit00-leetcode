@@ -1,7 +1,6 @@
-// Last updated: 8/1/2025, 11:39:17 PM
+// Last updated: 8/1/2025, 11:40:31 PM
 class Solution {
     public int minMoves2(int[] nums) {
-        Arrays.sort(nums);
         int n = nums.length, sum = 0;
         int median = quickSelect(nums, 0, n - 1, (n - 1) / 2);        
         for (int num : nums) {
@@ -12,8 +11,8 @@ class Solution {
     private int quickSelect(int[] nums, int start, int end, int k) {
         if (start >= end) {
             return nums[start];
-        } // take random pivot choice between index [start .. end]
-        int pivotIndex = start + new Random().nextInt(end - start + 1);
+        } // take middle as pivot choice between index [start .. end]
+        int pivotIndex = start + (end - start) / 2;
         int pivot[] = partition(nums, start, end, pivotIndex);
         if (pivot[0] > k) {
             return quickSelect(nums, start, pivot[0] - 1, k);
