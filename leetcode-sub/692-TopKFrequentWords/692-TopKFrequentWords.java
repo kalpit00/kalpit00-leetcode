@@ -1,4 +1,4 @@
-// Last updated: 8/2/2025, 2:59:34 PM
+// Last updated: 8/2/2025, 3:02:11 PM
 class Solution {
     public List<String> topKFrequent(String[] words, int k) {
         Map<String, Integer> map = new HashMap<>();
@@ -11,15 +11,11 @@ class Solution {
             nums[idx++] = new Node(key, map.get(key));
         }
         quickSelect(nums, 0, n - 1, n - k);
-        List<Node> topK = new ArrayList<>();
-        for (int i = n - k; i < n; i++) {
-            topK.add(nums[i]);
-        }
-        Collections.sort(topK, (a, b) -> a.val != b.val ? b.val - a.val : a.word.compareTo(b.word));
         List<String> res = new ArrayList<>();
-        for (Node node : topK) {
-            res.add(node.word);
+        for (int i = n - k; i < n; i++) {
+            res.add(nums[i].word);
         }
+        Collections.sort(res, (a, b) -> map.get(a) != map.get(b) ? map.get(b) - map.get(a) : a.compareTo(b));
         return res;
     }
     private String quickSelect(Node[] nums, int start, int end, int k) {
