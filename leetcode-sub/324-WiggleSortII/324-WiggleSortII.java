@@ -1,4 +1,4 @@
-// Last updated: 8/1/2025, 11:38:11 PM
+// Last updated: 8/1/2025, 11:39:57 PM
 class Solution {
     public void wiggleSort(int[] nums) {
         int n = nums.length;
@@ -22,8 +22,8 @@ class Solution {
     private int quickSelect(int[] nums, int start, int end, int k) {
         if (start >= end) {
             return nums[start];
-        } // take random pivot choice between index [start .. end]
-        int pivotIndex = start + new Random().nextInt(end - start + 1);
+        } // take middle as pivot choice between index [start .. end]
+        int pivotIndex = start + (end - start) / 2;
         int pivot[] = partition(nums, start, end, pivotIndex);
         if (pivot[0] > k) {
             return quickSelect(nums, start, pivot[0] - 1, k);
