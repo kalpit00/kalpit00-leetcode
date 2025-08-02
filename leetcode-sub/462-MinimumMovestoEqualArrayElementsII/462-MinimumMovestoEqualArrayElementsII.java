@@ -1,49 +1,55 @@
-// Last updated: 8/1/2025, 11:40:31 PM
+// Last updated: 8/1/2025, 11:40:57 PM
 class Solution {
     public int minMoves2(int[] nums) {
-        int n = nums.length, sum = 0;
-        int median = quickSelect(nums, 0, n - 1, (n - 1) / 2);        
-        for (int num : nums) {
-            sum += Math.abs(median - num);
-        }
-        return sum;
+    int  median=findKth(nums,0,nums.length-1,nums.length/2),sum=0;
+    for(int x:nums){
+        sum+=Math.abs(median-x);
     }
-    private int quickSelect(int[] nums, int start, int end, int k) {
-        if (start >= end) {
-            return nums[start];
-        } // take middle as pivot choice between index [start .. end]
-        int pivotIndex = start + (end - start) / 2;
-        int pivot[] = partition(nums, start, end, pivotIndex);
-        if (pivot[0] > k) {
-            return quickSelect(nums, start, pivot[0] - 1, k);
-        }
-        else if (pivot[1] < k) {
-            return quickSelect(nums, pivot[1] + 1, end, k);
-        }
-        else {
-            return nums[k];
-        }
+    return sum;
     }
-    // Dutch National Flag Algorithm
-    private int[] partition(int[] nums, int start, int end, int pivotIndex) {
-        int pivot = nums[pivotIndex]; 
-        int i = start, idx = start, j = end;
-        while (idx <= j && i < j) {
-            if (nums[idx] < pivot) {
-                swap(nums, i++, idx++);
+    private int findKth(int[] nums,int l,int r,int k){
+        while(l<r){
+            int p=partition(nums,l,r);
+            if(p<k){
+                l=p+1;
             }
-            else if (nums[idx] > pivot) {
-                swap(nums, j--, idx);
-            }
-            else {
-                idx++;
+            else{
+                r=p;
             }
         }
-        return new int[]{i, j};
+        return nums[l];
     }
-    private void swap(int[] nums, int i, int j) {
-        int temp = nums[i];
-        nums[i] = nums[j];
-        nums[j] = temp;
+    private int partition(int[] n,int l,int r){
+        int mid =(l+r)/2;
+        if(n[mid]<n[l]){
+            swap(n,mid,l);
+        }
+        if(n[r]<n[l]){
+            swap(n,l,r);
+        }
+        if(n[r]<n[mid]){
+            swap(n,mid,r);
+        }
+        int p=n[mid],i=l-1,j=r+1;
+        while(true){
+            do{
+                i++;
+            }while(n[i]<p);
+            do{
+                j--;
+            }while(n[j]>p);
+            if(i<j){
+                swap(n,i,j);
+            }
+            else{
+                return j;
+            }
+        }
+    }
+
+    private void swap(int[] n,int i,int j){
+        int tmp=n[i];
+        n[i]=n[j];
+        n[j]=tmp;
     }
 }
