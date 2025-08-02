@@ -1,18 +1,17 @@
-// Last updated: 8/2/2025, 5:25:26 AM
+// Last updated: 8/2/2025, 1:59:55 PM
 class Solution {
     public long minCost(int[] basket1, int[] basket2) {
         Map<Integer, Integer> map = new HashMap<>();
         int min = Integer.MAX_VALUE;
         for (int num : basket1) {
             map.put(num, map.getOrDefault(num, 0) + 1);
-            min = Math.min(min, num);
         }
         for (int num : basket2) {
             map.put(num, map.getOrDefault(num, 0) - 1);
-            min = Math.min(min, num);
         }
         List<Integer> list = new ArrayList<>();
         for (int key : map.keySet()) {
+            min = Math.min(min, key);
             int count = map.get(key);
             if (count % 2 != 0) {
                 return -1;
@@ -30,11 +29,11 @@ class Solution {
             nums[i] = list.get(i);
         }
         quickSelect(nums, 0, n - 1, (n - 1) / 2);
-        long res = 0;
+        long sum = 0;
         for (int i = 0; i < n / 2; i++) {
-            res += Math.min(2 * min, nums[i]);
+            sum += Math.min(2 * min, nums[i]);
         }
-        return res;
+        return sum;
     }
     private int quickSelect(int[] nums, int start, int end, int k) {
         if (start >= end) {
