@@ -1,55 +1,57 @@
-// Last updated: 8/2/2025, 5:10:10 PM
+// Last updated: 8/2/2025, 5:13:09 PM
+import java.util.*;
+
 class Solution {
+    int[] nums;
+    int[] answers;
+
     public List<Integer> countSmaller(int[] nums) {
+        this.nums = nums;
         int n = nums.length;
-        int[] map = new int[n];
-        int[][] arr = new int[n][2];
-        for (int i = 0; i < n; i++) {
-            arr[i][0] = nums[i];
-            arr[i][1] = i;
-        }
-        mergeSort(arr, map);
-        List<Integer> res = new ArrayList<>();
-        for (int num : map) {
-            res.add(num);
-        }
-        return res;
+        answers = new int[n];
+
+        // We use an array of indices to avoid moving the actual nums array around
+        int[] indices = new int[n];
+        for (int i = 0; i < n; i++) indices[i] = i;
+
+        mergeSort(indices, 0, n - 1);
+
+        // Convert answers array to List<Integer>
+        List<Integer> result = new ArrayList<>();
+        for (int val : answers) result.add(val);
+        return result;
     }
 
-    private int[][] mergeSort(int[][] nums, int[] map) {
-        if (nums.length <= 1) return nums;
-        int n = nums.length, k = n / 2;
-        int[][] left = new int[k][2], right = new int[n - k][2];
-        for (int i = 0; i < k; i++) {
-            left[i] = nums[i];
-        }
-        for (int i = k; i < n; i++) {
-            right[i - k] = nums[i];
-        }
-        left = mergeSort(left, map);
-        right = mergeSort(right, map);
-        return merge(left, right, map);
+    private int[] mergeSort(int[] indices, int left, int right) {
+        if (left == right) return new int[]{indices[left]};
+
+        int mid = (left + right) / 2;
+        int[] leftSorted = mergeSort(indices, left, mid);
+        int[] rightSorted = mergeSort(indices, mid + 1, right);
+
+        return merge(leftSorted, rightSorted);
     }
 
-    private int[][] merge(int[][] left, int[][] right, int[] map) {
-        int m = left.length, n = right.length, i = 0, j = 0, k = 0;
-        int[][] res = new int[m + n][2];
-        while (i < m && j < n) {
-            if (left[i][0] <= right[j][0]) {
-                map[left[i][1]] += j;
-                res[k++] = left[i++];
-            }  // just count all 'j' greater eles on the right 
-            else {
-                res[k++] = right[j++];
+    private int[] merge(int[] left, int[] right) {
+        int[] merged = new int[left.length + right.length];
+
+        int i = 0, j = 0, k = 0;
+        while (i < left.length && j < right.length) {
+            if (nums[left[i]] <= nums[right[j]]) {
+                // No count is added, because nums[left[i]] <= nums[right[j]]
+                merged[k++] = right[j++];
+            } else {
+                // nums[left[i]] > nums[right[j]]
+                // All remaining right[j:] are smaller
+                answers[left[i]] += right.length - j;
+                merged[k++] = left[i++];
             }
         }
-        while (i < m) {  // same here, add += 'j'
-            map[left[i][1]] += j;
-            res[k++] = left[i++];
-        }
-        while (j < n) {
-            res[k++] = right[j++];
-        }
-        return res;
+
+        // Dump remaining elements
+        while (i < left.length) merged[k++] = left[i++];
+        while (j < right.length) merged[k++] = right[j++];
+
+        return merged;
     }
 }
