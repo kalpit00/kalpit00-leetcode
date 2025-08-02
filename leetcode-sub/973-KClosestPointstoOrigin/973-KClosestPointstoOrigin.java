@@ -1,4 +1,4 @@
-// Last updated: 8/1/2025, 11:18:34 PM
+// Last updated: 8/1/2025, 11:19:11 PM
 class Solution {
     public int[][] kClosest(int[][] points, int k) {
         int n = points.length;
@@ -47,8 +47,8 @@ class Solution {
         return new int[]{i, j};
     }
     private void swap(int[][] nums, int i, int j) {
-        int[] temp = nums[i].clone();
-        System.arraycopy(nums[j], 0, nums[i], 0, 3);
-        System.arraycopy(temp, 0, nums[j], 0, 3); 
+        int[] temp = nums[i];
+        nums[i] = nums[j];
+        nums[j] = temp;
     }
 }
