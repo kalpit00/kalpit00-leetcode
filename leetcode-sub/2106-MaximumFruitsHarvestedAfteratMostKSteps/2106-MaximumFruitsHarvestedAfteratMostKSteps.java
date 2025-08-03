@@ -1,15 +1,10 @@
-// Last updated: 8/2/2025, 10:13:48 PM
+// Last updated: 8/2/2025, 10:22:36 PM
 class Solution {
-        public int maxTotalFruits(int[][] fruits, int startPos, int k) {
-        int left = 0, n = fruits.length, max = 0, sum = 0;
-        while (left < n && fruits[left][0] + k < startPos) {
-            left++;
-        }
-        int right = left;
-        while (right < n && startPos + k >= fruits[right][0]) {
-            sum += fruits[right][1]; // <r - 2l + src, 2r - l - src
-            while (Math.min(fruits[right][0] - 2 * fruits[left][0] + startPos,
-            2 * fruits[right][0] - fruits[left][0] - startPos) > k) {
+        public int maxTotalFruits(int[][] fruits, int src, int k) {
+        int left = 0, right = 0, n = fruits.length, max = 0, sum = 0;
+        while (right < n) {
+            sum += fruits[right][1];
+            while (left <= right && (helper(fruits, src, left, right) > k)) {
                 sum -= fruits[left][1];
                 left++;
             }
@@ -17,5 +12,11 @@ class Solution {
             right++;
         }
         return max;
+    }
+    public int helper(int[][] fruits, int src, int left, int right) {
+        int r = fruits[right][0], l = fruits[left][0];
+        int k = r - l;
+        int start = Math.min(Math.abs(src - r), Math.abs(src - l));
+        return start + k;
     }
 }
