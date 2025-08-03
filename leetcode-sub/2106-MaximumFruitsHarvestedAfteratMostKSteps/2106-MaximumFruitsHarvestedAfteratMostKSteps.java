@@ -1,10 +1,10 @@
-// Last updated: 8/2/2025, 10:22:36 PM
+// Last updated: 8/2/2025, 10:23:14 PM
 class Solution {
         public int maxTotalFruits(int[][] fruits, int src, int k) {
         int left = 0, right = 0, n = fruits.length, max = 0, sum = 0;
         while (right < n) {
             sum += fruits[right][1];
-            while (left <= right && (helper(fruits, src, left, right) > k)) {
+            while (left < n && helper(fruits, src, left, right) > k) {
                 sum -= fruits[left][1];
                 left++;
             }
