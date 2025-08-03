@@ -1,4 +1,4 @@
-// Last updated: 7/25/2025, 3:42:44 AM
+// Last updated: 8/2/2025, 10:13:48 PM
 class Solution {
         public int maxTotalFruits(int[][] fruits, int startPos, int k) {
         int left = 0, n = fruits.length, max = 0, sum = 0;
