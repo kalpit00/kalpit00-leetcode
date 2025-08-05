@@ -1,10 +1,10 @@
-// Last updated: 8/4/2025, 10:18:22 PM
+// Last updated: 8/4/2025, 10:18:39 PM
 class Solution {
     public int numOfUnplacedFruits(int[] fruits, int[] baskets) {
         int n = fruits.length, count = 0;
         SegmentTree segmentTree = new SegmentTree(baskets);
         for (int fruit : fruits) { // If no basket can fit this fruit, skip
-            if (segmentTree.query(0, n - 1) < fruit) continue;
+            if (segmentTree.tree[0] < fruit) continue;
             // Binary search to find leftmost basket that can fit this fruit
             int start = 0, end = n - 1, ans = n;
             while (start <= end) {
