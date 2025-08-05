@@ -1,22 +1,12 @@
-// Last updated: 8/4/2025, 10:16:12 PM
+// Last updated: 8/4/2025, 10:17:22 PM
 class Solution {
     public int numOfUnplacedFruits(int[] fruits, int[] baskets) {
         int n = fruits.length, count = 0;
         SegmentTree segmentTree = new SegmentTree(baskets);
         for (int fruit : fruits) { // If no basket can fit this fruit, skip
             if (segmentTree.tree[0] < fruit) continue;
-            // Binary search to find leftmost basket that can fit this fruit
-            int start = 0, end = n - 1, ans = n;
-            while (start <= end) {
-                int mid = start + (end - start) / 2;
-                if (segmentTree.query(0, mid) >= fruit) {
-                    ans = mid;
-                    end = mid - 1;
-                } else {
-                    start = mid + 1;
-                }
-            }
-            segmentTree.update(ans, -1);
+            int idx = segmentTree.findFirst(0, 0, n - 1, fruit);
+            segmentTree.update(idx, -1);
             count++;
         }
         return n - count;
@@ -72,6 +62,17 @@ class Solution {
             int leftMax = query(2 * node + 1, l, mid, left, right);
             int rightMax = query(2 * node + 2, mid + 1, r, left, right);
             return Math.max(leftMax, rightMax);
+        }
+        public int findFirst(int node, int l, int r, int target) {
+            if (l == r) return l;
+            int mid = l + (r - l) / 2;
+            // If left child has a valid basket, go left; otherwise go right
+            if (tree[2 * node + 1] >= target) {
+                return findFirst(2 * node + 1, l, mid, target);
+            } 
+            else {
+                return findFirst(2 * node + 2, mid + 1, r, target);
+            }
         }
     }
 }
