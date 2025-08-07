@@ -1,4 +1,4 @@
-// Last updated: 8/6/2025, 9:16:19 PM
+// Last updated: 8/6/2025, 9:16:44 PM
 class Solution {
     public int maxCollectedFruits(int[][] grid) {
         int n = grid.length, sum = 0;
@@ -16,7 +16,7 @@ class Solution {
             return Integer.MIN_VALUE;
         }
         if (i == n - 1 && j == n - 1) {
-            return grid[i][j];
+            return 0;
         }
         if (dp[i][j] != null) {
             return dp[i][j];
