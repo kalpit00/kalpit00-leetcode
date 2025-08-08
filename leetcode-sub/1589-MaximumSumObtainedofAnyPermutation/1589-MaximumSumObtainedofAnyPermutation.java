@@ -1,15 +1,11 @@
-// Last updated: 8/8/2025, 5:56:53 PM
+// Last updated: 8/8/2025, 5:59:20 PM
 class Solution {
     public int countEven(int num) {
-        int count = 0;
-        for (int i = 1; i <= num; i++) {
-            int n = i, sum = 0;
-            while (n > 0) {
-                sum += n % 10;
-                n /= 10;
-            }
-            count += sum % 2 == 0 ? 1 : 0;
+        int n = num, sum = 0;
+        while (n > 0) {
+            sum += n % 10;
+            n /= 10;
         }
-        return count;
+        return sum % 2 == 0 ? num / 2 : (num - 1) / 2;
     }
 }
