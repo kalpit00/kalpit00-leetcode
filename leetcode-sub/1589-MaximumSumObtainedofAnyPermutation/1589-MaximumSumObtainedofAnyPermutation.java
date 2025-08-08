@@ -1,4 +1,4 @@
-// Last updated: 8/8/2025, 5:59:20 PM
+// Last updated: 8/8/2025, 6:01:12 PM
 class Solution {
     public int countEven(int num) {
         int n = num, sum = 0;
@@ -6,6 +6,6 @@ class Solution {
             sum += n % 10;
             n /= 10;
         }
-        return sum % 2 == 0 ? num / 2 : (num - 1) / 2;
+        return (num - (sum % 2)) / 2;
     }
 }
