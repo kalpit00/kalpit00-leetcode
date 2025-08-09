@@ -1,4 +1,4 @@
-// Last updated: 8/9/2025, 3:24:24 PM
+// Last updated: 8/9/2025, 3:25:05 PM
 class Solution {
     public String[] findWords(String[] words) {
         String[] rows = {"qwertyuiop", "asdfghjkl", "zxcvbnm"};
@@ -13,8 +13,8 @@ class Solution {
             if (helper(word.toLowerCase(), map)) {
                 res.add(word);
             }
-        }
-        return res.toArray(new String[0]);
+        } // same as res.toArray(new String[0]);
+        return res.toArray(String[]::new);
     }
     private boolean helper(String word, int[] map) {
         int x = map[word.charAt(0) - 'a'];
