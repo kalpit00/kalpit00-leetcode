@@ -1,13 +1,35 @@
-// Last updated: 8/9/2025, 12:28:42 AM
+// Last updated: 8/9/2025, 12:38:13 AM
 class Solution {
     public int maxSumDistinctTriplet(int[] x, int[] y) {
-        Map<Integer, Integer> map = new HashMap<>();
-        int n = x.length;
+        int n = x.length, size = 0;
         for (int i = 0; i < n; i++) {
-            map.put(x[i], Math.max(map.getOrDefault(x[i], 0), y[i]));
+            size = Math.max(size, x[i]);
         }
-        List<Integer> list = new ArrayList<>(map.values());
-        list.sort(Collections.reverseOrder());
-        return list.size() < 3 ? -1 : list.get(0) + list.get(1) + list.get(2);
+        int[] map = new int[size + 1];
+        for (int i = 0; i < n; i++) {
+            map[x[i]] = Math.max(map[x[i]], y[i]);
+        }
+        int[] max = helper(map);
+        if (max[0] == -1 || max[1] == -1 || max[2] == -1) {
+            return -1;
+        }
+        return max[0] + max[1] + max[2];
+    }
+    private int[] helper(int[] nums) {
+        int max1 = -1, max2 = -1, max3 = -1;
+        for (int num : nums) {
+            if (num == 0) continue;
+            if (num > max1) {
+                max3 = max2;
+                max2 = max1;
+                max1 = num;
+            } else if (num > max2) {
+                max3 = max2;
+                max2 = num;
+            } else if (num > max3) {
+                max3 = num;
+            }
+        }
+        return new int[] {max1, max2, max3};
     }
 }
