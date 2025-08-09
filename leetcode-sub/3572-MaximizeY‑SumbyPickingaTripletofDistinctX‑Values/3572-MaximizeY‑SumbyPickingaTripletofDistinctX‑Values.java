@@ -1,11 +1,8 @@
-// Last updated: 8/9/2025, 12:38:13 AM
+// Last updated: 8/9/2025, 12:38:48 AM
 class Solution {
     public int maxSumDistinctTriplet(int[] x, int[] y) {
-        int n = x.length, size = 0;
-        for (int i = 0; i < n; i++) {
-            size = Math.max(size, x[i]);
-        }
-        int[] map = new int[size + 1];
+        int n = x.length;
+        int[] map = new int[1000001];
         for (int i = 0; i < n; i++) {
             map[x[i]] = Math.max(map[x[i]], y[i]);
         }
