@@ -1,8 +1,8 @@
-// Last updated: 3/27/2025, 3:45:11 PM
+// Last updated: 8/11/2025, 5:20:38 PM
 class Solution {
     int[][] dir = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
     public int shortestBridge(int[][] grid) {
-        int n = grid.length, steps = 0;
+        int n = grid.length, steps = -1;
         Queue<int[]> queue = new LinkedList<>();
         boolean[][] visited = new boolean[n][n];
         outer: // LABEL new trick
@@ -18,18 +18,16 @@ class Solution {
             int size = queue.size();
             for (int k = 0; k < size; k++) {
                 int[] node = queue.poll();
-                int x = node[0], y = node[1];      
+                int x = node[0], y = node[1];
+                if (grid[x][y] == 1) {
+                    return steps;
+                }
                 for (int[] d : dir) {
                     int r = x + d[0], c = y + d[1];
                     if (r >= 0 && r < n && c >= 0 && c < n && 
                     !visited[r][c]) {
-                        if (grid[r][c] == 1) {
-                            return steps;
-                        }
-                        else {
-                            visited[r][c] = true;
-                            queue.offer(new int[]{r, c});
-                        }
+                        visited[r][c] = true;
+                        queue.offer(new int[]{r, c});
                     }
                 }
             }
@@ -44,6 +42,7 @@ class Solution {
         visited[i][j]) {
             return;
         }
+        grid[i][j] = 2; // color first island cells to 2!!
         visited[i][j] = true;
         queue.offer(new int[]{i, j});
         for (int[] d : dir) {
