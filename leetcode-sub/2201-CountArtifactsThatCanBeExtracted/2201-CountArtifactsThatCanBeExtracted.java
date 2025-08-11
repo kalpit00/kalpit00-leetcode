@@ -1,26 +1,23 @@
-// Last updated: 8/10/2025, 11:27:41 PM
+// Last updated: 8/11/2025, 3:47:14 AM
 class Solution {
     public int digArtifacts(int n, int[][] artifacts, int[][] dig) {
-        boolean[][] grid = new boolean[n][n];
-        for (int[] d : dig) {
-            int r = d[0], c = d[1];
-            grid[r][c] = true;
+        
+        boolean visit[][]=new boolean[n][n];
+        for(int arr[]:dig){
+            visit[arr[0]][arr[1]]=true;
         }
-        int count = 0;
-        for (int[] d : artifacts) {
-            int r1 = d[0], c1 = d[1], r2 = d[2], c2 = d[3];
-            boolean flag = true;
-            outer:
-            for (int i = r1; i <= r2; i++) {
-                for (int j = c1; j <= c2; j++) {
-                    if (!grid[i][j]) {
-                        flag = false;
-                        break outer;
-                    }
+        
+        int ans=0;
+        for(int arr[]:artifacts){
+            
+            boolean flag=true;
+            for(int i=arr[0];i<=arr[2];i++){
+                for(int j=arr[1];j<=arr[3];j++){
+                    if(!visit[i][j]) flag=false;
                 }
             }
-            count += flag ? 1 : 0;
+            if(flag) ans++;
         }
-        return count;
+        return ans;
     }
 }
