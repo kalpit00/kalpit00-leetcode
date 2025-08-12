@@ -1,4 +1,4 @@
-// Last updated: 8/11/2025, 9:04:13 PM
+// Last updated: 8/11/2025, 9:07:25 PM
 class Solution {
     public int[] processQueries(int c, int[][] connections, int[][] queries) {
         DSU dsu = new DSU(c + 1);
@@ -13,7 +13,7 @@ class Solution {
             map.putIfAbsent(parent, new TreeSet<>());
             map.get(parent).add(i);
         }
-        List<Integer> res = new ArrayList<>();
+        List<Integer> list = new ArrayList<>();
         for (int[] q : queries) {
             int i = q[1];
             if (q[0] == 2) {
@@ -22,20 +22,24 @@ class Solution {
             }
             else {
                 if (!visited[i]) {
-                    res.add(i);
+                    list.add(i);
                 }
                 else {
                     int parent = dsu.findParent(i);
-                    if (map.get(parent).isEmpty()) {
-                        res.add(-1);
+                    if (!map.containsKey(parent) || map.get(parent).isEmpty()) {
+                        list.add(-1);
                     }
                     else {
-                        res.add(map.get(parent).iterator().next());
+                        list.add(map.get(parent).iterator().next());
                     }
                 }
             }
         }
-        return res.stream().mapToInt(Integer::intValue).toArray();
+        int[] res = new int[list.size()];
+        for (int i = 0; i < res.length; i++) {
+            res[i] = list.get(i);
+        }
+        return res;
     }
     class DSU {
         int[] size, parent;
