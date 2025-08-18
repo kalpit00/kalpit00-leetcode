@@ -1,68 +1,62 @@
-// Last updated: 5/4/2025, 12:57:12 AM
+// Last updated: 8/17/2025, 8:57:06 PM
 class Solution {
     public int lengthOfLIS(int[] nums, int k) {
         int n = nums.length, size = 0, max = 0;
         for (int num : nums) size = Math.max(size, num);
-        SegmentTreeLazyMax segmentTree = new SegmentTreeLazyMax(size + 2);
-        int[] arr = new int[size + 2]; 
+        SegmentTreeMax segmentTree = new SegmentTreeMax(size + 1);        
         for (int num : nums) {
             int left = Math.max(0, num - k), right = num - 1;
-            int res = (left <= right) ? segmentTree.query(left, right) + 1 : 1;
-            int diff = res - arr[num];
-            arr[num] = res;
-            segmentTree.update(num, num, diff);
-            max = Math.max(max, res);
+            int res = (left <= right) ? segmentTree.query(left, right) : 0;
+            segmentTree.update(num, res + 1);
+            max = Math.max(max, res + 1);
         }
         return max;
     }
-
-    class SegmentTreeLazyMax {
-        int[] tree, lazy;
+    
+    class SegmentTreeMax {
+        int[] tree;
         int n;
-
-        public SegmentTreeLazyMax(int size) {
+        
+        public SegmentTreeMax(int size) {
             n = size;
             tree = new int[4 * n];
-            lazy = new int[4 * n];
         }
-
-        private void push(int node, int l, int r) {
-            if (lazy[node] != 0) {
-                tree[node] += (r - l + 1) * lazy[node];
-                if (l != r) { // Not a leaf
-                    lazy[2 * node] += lazy[node];
-                    lazy[2 * node + 1] += lazy[node];
-                }
-                lazy[node] = 0;
-            }
+        
+        public void update(int idx, int val) {
+            update(1, 0, n - 1, idx, val);
         }
-
-        public void update(int l, int r, int val) {
-            update(1, 0, n - 1, l, r, val);
-        }
-
-        private void update(int node, int l, int r, int ql, int qr, int val) {
-            push(node, l, r);
-            if (qr < l || r < ql) return;
-            if (ql <= l && r <= qr) {
-                lazy[node] += val;
-                push(node, l, r);
+        
+        private void update(int node, int l, int r, int idx, int val) {
+            if (l == r) {
+                tree[node] = Math.max(tree[node], val);
                 return;
             }
+            
             int mid = l + (r - l) / 2;
-            update(2 * node, l, mid, ql, qr, val);
-            update(2 * node + 1, mid + 1, r, ql, qr, val);
+            if (idx <= mid) {
+                update(2 * node, l, mid, idx, val);
+            } else {
+                update(2 * node + 1, mid + 1, r, idx, val);
+            }            
             tree[node] = Math.max(tree[2 * node], tree[2 * node + 1]);
         }
-
-        public int query(int l, int r) {
-            return query(1, 0, n - 1, l, r);
+        
+        // Range query: get maximum in range [ql, qr]
+        public int query(int ql, int qr) {
+            return query(1, 0, n - 1, ql, qr);
         }
-
+        
         private int query(int node, int l, int r, int ql, int qr) {
-            push(node, l, r);
-            if (qr < l || r < ql) return 0;
-            if (ql <= l && r <= qr) return tree[node];
+            // No overlap
+            if (qr < l || r < ql) {
+                return 0; // Return neutral value for max operation
+            }
+            
+            // Complete overlap
+            if (ql <= l && r <= qr) {
+                return tree[node];
+            }
+            // Partial overlap
             int mid = l + (r - l) / 2;
             int leftMax = query(2 * node, l, mid, ql, qr);
             int rightMax = query(2 * node + 1, mid + 1, r, ql, qr);
