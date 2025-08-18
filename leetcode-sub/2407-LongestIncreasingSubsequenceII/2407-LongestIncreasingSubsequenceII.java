@@ -1,4 +1,4 @@
-// Last updated: 8/17/2025, 9:30:47 PM
+// Last updated: 8/17/2025, 10:35:14 PM
 class Solution {
     public int lengthOfLIS(int[] nums, int k) {
         int n = nums.length, size = 0, max = 0;
@@ -28,7 +28,8 @@ class Solution {
         
         private void push(int node, int l, int r) {
             if (lazy[node] != 0) {
-                tree[node] += lazy[node];  // ADD lazy value to MAX
+                tree[node] += lazy[node];  // r - l + 1 == 1, as l == r
+                // tree[node] += (r - l + 1) * lazy[node]; use for SUMs
                 if (l != r) {
                     lazy[2*node] += lazy[node];
                     lazy[2*node+1] += lazy[node];
