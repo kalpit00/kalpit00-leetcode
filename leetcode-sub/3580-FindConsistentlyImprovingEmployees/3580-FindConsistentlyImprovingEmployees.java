@@ -1,4 +1,4 @@
-// Last updated: 8/17/2025, 8:25:16 PM
+// Last updated: 8/17/2025, 11:34:43 PM
 class Solution {
     public int minStable(int[] nums, int maxC) {
         int n = nums.length, start = 0, end = n, ans = n;
@@ -16,12 +16,6 @@ class Solution {
     }
     private boolean helper(int[] nums, int mid, int maxC, SparseTable table) {
         int n = nums.length, count = 0, i = 0;
-        if (mid == 0) {
-            for (int num : nums) {
-                if (num >= 2) count++;
-            }
-            return count <= maxC;
-        }
         while (i + mid < n) {
             int gcd = table.query(i, i + mid);
             if (gcd > 1) {
