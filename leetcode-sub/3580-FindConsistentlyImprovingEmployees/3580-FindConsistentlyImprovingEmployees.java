@@ -1,13 +1,11 @@
-// Last updated: 8/17/2025, 8:16:36 PM
+// Last updated: 8/17/2025, 8:25:16 PM
 class Solution {
     public int minStable(int[] nums, int maxC) {
-        if (maxC == 3 && nums.length > 10000) {
-            return 24999; // large Test Case cheat
-        }
         int n = nums.length, start = 0, end = n, ans = n;
+        SparseTable table = new SparseTable(nums);
         while (start <= end) {
             int mid = start + (end - start) / 2;
-            if (helper(nums, mid, maxC)) {
+            if (helper(nums, mid, maxC, table)) {
                 ans = mid;
                 end = mid - 1;
             } else {
@@ -16,9 +14,8 @@ class Solution {
         }
         return ans;
     }
-    private boolean helper(int[] nums, int mid, int maxC) {
+    private boolean helper(int[] nums, int mid, int maxC, SparseTable table) {
         int n = nums.length, count = 0, i = 0;
-        
         if (mid == 0) {
             for (int num : nums) {
                 if (num >= 2) count++;
@@ -26,11 +23,7 @@ class Solution {
             return count <= maxC;
         }
         while (i + mid < n) {
-            int gcd = nums[i], j = i + 1;
-            while (j <= i + mid && gcd > 1) {
-                gcd = gcd(gcd, nums[j]);
-                j++;
-            }            
+            int gcd = table.query(i, i + mid);
             if (gcd > 1) {
                 count++;
                 i += mid + 1;
@@ -43,5 +36,27 @@ class Solution {
     
     public int gcd(int x, int y) {
         return y == 0 ? x : gcd(y, x % y);
+    }
+    class SparseTable {
+        int[][] table;
+        int k, n;
+        public SparseTable(int[] nums) {
+            n = nums.length;
+            k = (int) (Math.log(n) / Math.log(2)) + 1;
+            table = new int[n][k];
+            for (int i = 0; i < n; i++) {
+                table[i][0] = nums[i];
+            }
+            for (int j = 1; j < k; j++) {
+                for (int i = 0; i + (1 << j) <= n; i++) {
+                    table[i][j] = gcd(table[i][j - 1], table[i + (1 << (j - 1))][j - 1]);
+                }
+            }
+        }
+        public int query(int l, int r) {
+            if (l > r) return Integer.MAX_VALUE;
+            int x = 31 - Integer.numberOfLeadingZeros(r - l + 1);
+            return gcd(table[l][x], table[r - (1 << x) + 1][x]);
+        }
     }
 }
