@@ -1,8 +1,8 @@
-// Last updated: 8/20/2025, 3:09:48 PM
+// Last updated: 8/20/2025, 3:33:03 PM
 class Solution {
     public int maxScore(int[] nums) {
-        int n = nums.length;
-        Integer[][] dp = new Integer[n][1 << n];
+        int n = nums.length, m = n / 2;
+        Integer[][] dp = new Integer[m + 1][1 << n];
         return solve(1, n, 0, nums, dp);
     }
     private int solve(int i, int n, int mask, int[] nums, Integer[][] dp) {
