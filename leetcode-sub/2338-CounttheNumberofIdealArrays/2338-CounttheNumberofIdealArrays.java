@@ -1,18 +1,16 @@
-// Last updated: 8/20/2025, 3:00:16 AM
+// Last updated: 8/20/2025, 3:03:00 AM
 class Solution {
-    public boolean isSubstringPresent(String s) {
-        String rev = new StringBuilder(s).reverse().toString();
-        Set<String> set = new HashSet<>();
-        for (int i = 0; i < s.length() - 1; i++) {
-            String key = rev.charAt(i) + "" + rev.charAt(i + 1);
-            set.add(key);
-        }
-        for (int i = 0; i < s.length() - 1; i++) {
-            String key = s.charAt(i) + "" + s.charAt(i + 1);
-            if (set.contains(key)) {
-                return true;
+    public int numberOfSteps(int num) {
+        int count = 0;
+        while (num > 0) {
+            if (num % 2 == 1) {
+                num--;
             }
+            else {
+                num /= 2;
+            }
+            count++;
         }
-        return false;
+        return count;
     }
 }
