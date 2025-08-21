@@ -1,4 +1,4 @@
-// Last updated: 8/21/2025, 4:32:14 AM
+// Last updated: 8/21/2025, 4:33:45 AM
 class Solution {
     public int numSubmat(int[][] matrix) {
         int m = matrix.length, n = matrix[0].length, count = 0;
@@ -17,26 +17,25 @@ class Solution {
         return count;
     }
     public int helper(int[] heights) {
-        int n = heights.length, sum = 0;
-        Stack<Integer> stack = new Stack<>();
-        int[] PSE = new int[n], pre = new int[n];
+        int n = heights.length, top = -1, res = 0;
+        int[] stack = new int[n], PSE = new int[n], pre = new int[n];
         Arrays.fill(PSE, -1);
         for (int i = 0; i < n; i++) {
-            while (!stack.isEmpty() && heights[stack.peek()] > heights[i]) {
-                int top = stack.pop();
+            while (top != -1 && heights[stack[top]] > heights[i]) {
+                int t = stack[top--];
             }
-            if (!stack.isEmpty()) {
-                PSE[i] = stack.peek();
+            if (top != -1) {
+                PSE[i] = stack[top];
             }
-            stack.push(i);
+            stack[++top] = i;
         }
         for (int i = 0; i < n; i++) {
             pre[i] = (i - PSE[i]) * heights[i];
             pre[i] += PSE[i] != -1 ? pre[PSE[i]] : 0;
         }
         for (int i = 0; i < n; i++) {
-            sum += pre[i];
+            res += pre[i];
         }
-        return sum;
+        return res;
     }
 }
