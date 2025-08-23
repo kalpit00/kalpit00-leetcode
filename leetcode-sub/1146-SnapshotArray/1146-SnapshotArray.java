@@ -1,13 +1,10 @@
-// Last updated: 8/23/2025, 12:26:56 AM
+// Last updated: 8/23/2025, 12:27:55 AM
 class Solution {
     public int sortPermutation(int[] nums) {
-        int n = nums.length, k = -1;
-        for (int i = 0; i < n; i++) {
-            if (nums[i] != i) {
-                k = k == -1 ? nums[i] : k;
-                k &= nums[i];
-            }
+        int mask = Integer.MAX_VALUE;
+        for (int i = 0; i < nums.length; i++) {
+            if (nums[i] != i) mask &= nums[i];
         }
-        return k == -1 ? 0 : k;
+        return mask == Integer.MAX_VALUE ? 0 : mask;
     }
 }
