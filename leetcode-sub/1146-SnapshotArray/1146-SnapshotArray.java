@@ -1,19 +1,13 @@
-// Last updated: 8/23/2025, 12:03:59 AM
+// Last updated: 8/23/2025, 12:26:56 AM
 class Solution {
-    public int rotatedDigits(int N) {
-        int count = 0;
-        for (int i = 1;i<=N;i++) if (getCount(i) > 0) count++;
-        return count;
-    }
-    
-    public int getCount(int num){
-        int count  = 0;
-        while (num > 0){
-                int r = num % 10;
-                if (r == 3 || r == 4 || r == 7) return 0;
-                if (r == 2 || r == 5 || r == 6 || r == 9) count++;
-                num = num / 10;
+    public int sortPermutation(int[] nums) {
+        int n = nums.length, k = -1;
+        for (int i = 0; i < n; i++) {
+            if (nums[i] != i) {
+                k = k == -1 ? nums[i] : k;
+                k &= nums[i];
+            }
         }
-        return count;
+        return k == -1 ? 0 : k;
     }
 }
