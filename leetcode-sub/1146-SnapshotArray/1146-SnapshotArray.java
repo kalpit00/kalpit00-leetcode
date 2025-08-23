@@ -1,14 +1,18 @@
-// Last updated: 8/23/2025, 12:01:02 AM
+// Last updated: 8/23/2025, 12:03:59 AM
 class Solution {
-    public int rotatedDigits(int n) {
+    public int rotatedDigits(int N) {
         int count = 0;
-        for (int i = 1; i <= n; i++) {
-            String s = String.valueOf(i);
-            if (s.contains("3") || s.contains("4") || s.contains("7")) continue;
-            if (s.contains("2") || s.contains("5") || 
-            s.contains("6") || s.contains("9")) {
-                count++;
-            }
+        for (int i = 1;i<=N;i++) if (getCount(i) > 0) count++;
+        return count;
+    }
+    
+    public int getCount(int num){
+        int count  = 0;
+        while (num > 0){
+                int r = num % 10;
+                if (r == 3 || r == 4 || r == 7) return 0;
+                if (r == 2 || r == 5 || r == 6 || r == 9) count++;
+                num = num / 10;
         }
         return count;
     }
