@@ -1,30 +1,37 @@
-// Last updated: 8/30/2025, 1:07:45 AM
+// Last updated: 8/30/2025, 1:11:10 AM
 class Solution {
-    public long validSubstringCount(String word1, String word2) {
-        int[] map = new int[26], pre = new int[26];
-        char[] nums = word1.toCharArray(), arr = word2.toCharArray();
-        for (char c : arr) {
-            map[c - 'a']++;
+   public static long validSubstringCount(String word1, String word2) {
+        int[] v = new int[26];
+        for (char c : word2.toCharArray()) {
+            v[c - 'a']++;
         }
-        int left = 0, right = 0, n = nums.length, m = arr.length;
+
+        int[] cnt = new int[26];
+        int start = 0;
+        int k = word2.length();
         long count = 0;
-        while (right < n) {
-            pre[nums[right] - 'a']++;
-            while (left <= right && helper(pre, map)) {
-                count += n - right;
-                pre[nums[left] - 'a']--;
-                left++;
+
+        for (int i = 0; i < word1.length(); i++) {
+            char curr = word1.charAt(i);
+            if (v[curr - 'a'] > 0) {
+                if (cnt[curr - 'a'] < v[curr - 'a']) {
+                    k--;
+                }
             }
-            right++;
+
+            cnt[curr - 'a']++;
+
+            while (k == 0) {
+                count += word1.length() - i;
+                char pre = word1.charAt(start);
+                cnt[pre - 'a']--;
+                if (v[pre - 'a'] > 0 && cnt[pre - 'a'] < v[pre - 'a']) {
+                    k++;
+                }
+                start++;
+            }
         }
+
         return count;
-    }
-    private boolean helper(int[] pre, int[] map) {
-        for (int i = 0; i < 26; i++) {
-            if (pre[i] < map[i]) {
-                return false;
-            }
-        }
-        return true;
     }
 }
