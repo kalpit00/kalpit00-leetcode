@@ -1,36 +1,27 @@
-// Last updated: 8/29/2025, 9:20:13 PM
+// Last updated: 8/29/2025, 9:25:28 PM
 class Solution {
     public boolean isValidSudoku(char[][] board) {
         int n = board.length, k = (int) Math.sqrt(n);
-        Set<Character>[] rows = new HashSet[n], cols = new HashSet[n];
-        Set<Character>[][] boxes = new HashSet[k][k];
-        for (int i = 0; i < n; i++) {
-            rows[i] = new HashSet<>();
-            cols[i] = new HashSet<>();
-        }
-        for (int i = 0; i < k; i++) {
-            for (int j = 0; j < k; j++) {
-                boxes[i][j] = new HashSet<>();
-            }
-        }
+        boolean[][] rows = new boolean[n][10], cols = new boolean[n][10];
+        boolean[][][] boxes = new boolean[k][k][10];
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < n; j++) {
                 char c = board[i][j];
                 if (c == '.') {
                     continue;
                 }
-                if (rows[i].contains(c)) {
+                if (rows[i][c - '0']) {
                     return false;
                 }
-                if (cols[j].contains(c)) {
+                if (cols[j][c - '0']) {
                     return false;
                 }
-                if (boxes[i/k][j/k].contains(c)) {
+                if (boxes[i/k][j/k][c - '0']) {
                     return false;
                 }
-                rows[i].add(c);
-                cols[j].add(c);
-                boxes[i/k][j/k].add(c);
+                rows[i][c - '0'] = true;
+                cols[j][c - '0'] = true;
+                boxes[i/k][j/k][c - '0'] = true;
             }
         }
         return true;
