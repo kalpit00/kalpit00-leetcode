@@ -1,19 +1,53 @@
-// Last updated: 9/3/2025, 3:07:43 PM
+// Last updated: 9/3/2025, 7:29:11 PM
 class Solution {
-    public boolean isPossibleToCutPath(int[][] grid) {
-        int m = grid.length, n = grid[0].length;
-        dfs(grid, 0, 0, m, n);
-        grid[0][0] = 1;
-        return !dfs(grid, 0, 0, m, n);
+    long[] res;
+    public long[] placedCoins(int[][] edges, int[] cost) {
+        int n = edges.length + 1;
+        List<List<Integer>> adj = new ArrayList<>();
+        for (int i = 0; i < n; i++) {
+            adj.add(new ArrayList<>());
+        }
+        for (int[] edge : edges) {
+            int u = edge[0], v = edge[1];
+            adj.get(u).add(v);
+            adj.get(v).add(u);
+        }
+        res = new long[n];
+        dfs(0, -1, adj, cost);
+        return res;
     }
-    private boolean dfs(int[][] grid, int r, int c, int m, int n) {
-        if (r == m - 1 && c == n - 1) {
-            return true;
+    
+    private List<Long> dfs(int node, int parent, List<List<Integer>> adj, int[] cost) {
+        List<Long> list = new ArrayList<>();
+        list.add(1L * cost[node]);
+        for (int neighbor : adj.get(node)) {
+            if (neighbor == parent) continue;
+            List<Long> child = dfs(neighbor, node, adj, cost);
+            list.addAll(child);
         }
-        if (r >= m || c >= n || grid[r][c] == 0) {
-            return false;
+        int n = list.size();
+        if (n < 3) {
+            res[node] = 1;
+        } 
+        else {
+            Collections.sort(list);
+            long max = Long.MIN_VALUE;
+            max = Math.max(max, list.get(n-1) * list.get(n-2) * list.get(n-3));
+            max = Math.max(max, list.get(0) * list.get(1) * list.get(n-1));
+            max = Math.max(max, list.get(0) * list.get(1) * list.get(2));
+            res[node] = Math.max(0, max);
         }
-        grid[r][c] = 0;
-        return dfs(grid, r + 1, c, m, n) || dfs(grid, r, c + 1, m, n);
+        Collections.sort(list);
+        if (n > 6) {
+            List<Long> copy = new ArrayList<>();
+            copy.add(list.get(0));
+            copy.add(list.get(1));
+            copy.add(list.get(2));
+            copy.add(list.get(n - 3));
+            copy.add(list.get(n - 2));
+            copy.add(list.get(n - 1));
+            return copy;
+        }
+        return list;
     }
 }
