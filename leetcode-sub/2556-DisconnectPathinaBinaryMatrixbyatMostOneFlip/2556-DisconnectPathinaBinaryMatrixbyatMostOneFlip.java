@@ -1,4 +1,4 @@
-// Last updated: 9/3/2025, 7:29:11 PM
+// Last updated: 9/3/2025, 7:36:14 PM
 class Solution {
     long[] res;
     public long[] placedCoins(int[][] edges, int[] cost) {
@@ -26,23 +26,21 @@ class Solution {
             list.addAll(child);
         }
         int n = list.size();
+        Collections.sort(list);
         if (n < 3) {
             res[node] = 1;
         } 
         else {
-            Collections.sort(list);
             long max = Long.MIN_VALUE;
             max = Math.max(max, list.get(n-1) * list.get(n-2) * list.get(n-3));
             max = Math.max(max, list.get(0) * list.get(1) * list.get(n-1));
             max = Math.max(max, list.get(0) * list.get(1) * list.get(2));
             res[node] = Math.max(0, max);
-        }
-        Collections.sort(list);
-        if (n > 6) {
+        } // we only need 3 most positive and 2 most negative elements!
+        if (n > 5) { // prune otherwise will TLE
             List<Long> copy = new ArrayList<>();
             copy.add(list.get(0));
             copy.add(list.get(1));
-            copy.add(list.get(2));
             copy.add(list.get(n - 3));
             copy.add(list.get(n - 2));
             copy.add(list.get(n - 1));
