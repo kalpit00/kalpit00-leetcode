@@ -1,4 +1,4 @@
-// Last updated: 9/3/2025, 1:20:50 PM
+// Last updated: 9/3/2025, 1:21:07 PM
 class Solution {
     public boolean isPossibleToCutPath(int[][] grid) {
         int m = grid.length, n = grid[0].length;
@@ -8,7 +8,7 @@ class Solution {
     }
     private boolean dfs(int[][] grid, int r, int c, int m, int n) {
         if (r == m - 1 && c == n - 1) {
-            return true; // path to [m-1][n-1] found, count 1
+            return true;
         }
         if (r >= m || c >= n || r < 0 || c < 0 || grid[r][c] == 0) {
             return false;
