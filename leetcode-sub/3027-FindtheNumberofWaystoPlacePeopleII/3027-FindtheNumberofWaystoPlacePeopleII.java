@@ -1,4 +1,4 @@
-// Last updated: 9/1/2025, 9:35:43 PM
+// Last updated: 9/2/2025, 10:01:12 PM
 class Solution {
     public int numberOfPairs(int[][] points) {
         int count = 0, n = points.length;
