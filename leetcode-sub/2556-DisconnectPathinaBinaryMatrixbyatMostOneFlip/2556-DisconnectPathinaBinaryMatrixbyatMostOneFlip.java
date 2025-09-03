@@ -1,4 +1,4 @@
-// Last updated: 9/3/2025, 1:57:35 PM
+// Last updated: 9/3/2025, 3:07:43 PM
 class Solution {
     public boolean isPossibleToCutPath(int[][] grid) {
         int m = grid.length, n = grid[0].length;
@@ -10,7 +10,7 @@ class Solution {
         if (r == m - 1 && c == n - 1) {
             return true;
         }
-        if (r >= m || c >= n || r < 0 || c < 0 || grid[r][c] == 0) {
+        if (r >= m || c >= n || grid[r][c] == 0) {
             return false;
         }
         grid[r][c] = 0;
