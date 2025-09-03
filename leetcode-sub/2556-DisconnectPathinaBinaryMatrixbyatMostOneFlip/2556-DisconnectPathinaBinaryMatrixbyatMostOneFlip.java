@@ -1,4 +1,4 @@
-// Last updated: 9/3/2025, 1:21:07 PM
+// Last updated: 9/3/2025, 1:57:35 PM
 class Solution {
     public boolean isPossibleToCutPath(int[][] grid) {
         int m = grid.length, n = grid[0].length;
