@@ -1,19 +1,50 @@
-// Last updated: 6/20/2025, 12:15:40 PM
-import java.util.*;
-public class Solution {
-    public int totalHammingDistance(int[] nums) {
-        int n = nums.length, sum = 0;
-        for (int bit = 0; bit < 32; bit++) {
-            BitSet bitset = new BitSet(n);
-            for (int i = 0; i < n; i++) {
-                if ((nums[i] & (1 << bit)) != 0) {
-                    bitset.set(i);
-                }
+// Last updated: 9/4/2025, 1:45:38 PM
+class Solution {
+    public int minTime(int n, int[][] edges, int k) {
+        Arrays.sort(edges, (a, b) -> Integer.compare(b[2], a[2]));
+        DSU dsu = new DSU(n);
+        int count = n;
+        for (int[] edge : edges) {
+            int u = edge[0], v = edge[1], t = edge[2];
+            count -= dsu.union(u, v) ? 1 : 0;
+            if (count < k) {
+                return t;
             }
-            int ones = bitset.cardinality(); // count of 1s at this bit index
-            int zeros = n - ones;            // count of 0s
-            sum += ones * zeros;
         }
-        return sum;
+        return 0;
+    }
+    class DSU {
+        int[] size, parent;
+        int componentCount;
+        public DSU(int n) {
+            size = new int[n];
+            parent = new int[n];
+            componentCount = n;
+            for (int i = 0; i < n; i++) {
+                size[i] = 1;
+                parent[i] = i;
+            }
+        }
+
+        public int findParent(int node) {
+            if (node == parent[node]) {
+                return node;
+            }
+            return parent[node] = findParent(parent[node]);
+        }
+
+        public boolean union(int u, int v) {
+            int pu = findParent(u), pv = findParent(v);
+            if (pu == pv) return false;
+            if (size[pu] < size[pv]) {
+                parent[pu] = pv;
+                size[pv] += size[pu];
+            } else {
+                parent[pv] = pu;
+                size[pu] += size[pv];
+            }
+            componentCount--;
+            return true;
+        }
     }
 }
