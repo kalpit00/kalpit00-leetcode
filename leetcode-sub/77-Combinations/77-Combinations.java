@@ -1,4 +1,4 @@
-// Last updated: 9/10/2025, 11:08:23 PM
+// Last updated: 9/10/2025, 11:09:16 PM
 class Solution {
     public List<List<Integer>> combine(int n, int k) {
         List<List<Integer>> res = new ArrayList<>();
@@ -19,9 +19,9 @@ class Solution {
         if (i >= n) {
             return;
         }
+        solve(i + 1, n, k, nums, res, list); // notTake, k -> k
         list.add(nums[i]);
         solve(i + 1, n, k - 1, nums, res, list); // take, k -> k - 1
         list.remove(list.size() - 1);
-        solve(i + 1, n, k, nums, res, list); // notTake, k -> k
     }
 }
