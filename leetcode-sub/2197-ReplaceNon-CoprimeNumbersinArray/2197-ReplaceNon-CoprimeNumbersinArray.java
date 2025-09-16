@@ -1,17 +1,21 @@
-// Last updated: 9/15/2025, 11:03:03 PM
+// Last updated: 9/16/2025, 3:03:53 AM
 class Solution {
     public List<Integer> replaceNonCoprimes(int[] nums) {
-        Stack<Integer> stack = new Stack<>();
-        stack.push(nums[0]);
-        int n = nums.length;
+        int n = nums.length, top = 0;
+        int[] stack = new int[n];
+        stack[0] = nums[0];
         for (int i = 1; i < n; i++) {
             int curr = nums[i];
-            while (!stack.isEmpty() && gcd(stack.peek(), curr) > 1) {
-                curr = (int) lcm(stack.pop(), curr);
+            while (top > -1 && gcd(stack[top], curr) > 1) {
+                curr = (int) lcm(stack[top--], curr);
             }
-            stack.push(curr);
+            stack[++top] = curr;
         }
-        return new ArrayList<>(stack);
+        List<Integer> res = new ArrayList<>();
+        for (int i = 0; i <= top; i++) {
+            res.add(stack[i]);
+        }
+        return res;
     }
     private long gcd(long x, long y) {
         return y == 0 ? x : gcd(y, x % y);
