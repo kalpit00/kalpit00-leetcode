@@ -1,4 +1,4 @@
-// Last updated: 9/16/2025, 3:03:53 AM
+// Last updated: 9/16/2025, 3:05:31 AM
 class Solution {
     public List<Integer> replaceNonCoprimes(int[] nums) {
         int n = nums.length, top = 0;
@@ -21,6 +21,6 @@ class Solution {
         return y == 0 ? x : gcd(y, x % y);
     }
     private long lcm(long x, long y) {
-        return Math.abs(x * y) / gcd(x, y);
+        return x * y / gcd(x, y);
     }
 }
