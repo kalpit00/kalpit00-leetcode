@@ -1,29 +1,23 @@
-// Last updated: 3/24/2025, 5:44:07 AM
+// Last updated: 9/17/2025, 4:41:34 AM
 class Solution {
-    public int countDays(int days, int[][] intervals) {
-        intervals = merge(intervals);
-        int sum = 0;
-        for (int[] interval : intervals) {
-            int end = interval[1], start = interval[0];
-            sum += end - start + 1; // range
-        } // sum up ranges of all merged non-overlapping intervals
-        return days - sum;
-    }
-    private int[][] merge(int[][] intervals) {
-        Arrays.sort(intervals, (a,b) -> a[0] - b[0]);
-        List<int[]> res = new ArrayList();
-        int[] prev = intervals[0];
-        for (int i = 1; i < intervals.length; i++) {
-            int[] curr = intervals[i];
-            if (prev[1] < curr[0]) {
-                res.add(prev);
-                prev = curr;
-            } else {
-                prev[0] = Math.min(prev[0], curr[0]);
-                prev[1] = Math.max(prev[1], curr[1]);
+    public int maxHeight(int[][] grid) {
+        int n = grid.length, max = 0;
+        int[] dp = new int[n];
+        for (int[] item : grid) {
+            Arrays.sort(item); // first sort each <l, w, h> -> interchangable
+        } // then sort grid based on desc order on 1st dim -> 2nd -> 3rd
+        Arrays.sort(grid, (a, b) -> a[0] != b[0] ? b[0] - a[0] : 
+        a[1] != b[1] ? b[1] - a[1] : b[2] - a[2]);
+        for (int i = 0; i < n; i++) {
+            dp[i] = grid[i][2];
+            for (int j = 0; j < i; j++) {
+                if (grid[i][0] <= grid[j][0] && grid[i][1] <= grid[j][1] &&
+                grid[i][2] <= grid[j][2]) {
+                    dp[i] = Math.max(dp[i], dp[j] + grid[i][2]);
+                }
             }
+            max = Math.max(max, dp[i]);
         }
-        res.add(prev);
-        return res.toArray(new int[0][]);
+        return max;
     }
 }
