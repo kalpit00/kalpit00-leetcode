@@ -1,24 +1,28 @@
-// Last updated: 9/26/2025, 8:48:14 PM
+// Last updated: 9/27/2025, 4:35:38 AM
 class Solution {
     public int[] sortArray(int[] nums) {
         int n = nums.length;
-        quickSort(nums, 0, n - 1);
+        for (int i = n / 2 - 1; i >= 0; i--) {
+            heapify(nums, n, i);
+        } // O(N) build maxHeap BOTTOM UP!!
+        for (int i = n - 1; i > 0; i--) {
+            swap(nums, 0, i);
+            heapify(nums, i, 0);
+        } // O(NLogN) times heapifies
         return nums;
     }
-    private void quickSort(int[] nums, int start, int end) {
-        if (start >= end) return;
-        int pivotIndex = hoarePartition(nums, start, end);
-        quickSort(nums, start, pivotIndex);
-        quickSort(nums, pivotIndex + 1, end);
-    }
 
-    private int hoarePartition(int[] nums, int start, int end) {
-        int pivot = nums[start], i = start - 1, j = end + 1;
-        while (true) {
-            do { i++; } while (nums[i] < pivot);
-            do { j--; } while (nums[j] > pivot);
-            if (i >= j) return j;
-            swap(nums, i, j);
+    private void heapify(int[] nums, int heapSize, int i) {
+        int largest = i, left = 2 * i + 1, right = 2 * i + 2;
+        if (left < heapSize && nums[left] > nums[largest]) {
+            largest = left;
+        }
+        if (right < heapSize && nums[right] > nums[largest]) {
+            largest = right;
+        }
+        if (largest != i) {
+            swap(nums, i, largest);
+            heapify(nums, heapSize, largest);
         }
     }
     private void swap(int[] nums, int i, int j) {
