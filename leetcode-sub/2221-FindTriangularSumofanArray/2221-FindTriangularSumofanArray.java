@@ -1,17 +1,15 @@
-// Last updated: 9/30/2025, 12:13:45 AM
+// Last updated: 9/30/2025, 12:14:09 AM
 class Solution {
-
     public int triangularSum(int[] nums) {
-        List<Integer> current = Arrays.stream(nums)
-            .boxed()
-            .collect(Collectors.toList());
-        while (current.size() > 1) {
-            List<Integer> newNums = new ArrayList<>();
-            for (int i = 0; i < current.size() - 1; ++i) {
-                newNums.add((current.get(i) + current.get(i + 1)) % 10);
+        int n = nums.length;
+
+        while (n > 1) { // keep shrinking until only one number left
+            for (int i = 0; i < n - 1; i++) {
+                nums[i] = (nums[i] + nums[i + 1]) % 10;
             }
-            current = newNums;
+            n--; // effectively the array shrinks by one
         }
-        return current.get(0);
+
+        return nums[0];
     }
 }
