@@ -1,25 +1,12 @@
-// Last updated: 4/17/2025, 2:55:39 AM
+// Last updated: 10/1/2025, 7:40:43 PM
 class Solution {
-    public List<String> binaryTreePaths(TreeNode root) {
-        List<String> result = new LinkedList<>();
-        dfs(root, new StringBuilder(), result);
-        return result;
-    }
-
-    private void dfs(TreeNode node, StringBuilder path, List<String> result) {
-        if (node == null) {
-            return;
+    public int minOperations(int[] nums) {
+        int sum = 0, max = 0;
+        for (int num : nums) {
+            if (num == 0) continue;
+            sum += Integer.bitCount(num);
+            max = Math.max(max, Integer.numberOfTrailingZeros(Integer.highestOneBit(num)));
         }
-        int len = path.length();
-        path.append(node.val);
-        if (node.left == null && node.right == null) {
-            result.add(path.toString());
-        } 
-        else {
-            path.append("->");
-            dfs(node.left, path, result);
-            dfs(node.right, path, result);
-        }
-        path.setLength(len);
+        return sum + max;
     }
 }
