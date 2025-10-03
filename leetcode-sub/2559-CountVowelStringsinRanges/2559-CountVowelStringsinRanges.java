@@ -1,9 +1,8 @@
-// Last updated: 10/3/2025, 6:20:31 AM
+// Last updated: 10/3/2025, 6:20:53 AM
 class Solution {
     public int[] vowelStrings(String[] words, int[][] queries) {
         int n = words.length, m = queries.length;
         int[] pre = new int[n + 1], res = new int[m];
-        Set<Character> set = Set.of('a', 'e', 'i', 'o', 'u');
         for (int i = 0; i < n; i++) {
             int val = isVowel(words[i].charAt(0)) && 
             isVowel(words[i].charAt(words[i].length() - 1)) ? 1 : 0;
