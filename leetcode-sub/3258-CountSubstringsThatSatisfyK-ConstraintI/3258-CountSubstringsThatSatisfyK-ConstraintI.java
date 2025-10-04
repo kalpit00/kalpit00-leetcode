@@ -1,24 +1,20 @@
-// Last updated: 10/4/2025, 6:12:39 AM
+// Last updated: 10/4/2025, 6:13:10 AM
 class Solution {
-    public int countKConstraintSubstrings(String s, int k) {
-        int n = s.length();
-        int count = 0;
-        for (int i = 0; i < n; i++) {
-            int zeros = 0;
-            int ones = 0;
-            for (int j = i; j < n; j++) {
-                if (s.charAt(j) == '0') {
-                    zeros++;
-                } else {
-                    ones++;
-                }            
-                if (zeros <= k || ones <= k) {
-                    count++;
-                } else {
-                    break;
-                }
-            }
+    public int minChanges(int n, int k) {
+        if ((n & k) != k) {
+            return -1;
         }
-        return count;
+
+        int diff = n ^ k;
+        int changes = 0;
+        
+        while (diff > 0) {
+            if ((diff & 1) == 1) {
+                changes++;
+            }
+            diff >>= 1;
+        }
+        
+        return changes;
     }
 }
