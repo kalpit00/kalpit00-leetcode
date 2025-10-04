@@ -1,20 +1,12 @@
-// Last updated: 10/4/2025, 6:13:10 AM
+// Last updated: 10/4/2025, 6:16:38 AM
 class Solution {
-    public int minChanges(int n, int k) {
-        if ((n & k) != k) {
-            return -1;
+    public int reverseDegree(String s) {
+        char[] arr = s.toCharArray();
+        int n = arr.length, res = 0;
+        for (int i = 1; i <= n; i++) {
+            int x = arr[i - 1] - 'a';
+            res += (26 - x) * i;
         }
-
-        int diff = n ^ k;
-        int changes = 0;
-        
-        while (diff > 0) {
-            if ((diff & 1) == 1) {
-                changes++;
-            }
-            diff >>= 1;
-        }
-        
-        return changes;
+        return res;
     }
 }
