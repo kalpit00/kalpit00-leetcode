@@ -1,20 +1,18 @@
-// Last updated: 8/29/2025, 6:12:45 PM
+// Last updated: 10/8/2025, 9:34:49 PM
 class Solution {
-    public boolean partitionArray(int[] nums, int k) {
-        int n = nums.length;
-        if (n % k != 0) {
-            return false;
-        }
-        int m = n / k;
-        int[] map = new int[1000001];
-        for (int num : nums) {
-            map[num]++;
-        }
-        for (int num : nums) {
-            if (map[num] > m) {
-                return false;
+    public long minTime(int[] skill, int[] mana) {
+        int n = skill.length, m = mana.length;
+        long[] done = new long[n + 1];
+        
+        for (int j = 0; j < m; ++j) {
+            for (int i = 0; i < n; ++i) {
+                done[i + 1] = Math.max(done[i + 1], done[i]) + (long) mana[j] * skill[i];
+            }
+            for (int i = n - 1; i > 0; --i) {
+                done[i] = done[i + 1] - (long) mana[j] * skill[i];
             }
         }
-        return true;
+        
+        return done[n];
     }
 }
