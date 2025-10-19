@@ -1,27 +1,22 @@
-// Last updated: 10/19/2025, 9:13:51 AM
+// Last updated: 10/19/2025, 9:17:24 AM
 class Solution {
     public long maximumSubarraySum(int[] nums, int k) {
-        int n = nums.length, left = 0, right = 0, count = 0;
+        int n = nums.length, count = 0;
         long sum = 0, max = 0;
         int[] map = new int[100001];
-        while (right < n) {
-            if (map[nums[right]] > 0) {
-                count++; // repeating element, count it
-            }
-            map[nums[right]]++;
-            sum += nums[right];
-            right++;
-            while (count > 0 || right - left > k) { // invalid window, shrink
-                sum -= nums[left];
-                if (map[nums[left]] > 1) {
-                    count--; // was one of the duplicates, removing it
-                }
-                map[nums[left]]--;
-                left++;
-            }
-            if (right - left == k && count == 0) { // valid window of len k
-                max = Math.max(max, sum); // and no dups, max its sum
-            }
+        for (int i = 0; i < k; i++) {
+            sum += nums[i];
+            map[nums[i]]++;
+            count += map[nums[i]] > 1 ? 1 : 0;
+        }
+        max = count == 0 ? Math.max(max, sum) : max;
+        for (int i = k; i < n; i++) {
+            sum += nums[i] - nums[i - k];
+            map[nums[i - k]]--;
+            count -= map[nums[i - k]] > 0 ? 1 : 0;
+            map[nums[i]]++;
+            count += map[nums[i]] > 1 ? 1 : 0;
+            max = count == 0 ? Math.max(max, sum) : max;
         }
         return max;
     }
