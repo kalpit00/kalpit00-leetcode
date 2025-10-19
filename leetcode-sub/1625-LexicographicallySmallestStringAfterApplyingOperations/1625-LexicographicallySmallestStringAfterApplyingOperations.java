@@ -1,30 +1,38 @@
-// Last updated: 10/18/2025, 9:22:41 PM
-class Solution {
-    public String findLexSmallestString(String s, int a, int b) {
-        Queue<String> q = new LinkedList<>();
-        Set<String> vis = new HashSet<>();
-        String ans = s;
-
-        q.offer(s);
-        vis.add(s);
-
-        while (!q.isEmpty()) {
-            String curr = q.poll();
-            if (curr.compareTo(ans) < 0) ans = curr;
-
-            // Operation 1: Add 'a' to odd indices
-            char[] ch = curr.toCharArray();
-            for (int i = 1; i < ch.length; i += 2) {
-                ch[i] = (char) (((ch[i] - '0' + a) % 10) + '0');
+// Last updated: 10/18/2025, 9:27:45 PM
+class Solution 
+{
+    public String findLexSmallestString(String s, int a, int b) 
+    {
+        int n = s.length();
+        boolean[] vis = new boolean[n];
+        
+        String res = s;
+        s = s + s; // double the length of s for convenience in extracting the rotated string t
+        
+        for (int i = 0; !vis[i]; i = (i + b) % n) 
+        {
+            vis[i] = true;
+            for (int j = 0; j < 10; j++) 
+            {
+                int kLimit = b % 2 == 0 ? 0 : 9;
+                for (int k = 0; k <= kLimit; k++) 
+                {
+                    // before each accumulation, re-truncate t
+                    char[] t = s.substring(i, i + n).toCharArray();
+                    for (int p = 1; p < n; p += 2) 
+                    {
+                        t[p] = (char) ('0' + ((t[p] - '0' + j * a) % 10));
+                    }
+                    for (int p = 0; p < n; p += 2) 
+                    {
+                        t[p] = (char) ('0' + ((t[p] - '0' + k * a) % 10));
+                    }
+                    
+                    String tStr = new String(t);
+                    if (tStr.compareTo(res) < 0) res = tStr;
+                }
             }
-            String addOp = new String(ch);
-            if (vis.add(addOp)) q.offer(addOp);
-
-            // Operation 2: Rotate right by b positions
-            String rotateOp = curr.substring(curr.length() - b) + curr.substring(0, curr.length() - b);
-            if (vis.add(rotateOp)) q.offer(rotateOp);
         }
-
-        return ans;
+        return res;
     }
 }
