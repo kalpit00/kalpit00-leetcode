@@ -1,4 +1,4 @@
-// Last updated: 10/23/2025, 8:32:56 PM
+// Last updated: 10/23/2025, 8:33:33 PM
 class Solution {
     public int nextBeautifulNumber(int n) {
         Set<Integer> set = new HashSet<>();
@@ -8,7 +8,6 @@ class Solution {
         for (String s : map) {
             int num = Integer.parseInt(s);
             char[] arr = s.toCharArray();
-            Arrays.sort(arr);
             while (!set.contains(num)) {
                 set.add(num);
                 nextPermutation(arr);
