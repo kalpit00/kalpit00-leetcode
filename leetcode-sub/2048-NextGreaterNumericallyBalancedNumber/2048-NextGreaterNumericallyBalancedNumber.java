@@ -1,4 +1,4 @@
-// Last updated: 10/23/2025, 8:33:33 PM
+// Last updated: 10/24/2025, 2:44:12 AM
 class Solution {
     public int nextBeautifulNumber(int n) {
         Set<Integer> set = new HashSet<>();
@@ -6,13 +6,13 @@ class Solution {
         String[] map = {"1", "22", "122", "333", "1333", "4444", "14444",
         "22333", "55555", "122333", "155555", "224444", "666666"};
         for (String s : map) {
-            int num = Integer.parseInt(s);
-            char[] arr = s.toCharArray();
-            while (!set.contains(num)) {
-                set.add(num);
-                nextPermutation(arr);
-                num = Integer.parseInt(new String(arr));
+            int num = Integer.parseInt(s), i = 0;
+            int[] nums = new int[s.length()];
+            while (num > 0) {
+                nums[i++] = num % 10;
+                num /= 10;
             }
+            permuteUnique(nums, set);
         }
         List<Integer> list = new ArrayList<>(set);
         Collections.sort(list);
@@ -32,38 +32,29 @@ class Solution {
         }
         return ans;
     }
-    public void nextPermutation(char[] nums) {
-        int n = nums.length, i = n - 2, j = n - 1;
-        for (i = n - 2; i >= 0; i--) {
-            if (nums[i] < nums[i + 1]) {
-                break;
+    public void permuteUnique(int[] nums, Set<Integer> set) {
+        int n = nums.length;
+        // Arrays.sort(nums);
+        List<Integer> list = new ArrayList<>();
+        backtrack(0, n, list, set, nums);
+    }
+    
+    public void backtrack(int mask, int n,
+    List<Integer> list, Set<Integer> set, int[] nums) {
+        if (list.size() >= n) {
+            int num = 0;
+            for (int i = 0; i < list.size(); i++) {
+                num = num*10 + list.get(i);
             }
-        }
-        if (i < 0) {
-            reverse(nums, 0, n - 1);
+            set.add(num);
             return;
         }
-        for (j = n - 1; j >= 0; j--) {
-            if (nums[j] > nums[i]) {
-                break;
-            }
+        for (int i = 0; i < n; i++) {
+            if (((mask & (1 << i)) != 0) || (i > 0 && nums[i] == nums[i-1] &&
+            (mask & (1 << (i - 1))) == 0)) continue;
+            list.add(nums[i]);
+            backtrack(mask | (1 << i), n, list, set, nums);
+            list.remove(list.size() - 1);
         }
-        swap(nums, i, j);
-        reverse(nums, i + 1, n - 1);
-    }
-
-    private void reverse(char[] nums, int start, int end) {
-        int i = start, j = end;
-        while (i < j) {
-            swap(nums, i, j);
-            i++;
-            j--;
-        }
-    }
-
-    private void swap(char[] nums, int i, int j) {
-        char temp = nums[i];
-        nums[i] = nums[j];
-        nums[j] = temp;
     }
 }
