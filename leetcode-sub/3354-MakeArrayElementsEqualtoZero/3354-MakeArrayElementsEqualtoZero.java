@@ -1,4 +1,4 @@
-// Last updated: 10/4/2025, 6:20:00 AM
+// Last updated: 10/27/2025, 9:13:32 PM
 class Solution {
     public int countValidSelections(int[] nums) {
         int n = nums.length;
