@@ -1,4 +1,4 @@
-// Last updated: 6/11/2025, 6:58:20 PM
+// Last updated: 10/28/2025, 9:06:57 PM
 class Solution {
     public int smallestNumber(int n) {
         return -1 >>> Integer.numberOfLeadingZeros(n);
