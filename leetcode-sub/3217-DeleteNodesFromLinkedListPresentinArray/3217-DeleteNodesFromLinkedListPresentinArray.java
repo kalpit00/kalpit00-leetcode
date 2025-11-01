@@ -1,4 +1,4 @@
-// Last updated: 10/31/2025, 8:13:22 PM
+// Last updated: 10/31/2025, 10:02:54 PM
 class Solution {
     public ListNode modifiedList(int[] nums, ListNode head) {
         boolean[] visited = new boolean[100001];
@@ -8,11 +8,8 @@ class Solution {
         while (head != null && visited[head.val]) {
             head = head.next;
         }
-        if (head == null) {
-            return null;
-        }
         ListNode temp = head;
-        while (temp.next != null) {
+        while (temp != null && temp.next != null) {
             if (visited[temp.next.val]) {
                 temp.next = temp.next.next;
             } else {
