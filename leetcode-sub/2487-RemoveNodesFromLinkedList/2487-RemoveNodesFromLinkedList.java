@@ -1,33 +1,28 @@
-// Last updated: 10/31/2025, 11:24:38 PM
+// Last updated: 10/31/2025, 11:32:36 PM
 class Solution {
     public ListNode removeNodes(ListNode head) {
-        Set<ListNode> set = new HashSet<>();
-        int n = 0, top = -1;
-        ListNode temp = head;
+        List<ListNode> list = new ArrayList<>();
+        ListNode temp = head, dummy = new ListNode(-1), curr = dummy;
         while (temp != null) {
-            n++;
+            list.add(temp);
             temp = temp.next;
         }
-        temp = head;
-        ListNode[] stack = new ListNode[n];
-        while (temp != null) {
-            while (top >= 0 && stack[top].val < temp.val) {
-                set.add(stack[top--]);
+        int n = list.size(), top = -1;
+        int[] stack = new int[n], NGE = new int[n];
+        Arrays.fill(NGE, -1);
+        for (int i = 0; i < n; i++) {
+            while (top != -1 && list.get(stack[top]).val < list.get(i).val) {
+                int idx = stack[top--];
+                NGE[idx] = i;
             }
-            stack[++top] = temp;
-            temp = temp.next;
+            stack[++top] = i;
         }
-        while (head != null && set.contains(head)) {
-            head = head.next;
-        }
-        temp = head;
-        while (temp != null && temp.next != null) {
-            if (set.contains(temp.next)) {
-                temp.next = temp.next.next;
-            } else {
-                temp = temp.next;
+        for (int i = 0; i < n; i++) {
+            if (NGE[i] == -1) {
+                curr.next = list.get(i);
+                curr = curr.next;
             }
         }
-        return head;
+        return dummy.next;
     }
 }
