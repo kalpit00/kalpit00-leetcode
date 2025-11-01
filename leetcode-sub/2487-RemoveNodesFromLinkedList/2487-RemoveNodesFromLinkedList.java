@@ -1,28 +1,27 @@
-// Last updated: 10/31/2025, 11:32:36 PM
+// Last updated: 10/31/2025, 11:33:13 PM
 class Solution {
     public ListNode removeNodes(ListNode head) {
-        List<ListNode> list = new ArrayList<>();
-        ListNode temp = head, dummy = new ListNode(-1), curr = dummy;
-        while (temp != null) {
-            list.add(temp);
-            temp = temp.next;
-        }
-        int n = list.size(), top = -1;
-        int[] stack = new int[n], NGE = new int[n];
-        Arrays.fill(NGE, -1);
-        for (int i = 0; i < n; i++) {
-            while (top != -1 && list.get(stack[top]).val < list.get(i).val) {
-                int idx = stack[top--];
-                NGE[idx] = i;
+        head = reverseList(head);
+        ListNode temp = head;
+        while (temp != null && temp.next != null) {
+            if (temp.next.val < temp.val) { // instead of checking next==val
+                temp.next = temp.next.next; // check if its < curr.val!
             }
-            stack[++top] = i;
-        }
-        for (int i = 0; i < n; i++) {
-            if (NGE[i] == -1) {
-                curr.next = list.get(i);
-                curr = curr.next;
+            else {
+                temp = temp.next;
             }
         }
-        return dummy.next;
+        return reverseList(head);
+    }
+    public ListNode reverseList(ListNode head) {
+        ListNode prev = null;
+        ListNode curr = head;
+        while (curr != null) {
+            ListNode next = curr.next;
+            curr.next = prev;
+            prev = curr;
+            curr = next;
+        }
+        return prev;
     }
 }
