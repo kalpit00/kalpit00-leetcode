@@ -1,15 +1,13 @@
-// Last updated: 11/2/2025, 9:30:37 PM
+// Last updated: 11/2/2025, 9:31:06 PM
 class Solution {
     public int minCost(String colors, int[] neededTime) {
-        int answer = 0;
-        int time = 0;
-        for (int i = 0; i < colors.length(); ++i) {
-            if (i > 0 && colors.charAt(i) != colors.charAt(i-1)) {
-                time = 0;
-            }
-            answer+= Math.min(neededTime[i], time);
-            time = Math.max(neededTime[i], time);
+        char[] s = colors.toCharArray();
+        int sum = 0, max = neededTime[0], n = s.length;
+        for (int i = 1; i < n; ++i) {
+            max = s[i] != s[i - 1] ? 0 : max;
+            sum += Math.min(neededTime[i], max);
+            max = Math.max(max, neededTime[i]);
         }
-        return answer;
+        return sum;
     }
 }
