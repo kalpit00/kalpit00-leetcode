@@ -1,23 +1,54 @@
-// Last updated: 11/3/2025, 11:26:28 PM
+// Last updated: 11/4/2025, 6:39:45 AM
 class Solution {
     public int[] findXSum(int[] nums, int k, int x) {
-        int n = nums.length;
-        int[] res = new int[n - k + 1];
-        for (int i = 0; i <= n - k; i++) {
-            int[][] map = new int[51][2];
-            int sum = 0;
-            for (int j = i; j < i + k; j++) {
-                map[nums[j]][0]++;
-                map[nums[j]][1] = nums[j];
-            }
-            Arrays.sort(map, (a, b) -> a[0] != b[0] ? 
-            b[0] - a[0] : b[1] - a[1]);
-            for (int s = 0; s < x; s++) {
-                if (map[s][0] == 0) break;
-                sum += map[s][0] * map[s][1];
-            }
-            res[i] = sum;
+        int[] result = new int[nums.length - k + 1];
+
+        for (int i = 0; i < result.length; i++) {
+            int left = i, right = i + k - 1;
+            result[i] = findXSumofSubArray(nums, left, right, x);
         }
-        return res;
+
+        return result;
+    }
+
+    private int findXSumofSubArray(int[] nums, int left, int right, int x) {
+        int sum = 0, distinctCount = 0;
+        int[] freq = new int[51]; 
+
+        for (int i = left; i <= right; i++) {
+            sum += nums[i];
+            if (freq[nums[i]] == 0) {
+                distinctCount++;
+            }
+            freq[nums[i]]++;
+        }
+
+        if (distinctCount < x) {
+            return sum;
+        }
+
+        sum = 0;
+        for (int pick = 0; pick < x; pick++) {
+            int bestFreq = -1;
+            int bestVal = -1;
+
+            for (int val = 50; val >= 1; val--) {
+                if (freq[val] > bestFreq) {
+                    bestFreq = freq[val];
+                    bestVal = val;
+                }
+            }
+
+            if (bestVal != -1) {
+                sum += bestVal * bestFreq;
+                freq[bestVal] = 0;
+            }
+        }
+        
+        return sum;
     }
 }
+// TC : O(n - k + 1) * findXSumofSubArray() => O(n) * findXSumofSubArray()
+// findXSumofSubArray() =>  O(k + 50 * x) ~ O(k + x)
+// Total TC : O(n * (k + x))
+// SC : O(n - k + 1) * O(51) ~ O(n)
