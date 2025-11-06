@@ -1,8 +1,9 @@
-// Last updated: 11/5/2025, 8:13:20 PM
+// Last updated: 11/5/2025, 8:25:08 PM
 class Solution {
     public int[] processQueries(int c, int[][] connections, int[][] queries) {
         DSU dsu = new DSU(c + 1);
         boolean[] visited = new boolean[c + 1];
+        int count = 0, idx = 0;
         Map<Integer, TreeSet<Integer>> map = new HashMap<>();
         for (int[] edge : connections) {
             int u = edge[0], v = edge[1];
@@ -13,7 +14,10 @@ class Solution {
             map.putIfAbsent(parent, new TreeSet<>());
             map.get(parent).add(i);
         }
-        List<Integer> list = new ArrayList<>();
+        for (int[] q : queries) {
+            count += q[0] == 1 ? 1 : 0;
+        }
+        int[] res = new int[count];
         for (int[] q : queries) {
             int i = q[1];
             if (q[0] == 2) {
@@ -22,22 +26,18 @@ class Solution {
             }
             else {
                 if (!visited[i]) {
-                    list.add(i);
+                    res[idx++] = i;
                 }
                 else {
                     int parent = dsu.findParent(i);
                     if (!map.containsKey(parent) || map.get(parent).isEmpty()) {
-                        list.add(-1);
+                        res[idx++] = -1;
                     }
                     else {
-                        list.add(map.get(parent).iterator().next());
+                        res[idx++] = map.get(parent).iterator().next();
                     }
                 }
             }
-        }
-        int[] res = new int[list.size()];
-        for (int i = 0; i < res.length; i++) {
-            res[i] = list.get(i);
         }
         return res;
     }
