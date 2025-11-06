@@ -1,4 +1,4 @@
-// Last updated: 8/11/2025, 9:07:25 PM
+// Last updated: 11/5/2025, 8:13:20 PM
 class Solution {
     public int[] processQueries(int c, int[][] connections, int[][] queries) {
         DSU dsu = new DSU(c + 1);
