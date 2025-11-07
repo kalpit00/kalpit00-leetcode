@@ -1,42 +1,30 @@
-// Last updated: 11/7/2025, 4:29:56 PM
+// Last updated: 11/7/2025, 4:30:16 PM
 class Solution {
-    public int minimumCost(int[] start, int[] target, int[][] specialRoads) {
-        // Step 1: Filter out useless special roads
-        List<int[]> filteredRoads = new ArrayList<>();
-        for (int[] road : specialRoads) {
-            int a = road[0], b = road[1], c = road[2], d = road[3], cost = road[4];
-            if (cost < Math.abs(a - c) + Math.abs(b - d)) {
-                filteredRoads.add(new int[]{a, b, c, d, cost});
-            }
-        }
+  public int minimumCost(int[] start, int[] target, int[][] specialRoads) {
+    var visited = new HashSet<Pair<Integer, Integer>>();
 
-        // Step 2: Initialize distance map and priority queue
-        Map<List<Integer>, Integer> dist = new HashMap<>();
-        dist.put(Arrays.asList(start[0], start[1]), 0);
-        PriorityQueue<int[]> heap = new PriorityQueue<>((a, b) -> a[0] - b[0]);
-        heap.offer(new int[]{0, start[0], start[1]});
+    var queue = new PriorityQueue<int[]>((a, b) -> Integer.compare(a[2], b[2]));
+    queue.offer(new int[] {start[0], start[1], 0});
 
-        // Step 3: Run Dijkstra's algorithm to find shortest path
-        while (!heap.isEmpty()) {
-            int[] curr = heap.poll();
-            int currdist = curr[0], x = curr[1], y = curr[2];
-            for (int[] road : filteredRoads) {
-                int a = road[0], b = road[1], c = road[2], d = road[3], cost = road[4];
-                if (dist.getOrDefault(Arrays.asList(c, d), Integer.MAX_VALUE) > currdist + Math.abs(x - a) + Math.abs(y - b) + cost) {
-                    dist.put(Arrays.asList(c, d), currdist + Math.abs(x - a) + Math.abs(y - b) + cost);
-                    heap.offer(new int[]{dist.get(Arrays.asList(c, d)), c, d});
-                }
-            }
-        }
+    while (!queue.isEmpty()) {
+      var a = queue.poll();
+      int x = a[0], y = a[1], cost = a[2];
+      var pos = new Pair(x, y);
 
-        // Step 4: Compute minimum cost to travel from start to target
-        int res = Math.abs(target[0] - start[0]) + Math.abs(target[1] - start[1]);
-        for (int[] road : filteredRoads) {
-            int a = road[0], b = road[1], c = road[2], d = road[3], cost = road[4];
-            res = Math.min(res, dist.getOrDefault(Arrays.asList(c, d), Integer.MAX_VALUE) + Math.abs(target[0] - c) + Math.abs(target[1] - d));
-        }
+      if (visited.contains(pos)) continue;
 
-        // Step 5: Return the minimum cost
-        return res;
+      if (x == target[0] && y == target[1])
+        return cost;
+
+      visited.add(pos);
+
+      queue.offer(new int[] {target[0], target[1], cost + Math.abs(target[0] - x) + Math.abs(target[1] - y)});
+
+      for (var r : specialRoads)
+        if (!visited.contains(new Pair(r[2], r[3])))
+          queue.offer(new int[] {r[2], r[3], Math.abs(r[0] - x) + Math.abs(r[1] - y) + cost + r[4]});
+
     }
+    return -1;
+  }
 }
