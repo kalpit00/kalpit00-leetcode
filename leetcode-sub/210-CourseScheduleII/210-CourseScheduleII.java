@@ -1,11 +1,12 @@
-// Last updated: 11/7/2025, 2:25:00 PM
+// Last updated: 11/8/2025, 4:48:04 AM
 class Solution {
+    int idx;
     public int[] findOrder(int n, int[][] edges) {
         List<List<Integer>> adj = new ArrayList<>();
         for (int i = 0; i < n; i++) {
             adj.add(new ArrayList<>());
         }
-        Stack<Integer> stack = new Stack<>();
+        idx = n - 1;
         int[] res = new int[n];
         int[] visited = new int[n]; // 0 = white, 1 = grey, 2 = black
         for (int[] edge : edges) {
@@ -14,31 +15,27 @@ class Solution {
         }
         for (int i = 0; i < n; i++) {
             if (visited[i] == 0) {
-                if (!dfs(i, visited, adj, stack)) {
+                if (!dfs(i, visited, adj, res)) {
                     return new int[]{};
                 }
             }
         }
-        int idx = 0;
-        while (!stack.isEmpty()) {
-            res[idx++] = stack.pop();
-        }
         return res;
     }
     private boolean dfs(int u, int[] visited, List<List<Integer>> adj,
-    Stack<Integer> stack) {
+    int[] res) {
         visited[u] = 1; // gray
         for (int v : adj.get(u)) {
             if (visited[v] == 1) { // gray -> gray, BACK edge == cycle
                 return false;
             }
             else if (visited[v] == 0) {
-                if (!dfs(v, visited, adj, stack)) {
+                if (!dfs(v, visited, adj, res)) {
                     return false;
                 }
             }
         }
-        stack.push(u);
+        res[idx--] = u;
         visited[u] = 2; // black
         return true;
     }
