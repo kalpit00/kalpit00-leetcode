@@ -1,4 +1,4 @@
-// Last updated: 11/8/2025, 8:11:23 PM
+// Last updated: 11/8/2025, 8:17:06 PM
 class Solution {
     int timer = 1;
     int[][] dir = new int[][]{{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
