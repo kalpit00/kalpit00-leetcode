@@ -1,4 +1,4 @@
-// Last updated: 11/8/2025, 8:38:16 PM
+// Last updated: 11/8/2025, 8:41:57 PM
 class Solution {
     int[][] dir = new int[][]{{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
     int timer = 1;
@@ -32,10 +32,6 @@ class Solution {
         for (int[] d : dir) {
             int x = d[0] + i, y = d[1] + j;
             if (x < 0 || y < 0 || x >= m || y >= n || grid[x][y] == 0) {
-                continue;
-            }
-            int neighbor = n * x + y;
-            if (neighbor == parent[i][j]) {
                 continue;
             }
             if (visited[x][y] == 1) { // gray to gray, BACK EDGE
@@ -78,12 +74,11 @@ class Solution {
         visited[i][j] = 1;
         for (int[] d : dir) {
             int x = d[0] + i, y = d[1] + j;
-            if (x < 0 || y < 0 || x >= m || y >= n || visited[x][y] == 1 
-            || grid[x][y] == 0) {
-                continue;
+            if (x >= 0 && y >= 0 && x < m && y < n && visited[x][y] == 0 
+            && grid[x][y] == 1) {
+                dfs(visited, grid, x, y, m, n);
             }
-            dfs(visited, grid, x, y, m, n);
         }
-        // visited[i][j] = 2;
+        visited[i][j] = 2;
     }
 }
