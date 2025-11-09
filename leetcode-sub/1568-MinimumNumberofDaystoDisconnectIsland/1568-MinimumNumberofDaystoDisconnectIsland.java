@@ -1,4 +1,4 @@
-// Last updated: 11/8/2025, 8:35:55 PM
+// Last updated: 11/8/2025, 8:38:16 PM
 class Solution {
     int[][] dir = new int[][]{{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
     int timer = 1;
@@ -31,15 +31,13 @@ class Solution {
         int m = grid.length, n = grid[0].length, count = 0;
         for (int[] d : dir) {
             int x = d[0] + i, y = d[1] + j;
-            if (x < 0 || y < 0 || x >= m || y >= n || visited[x][y] == 2 
-            || grid[x][y] == 0) {
+            if (x < 0 || y < 0 || x >= m || y >= n || grid[x][y] == 0) {
                 continue;
             }
             int neighbor = n * x + y;
             if (neighbor == parent[i][j]) {
                 continue;
             }
-            
             if (visited[x][y] == 1) { // gray to gray, BACK EDGE
                 low[i][j] = Math.min(low[i][j], time[x][y]);
             } 
