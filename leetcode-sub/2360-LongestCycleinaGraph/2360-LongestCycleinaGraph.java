@@ -1,6 +1,6 @@
-// Last updated: 11/8/2025, 10:47:06 PM
+// Last updated: 11/8/2025, 11:31:43 PM
 class Solution {
-    int timer = 1, max = -1, flag = 0;
+    int flag = 0, timer = 1;
     public int longestCycle(int[] edges) {
         int n = edges.length;
         List<List<Integer>> adj = new ArrayList<>();
@@ -12,37 +12,65 @@ class Solution {
                 adj.get(i).add(edges[i]);
             }
         }
-        int[] visited = new int[n], time = new int[n], low = new int[n], 
-        parent = new int[n];
-        Arrays.fill(parent, -1);
+        int res = kosaraju(n, adj);
+        return flag == 0 ? -1 : res;
+    }
+    public int kosaraju(int n, List<List<Integer>> adj) {
+        int[] visited = new int[n];
+        int[][] finish = new int[n][2];
+        for (int i = 0; i < n; i++) {
+            finish[i][1] = i; // need node index in finish[] as sorting!
+        }
         for (int i = 0; i < n; i++) {
             if (visited[i] == 0) {
-                tarjan(i, parent, visited, adj, time, low);
+                dfs(adj, i, finish, visited);
             }
         }
-        Map<Integer, Integer> map = new HashMap<>();
-        for (int freq : low) {
-            map.put(freq, map.getOrDefault(freq, 0) + 1);
-            max = Math.max(max, map.get(freq));
+        List<List<Integer>> revAdj = new ArrayList<>();
+        for (int i = 0; i < n; i++) {
+            visited[i] = 0;
+            revAdj.add(new ArrayList<>());
         }
-        return flag == 0 ? -1 : max;
+        for (int i = 0; i < n; i++) {
+            for (int j : adj.get(i)) {
+                revAdj.get(j).add(i);
+            }
+        }
+        int max = 1;
+        Arrays.sort(finish, (a, b) -> b[0] - a[0]); // revSort finish[]
+        for (int i = 0; i < n; i++) {
+            int node = finish[i][1];
+            if (visited[node] == 0) {
+                max = Math.max(max, reverseDfs(revAdj, node, visited));
+            }
+        }
+        return max;
     }
-    private void tarjan(int node, int[] parent, int[] visited,
-    List<List<Integer>> adj, int time[], int low[]) {
+    private void dfs(List<List<Integer>> adj, int node, int[][] finish, 
+    int[] visited) {
         visited[node] = 1;
-        time[node] = low[node] = timer;
-        timer++;
+        timer++; // no need for disc time[], only finish[]
         for (int neighbor : adj.get(node)) {
-            if (visited[neighbor] == 1) { // back edge, gray to gray
-                flag = 1;
-                low[node] = Math.min(low[node], time[neighbor]);
+            if (visited[neighbor] == 1) { // back edge
+                flag = 1; // flag to determine an cycle exists in input
             }
             else if (visited[neighbor] == 0) {
-                parent[neighbor] = node;
-                tarjan(neighbor, parent, visited, adj, time, low);
-                low[node] = Math.min(low[node], low[neighbor]);
+                dfs(adj, neighbor, finish, visited);
+            }
+        }
+        finish[node][0] = timer++;
+        visited[node] = 2;
+    }
+    private int reverseDfs(List<List<Integer>> revAdj, int node, 
+    int[] visited) {
+        int size = 1;
+        visited[node] = 1;
+        for (int neighbor : revAdj.get(node)) {
+            if (visited[neighbor] == 0) {
+                size += reverseDfs(revAdj, neighbor, visited);
             }
         }
         visited[node] = 2;
+        return size;
     }
 }
