@@ -1,53 +1,43 @@
-// Last updated: 11/8/2025, 5:35:28 AM
+// Last updated: 11/8/2025, 7:06:09 PM
 class Solution {
     public int longestCycle(int[] edges) {
-        int n = edges.length;
-        boolean[] visit = new boolean[n];
+        int n = edges.length, max = -1;
         int[] indegree = new int[n];
-
-        // Count indegree of each node.
-        for (int edge : edges) {
-            if (edge != -1) {
-                indegree[edge]++;
+        Stack<Integer> stack = new Stack<>();
+        Queue<Integer> queue = new LinkedList<>();
+        for (int i = 0; i < n; i++) {
+            if (edges[i] != -1) {
+                indegree[edges[i]]++;
             }
         }
-
-        // Kahn's algorithm starts.
-        Queue<Integer> q = new LinkedList<>();
         for (int i = 0; i < n; i++) {
             if (indegree[i] == 0) {
-                q.offer(i);
+                queue.offer(i);
             }
         }
-
-        while (!q.isEmpty()) {
-            int node = q.poll();
-            visit[node] = true;
-            int neighbor = edges[node];
-            if (neighbor != -1) {
-                indegree[neighbor]--;
-                if (indegree[neighbor] == 0) {
-                    q.offer(neighbor);
-                }
+        while (!queue.isEmpty()) {
+            int node = queue.poll();
+            stack.push(node); // use stack as we want "reverse" topo-order
+            int neighbor = edges[node]; // no for-neigh loop as only 1 neigh
+            if (neighbor == -1) continue;
+            indegree[neighbor]--;
+            if (indegree[neighbor] == 0) {
+                queue.offer(neighbor);
             }
         }
-        // Kahn's algorithm ends.
-
-        int answer = -1;
         for (int i = 0; i < n; i++) {
-            if (!visit[i]) {
-                int neighbor = edges[i];
-                int count = 1;
-                visit[i] = true;
-                // Iterate in the cycle.
-                while (neighbor != i) {
-                    visit[neighbor] = true;
-                    count++;
-                    neighbor = edges[neighbor];
-                }
-                answer = Math.max(answer, count);
+            if (indegree[i] == 0) {
+                continue;
+            } // find length of cycle starting at node 'i'
+            List<Integer> cycle = new ArrayList<>();
+            int count = 0; // starting at i, go to next fav neighbor in cycle
+            for (int j = i; indegree[j] != 0; j = edges[j]) {
+                cycle.add(j);
+                indegree[j] = 0; // visit the neighbor
+                count++; // increase length of this cycle by 1
             }
+            max = Math.max(max, count);
         }
-        return answer;
+        return max;
     }
 }
