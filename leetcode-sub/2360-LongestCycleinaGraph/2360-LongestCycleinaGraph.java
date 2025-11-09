@@ -1,9 +1,8 @@
-// Last updated: 11/8/2025, 7:06:09 PM
+// Last updated: 11/8/2025, 7:07:12 PM
 class Solution {
     public int longestCycle(int[] edges) {
         int n = edges.length, max = -1;
         int[] indegree = new int[n];
-        Stack<Integer> stack = new Stack<>();
         Queue<Integer> queue = new LinkedList<>();
         for (int i = 0; i < n; i++) {
             if (edges[i] != -1) {
@@ -17,7 +16,6 @@ class Solution {
         }
         while (!queue.isEmpty()) {
             int node = queue.poll();
-            stack.push(node); // use stack as we want "reverse" topo-order
             int neighbor = edges[node]; // no for-neigh loop as only 1 neigh
             if (neighbor == -1) continue;
             indegree[neighbor]--;
