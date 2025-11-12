@@ -1,23 +1,43 @@
-// Last updated: 11/11/2025, 7:49:52 PM
+// Last updated: 11/11/2025, 7:54:30 PM
 class Solution {
+
     public int minOperations(int[] nums) {
-        int n = nums.length, count = 0, min = Integer.MAX_VALUE;
-        for (int num : nums) {
-            count += num == 1 ? 1 : 0;
+        int n = nums.length;
+        int num1 = 0;
+        int g = 0;
+        for (int x : nums) {
+            if (x == 1) {
+                num1++;
+            }
+            g = gcd(g, x);
         }
-        if (count > 0) {
-            return n - count;
+        if (num1 > 0) {
+            return n - num1;
         }
+        if (g > 1) {
+            return -1;
+        }
+
+        int minLen = n;
         for (int i = 0; i < n; i++) {
-            int gcd = nums[i];
-            for (int j = i + 1; j < n; j++) {
-                gcd = gcd(gcd, nums[j]);
-                min = gcd == 1 ? Math.min(min, j - i) : min;
+            int currentGcd = 0;
+            for (int j = i; j < n; j++) {
+                currentGcd = gcd(currentGcd, nums[j]);
+                if (currentGcd == 1) {
+                    minLen = Math.min(minLen, j - i + 1);
+                    break;
+                }
             }
         }
-        return min == Integer.MAX_VALUE ? -1 : min + n - 1;
+        return minLen + n - 2;
     }
-    private int gcd(int x, int y) {
-        return x == 0 ? y : gcd(y % x, x);
+
+    private int gcd(int a, int b) {
+        while (b != 0) {
+            int temp = b;
+            b = a % b;
+            a = temp;
+        }
+        return a;
     }
 }
