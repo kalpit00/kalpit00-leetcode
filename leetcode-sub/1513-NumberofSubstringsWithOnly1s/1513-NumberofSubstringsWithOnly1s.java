@@ -1,4 +1,4 @@
-// Last updated: 10/19/2025, 5:15:21 AM
+// Last updated: 11/15/2025, 11:39:19 PM
 class Solution {
     public int numSub(String s) {
         char[] arr = s.toCharArray();
