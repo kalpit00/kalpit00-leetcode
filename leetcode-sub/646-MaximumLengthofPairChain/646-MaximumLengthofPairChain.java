@@ -1,21 +1,16 @@
-// Last updated: 11/22/2025, 6:25:12 AM
+// Last updated: 11/22/2025, 6:29:55 AM
 class Solution {
     public boolean canFormArray(int[] arr, int[][] pieces) {
-        HashMap<Integer, int[]> map = new HashMap<>();
-        int n = arr.length, i = 0;
-        for (int[] piece : pieces) {
-            map.put(piece[0], piece);
-        } // use 1st item in each piece as key. store entire piece as value
-        while (i < n) {
-            if (!map.containsKey(arr[i])) {
-                return false;
-            }
-            int[] piece = map.get(arr[i]);
-            for (int j = 0; j < piece.length; j++) {
-                if (arr[i] != piece[j]) {
-                    return false;
-                }
-                i++;
+        int[] pos = new int[101];
+        for (int i = 0; i < arr.length; i++) pos[arr[i]] = i + 1;
+
+        for (int[] p : pieces) {
+            int start = pos[p[0]];
+            if (start == 0) return false;
+            int idx = start - 1;
+
+            for (int i = 0; i < p.length; i++) {
+                if (idx + i >= arr.length || arr[idx + i] != p[i]) return false;
             }
         }
         return true;
