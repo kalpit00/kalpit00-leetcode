@@ -1,4 +1,4 @@
-// Last updated: 9/2/2025, 5:29:55 PM
+// Last updated: 11/23/2025, 8:26:30 PM
 class Solution {
     public List<Boolean> prefixesDivBy5(int[] nums) {
         int n = nums.length, binaryNum = 0;
