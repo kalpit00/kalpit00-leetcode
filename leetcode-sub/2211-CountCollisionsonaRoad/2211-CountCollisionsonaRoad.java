@@ -1,49 +1,17 @@
-// Last updated: 6/29/2025, 2:12:40 AM
-class Solution {
-    public boolean isPrintable(int[][] grid) {
-        int m = grid.length, n = grid[0].length, count = 0;
-        List<List<Integer>> adj = new ArrayList<>();
-        for (int i = 0; i <= 60; i++) {
-            adj.add(new ArrayList<>());
-        }
-        int[] indegree = new int[61];
-        for (int k = 1; k <= 60; k++) {
-            int[] min = {Integer.MAX_VALUE, Integer.MAX_VALUE};
-            int[] max = {Integer.MIN_VALUE, Integer.MIN_VALUE};
-            for (int i = 0; i < m; i++) {
-                for (int j = 0; j < n; j++) {
-                    if (grid[i][j] == k) {
-                        min[0] = Math.min(min[0], i);
-                        min[1] = Math.min(min[1], j);
-                        max[0] = Math.max(max[0], i);
-                        max[1] = Math.max(max[1], j);
-                    }
-                }
-            }
-            for (int i = min[0]; i <= max[0]; i++) {
-                for (int j = min[1]; j <= max[1]; j++) {
-                    if (grid[i][j] == k) continue;
-                    adj.get(grid[i][j]).add(k);
-                    indegree[k]++;
-                }
-            }
-        }
-        Queue<Integer> queue = new LinkedList<>();
-        for (int i = 0; i <= 60; i++) {
-            if (indegree[i] == 0) {
-                queue.offer(i);
-            }
-        }
-        while (!queue.isEmpty()) {
-            int node = queue.poll();
-            count++;
-            for (int neighbor : adj.get(node)) {
-                indegree[neighbor]--;
-                if (indegree[neighbor] == 0) {
-                    queue.offer(neighbor);
-                }
-            }
-        }
-        return count == 61;
-    }
-}
+// Last updated: 12/3/2025, 9:42:32 PM
+1class Solution {
+2    public int countCollisions(String directions) {
+3        char[] s = directions.toCharArray();
+4        int count = 0, n = s.length, l = 0, r = n - 1;
+5        while (l < n && s[l] == 'L') {
+6            l++;
+7        }
+8        while (r >= l && s[r] == 'R') {
+9            r--;
+10        }
+11        for (int i = l; i <= r; i++) {
+12            count += s[i] != 'S' ? 1 : 0;
+13        }
+14        return count;
+15    }
+16}
