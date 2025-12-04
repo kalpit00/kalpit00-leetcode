@@ -1,4 +1,4 @@
-// Last updated: 12/3/2025, 9:42:32 PM
+// Last updated: 12/3/2025, 9:42:57 PM
 1class Solution {
 2    public int countCollisions(String directions) {
 3        char[] s = directions.toCharArray();
@@ -6,7 +6,7 @@
 5        while (l < n && s[l] == 'L') {
 6            l++;
 7        }
-8        while (r >= l && s[r] == 'R') {
+8        while (r >= 0 && s[r] == 'R') {
 9            r--;
 10        }
 11        for (int i = l; i <= r; i++) {
