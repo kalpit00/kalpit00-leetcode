@@ -1,4 +1,4 @@
-// Last updated: 12/8/2025, 8:13:59 AM
+// Last updated: 12/8/2025, 8:14:40 AM
 1class Solution {
 2    public int[] countPairsOfConnectableServers(int[][] edges, 
 3    int signalSpeed) {
@@ -14,7 +14,7 @@
 13        }
 14        int[] res = new int[n];
 15        for (int i = 0; i < n; i++) {
-16            res[i] = dfs(i, i, 0, adj, signalSpeed);
+16            res[i] = dfs(i, -1, 0, adj, signalSpeed);
 17        }
 18        return res;
 19    }
@@ -29,6 +29,6 @@
 28                count += res;
 29            }
 30        }
-31        return node == parent ? sum : count;
+31        return parent == -1 ? sum : count;
 32    }
 33}
