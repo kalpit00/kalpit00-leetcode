@@ -1,4 +1,4 @@
-// Last updated: 12/16/2025, 3:45:29 AM
+// Last updated: 12/16/2025, 3:45:52 AM
 1class Solution {
 2    public String shortestCommonSupersequence(String s, String t) {
 3        int m = s.length(), n = t.length();
@@ -30,7 +30,7 @@
 29            ans[idx--] = arr2[j - 1];
 30            j--;
 31        }
-32        return String.valueOf(ans);
+32        return new String(ans);
 33    }
 34    public int[][] lcs(String text1, String text2) {
 35        int m = text1.length(), n = text2.length();
