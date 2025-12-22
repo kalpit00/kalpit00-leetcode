@@ -1,4 +1,4 @@
-// Last updated: 12/21/2025, 9:31:36 PM
+// Last updated: 12/21/2025, 9:31:59 PM
 1class Solution {
 2    public int minDeletionSize(String[] strs) {
 3        int n = strs[0].length();
@@ -12,11 +12,11 @@
 11        if (dp[i][prev + 1] != null) {
 12            return dp[i][prev + 1];
 13        }
-14        int notTake = Integer.MAX_VALUE;
+14        int take = Integer.MAX_VALUE;
 15        if (prev == -1 || helper(i, prev, strs)) {
-16            notTake = solve(i + 1, i, n, strs, dp);
+16            take = solve(i + 1, i, n, strs, dp);
 17        }
-18        int take = 1 + solve(i + 1, prev, n, strs, dp);
+18        int notTake = 1 + solve(i + 1, prev, n, strs, dp);
 19        int min = Math.min(take, notTake);
 20        if (prev == -1) {
 21            return min;
