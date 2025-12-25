@@ -1,4 +1,4 @@
-// Last updated: 12/25/2025, 5:36:01 AM
+// Last updated: 12/25/2025, 5:37:59 AM
 1class Solution {
 2    public long maximumHappinessSum(int[] happiness, int k) {
 3        long sum = 0;
