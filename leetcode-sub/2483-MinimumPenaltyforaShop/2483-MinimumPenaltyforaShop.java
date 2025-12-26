@@ -1,4 +1,4 @@
-// Last updated: 12/26/2025, 5:21:45 AM
+// Last updated: 12/26/2025, 5:22:19 AM
 1class Solution {
 2    public int bestClosingTime(String customers) {
 3        char[] arr = customers.toCharArray();
