@@ -1,84 +1,75 @@
-// Last updated: 12/26/2025, 7:13:32 AM
-1class Solution {
-2    public long minInversionCount(int[] nums, int k) {
-3        Set<Integer> set = new HashSet<>();
-4        for (int num : nums) {
-5            set.add(num);
-6        }        
-7        List<Integer> sorted = new ArrayList<>(set);
-8        Collections.sort(sorted);
-9        Map<Integer, Integer> map = new HashMap<>();
-10        for (int i = 0; i < sorted.size(); i++) {
-11            map.put(sorted.get(i), i);
-12        }
-13        int n = nums.length, m = sorted.size();
-14        long min = Long.MAX_VALUE;
-15        Window window = new Window(m);
-16        for (int i = 0; i < k; i++) {
-17            window.expand(map.get(nums[i]));
-18        }
-19        min = window.count;
-20        for (int i = k; i < n; i++) {
-21            window.shrink();
-22            window.expand(map.get(nums[i]));
-23            min = Math.min(min, window.count);
-24        }
-25        return min;
-26    }
-27    
-28    class Window {
-29        long count;
-30        Deque<Integer> deque;
-31        int m;
-32        FenwickTree fenwickTree;
-33        
-34        public Window(int m) {
-35            this.m = m;
-36            count = 0;
-37            deque = new ArrayDeque<>();
-38            fenwickTree = new FenwickTree(m);
-39        }
-40        
-41        public void expand(int x) {
-42            // Count how many elements already in window are greater than x
-43            count += fenwickTree.query(m - 1) - fenwickTree.query(x);
-44            deque.addLast(x);
-45            fenwickTree.update(x, 1);
-46        }
-47        
-48        public void shrink() {
-49            int x = deque.pollFirst();
-50            // Count how many elements in window are less than x
-51            count -= fenwickTree.query(x - 1);
-52            fenwickTree.update(x, -1);
-53        }
-54    }
-55    
-56    class FenwickTree {
-57        int[] tree;
-58        int n;
-59        public FenwickTree(int n) {
-60            this.n = n;
-61            this.tree = new int[n + 1];
-62        }
-63        
-64        public int query(int index) {
-65            if (index < 0) return 0;
-66            int sum = 0;
-67            index++;
-68            while (index > 0) {
-69                sum += tree[index];
-70                index -= index & (-index);
-71            }
-72            return sum;
-73        }
-74
-75        public void update(int index, int val) {
-76            index++;
-77            while (index < tree.length) {
-78                tree[index] += val;
-79                index += index & (-index);
-80            }
-81        }
-82    }
-83}
+// Last updated: 12/26/2025, 7:17:35 AM
+import java.util.*;
+
+class Solution {
+
+    int[] bit;
+    int nVal;
+
+   
+    private void updatee(int i, int v) {
+        while (i <= nVal) {
+            bit[i] += v;
+            i += (i & -i);
+        }
+    }
+
+    
+    private int Query(int i) {
+        int s = 0;
+        while (i > 0) {
+            s += bit[i];
+            i -= (i & -i);
+        }
+        return s;
+    }
+
+    public long minInversionCount(int[] nums, int k) {
+
+        
+        int n = nums.length;
+        int[] t = Arrays.copyOf(nums, n);
+        Arrays.sort(t);
+
+        int m = 1;
+        for (int i = 1; i < n; i++) {
+            if (t[i] != t[m - 1]) {
+                t[m++] = t[i];
+            }
+        }
+
+        for (int i = 0; i < n; i++) {
+            nums[i] = Arrays.binarySearch(t, 0, m, nums[i]) + 1;
+        }
+
+        nVal = m;
+        bit = new int[nVal + 5];
+
+        long c = 0, minVal;
+
+       
+        for (int i = 0; i < k; i++) {
+            c += i - Query(nums[i]);
+            updatee(nums[i], 1);
+        }
+
+        minVal = c;
+
+       
+        for (int i = k; i < n; i++) {
+
+            
+            int old = nums[i - k];
+            updatee(old, -1);
+            c -= Query(old - 1);
+
+            
+            c += (k - 1) - Query(nums[i]);
+            updatee(nums[i], 1);
+
+            minVal = Math.min(minVal, c);
+        }
+
+        return minVal;
+    }
+}
