@@ -1,32 +1,32 @@
-// Last updated: 12/31/2025, 2:21:06 AM
+// Last updated: 12/31/2025, 2:26:09 AM
 1class Solution {
-2    public int latestDayToCross(int row, int col, int[][] cells) {
+2    public int latestDayToCross(int m, int n, int[][] cells) {
 3        int[][] dirs = {{0, -1}, {0, 1}, {-1, 0}, {1, 0}};
-4        int n = row * col, top = n, bottom = n + 1;        
-5        DSU dsu = new DSU(n + 2);
-6        boolean[][] visited = new boolean[row][col];
+4        int k = m * n, top = k, bottom = k + 1;        
+5        DSU dsu = new DSU(k + 2); // use 2 sentinels [k, k+1] for top & bottom
+6        boolean[][] visited = new boolean[m][n];
 7        for (int i = cells.length - 1; i >= 0; i--) {
 8            int x = cells[i][0] - 1, y = cells[i][1] - 1; // 1-indexed so -1
-9            int idx = x * col + y; // 2D -> 1D indexing
+9            int idx = x * n + y; // 2D -> 1D indexing
 10            visited[x][y] = true;
 11            for (int[] dir : dirs) {
 12                int r = x + dir[0], c = y + dir[1];
-13                if (r >= 0 && r < row && c >= 0 && c < col 
+13                if (r >= 0 && r < m && c >= 0 && c < n 
 14                && visited[r][c]) {
-15                    int neighborIdx = r * col + c;
+15                    int neighborIdx = r * n + c;
 16                    dsu.unionBySize(idx, neighborIdx);
 17                }
-18            }
+18            } // connect cell on first row 0 with TOP sentinel
 19            if (x == 0) {
 20                dsu.unionBySize(idx, top);                
-21            }
-22            if (x == row - 1) {
+21            } // connect cell on last row : m - 1 with BOTTOM sentinel
+22            if (x == m - 1) {
 23                dsu.unionBySize(idx, bottom);                
 24            }
 25            if (dsu.findParent(top) == dsu.findParent(bottom)) {
 26                return i;
-27            }
-28        }
+27            } // if top and bottom are connected, this is the last day
+28        } // as we go from right to left, rightmost day is greedily the last day
 29        return 0;
 30    }
 31    class DSU {
