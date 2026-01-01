@@ -1,11 +1,11 @@
-// Last updated: 1/1/2026, 12:40:22 AM
+// Last updated: 1/1/2026, 1:02:00 AM
 1class Solution {
 2    public int maxTurbulenceSize(int[] nums) {
-3        int n = nums.length, max = 1;
+3        int n = nums.length, max = 0;
 4        int[][] dp = new int[n][2];
-5        for (int i = 0; i < n; i++) {
-6            dp[i][0] = dp[i][1] = 1;
-7        }
+5        // for (int i = 0; i < n; i++) {
+6        //     dp[i][0] = dp[i][1] = 1;
+7        // }
 8        for (int i = 1; i < n; i++) {
 9            if (nums[i] > nums[i - 1]) {
 10                dp[i][1] = dp[i - 1][0] + 1;
@@ -17,6 +17,6 @@
 16        for (int i = 0; i < n; i++) {
 17            max = Math.max(max, Math.max(dp[i][0], dp[i][1]));
 18        }
-19        return max;
+19        return max + 1;
 20    }
 21}
