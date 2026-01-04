@@ -1,4 +1,4 @@
-// Last updated: 1/4/2026, 6:49:53 AM
+// Last updated: 1/4/2026, 6:50:05 AM
 1class Solution {
 2    public int reachableNodes(int[][] edges, int maxMoves, int n) {
 3        int[] dist = new int[n];
@@ -18,7 +18,7 @@
 17        while (!queue.isEmpty()) {
 18            int[] info = queue.poll();
 19            int parent = info[0], d = info[1];
-20            if (d > dist[parent]) continue;
+20            // if (d > dist[parent]) continue;
 21            for (int[] neighbor : adj.get(parent)) {
 22                int child = neighbor[0], weight = neighbor[1];
 23                if (dist[child] > dist[parent] + weight) {
