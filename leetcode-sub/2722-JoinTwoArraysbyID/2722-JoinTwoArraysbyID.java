@@ -1,22 +1,21 @@
-// Last updated: 1/8/2026, 5:21:31 PM
-1class Solution {
-2    public int longestSubsequence(int[] nums) {
-3        int n = nums.length, max = 1;
-4        int[][] dp = new int[301][301];
-5        for (int i = n - 1; i >= 0; i--) {
-6            for (int j = 1; j <= 300; j++) {
-7                int diff = Math.abs(nums[i] - j);
-8                dp[nums[i]][diff]= Math.max(dp[nums[i]][diff], dp[j][diff] + 1);
-9            }
-10            for (int j = 1; j <= 300; j++) {
-11                dp[nums[i]][j] = Math.max(dp[nums[i]][j], dp[nums[i]][j - 1]);
-12            }
-13        }
-14        for (int i = 0; i <= 300; ++i) {
-15            for (int j = 0; j <= 300; ++j) {
-16                max = Math.max(max, dp[i][j]);
-17            }
-18        }
-19        return max;
-20    }
-21}
+// Last updated: 1/8/2026, 5:22:39 PM
+class Solution {
+  public int longestSubsequence(int[] nums) {
+    final int mx = Arrays.stream(nums).max().getAsInt();
+    // dp[num][diff] := the length of the longest subsequence ending in `num`
+    // s.t. the last absolute difference between consecutive elements is `diff`
+    int[][] dp = new int[mx + 1][mx + 1];
+
+    for (final int num : nums) {
+      for (int prev = 1; prev <= mx; ++prev) {
+        final int diff = Math.abs(num - prev);
+        dp[num][diff] = Math.max(dp[num][diff], dp[prev][diff] + 1);
+      }
+      // dp[num][diff] := max(dp[num][j]), where j >= diff
+      for (int j = mx - 1; j >= 0; --j)
+        dp[num][j] = Math.max(dp[num][j], dp[num][j + 1]);
+    }
+
+    return Arrays.stream(dp).mapToInt(row -> row[0]).max().getAsInt();
+  }
+}
