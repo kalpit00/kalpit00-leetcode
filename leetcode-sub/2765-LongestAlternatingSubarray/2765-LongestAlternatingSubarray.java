@@ -1,13 +1,17 @@
-// Last updated: 1/1/2026, 6:23:04 AM
+// Last updated: 1/10/2026, 6:05:16 PM
 1class Solution {
-2    public int alternatingSubarray(int[] nums) {
-3        int n = nums.length, max = -1;
-4        int[] dp = new int[n];
-5        for (int i = 1; i < n; i++) {
-6            dp[i] = (dp[i - 1] > 0 && nums[i] == nums[i - 2]) ? 
-7            dp[i - 1] + 1 : (nums[i] - nums[i - 1] == 1) ? 2 : -1;
-8            max = Math.max(max, dp[i]);
-9        }
-10        return max;
-11    }
-12}
+2    public int deleteGreatestValue(int[][] grid) {
+3        int m = grid.length, n = grid[0].length, sum = 0;
+4        for (int i = 0; i < m; i++) {
+5            Arrays.sort(grid[i]);
+6        }
+7        for (int j = n - 1; j >= 0; j--) {
+8            int max = 0;
+9            for (int i = 0; i < m; i++) {
+10                max = Math.max(max, grid[i][j]);
+11            }
+12            sum += max;
+13        }
+14        return sum;
+15    }
+16}
