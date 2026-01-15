@@ -1,4 +1,4 @@
-// Last updated: 1/15/2026, 11:41:22 AM
+// Last updated: 1/15/2026, 11:42:08 AM
 1class Solution {
 2    public long countNoZeroPairs(long n) {
 3        String num = new StringBuilder(String.valueOf(n)).reverse().toString();
