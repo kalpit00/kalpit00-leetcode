@@ -1,77 +1,63 @@
-// Last updated: 1/22/2026, 7:45:04 PM
+// Last updated: 1/22/2026, 8:00:36 PM
 1class Solution {
-2    public int minimumPairRemoval(int[] nums) {
-3        int n = nums.length;
-4        // Use long to prevent integer overflow when summing elements
-5        long[] num = new long[n];
-6        for(int i = 0; i<n; i++) num[i] = nums[i];
-7
-8        // Simulated Doubly Linked List
-9        int[] L = new int[n+1];
-10        int[] R = new int[n+1];
-11
-12        for(int i = 0; i<n; i++) {
-13            L[i] = i-1;
-14            R[i] = i+1;
-15        }
-16
-17        // Min-Heap: Stores {sum, index}
-18        // Orders by smallest sum, ties broken by smallest index (leftmost)
-19        PriorityQueue<long[]> pq = new PriorityQueue<>((a, b) -> {
-20            if(a[0] != b[0]) return Long.compare(a[0], b[0]);
-21            return Long.compare(a[1], b[1]);
-22        });
-23
-24        boolean[] remove = new boolean[n];
-25        int bad = 0; // Count of inversions
-26
-27        // Initial population
-28        for(int i = 0; i<n-1; i++) {
-29            pq.offer(new long[]{num[i]+num[i+1], i});
-30            if(num[i] > num[i+1]) bad++;
-31        }
-32
-33        // If already sorted, 0 ops
-34        if(bad == 0) return 0;
-35
-36        int op = 0;
-37        while(bad > 0) {
-38            long[] b = pq.poll();
-39
-40            long sum = b[0];
-41            int i = (int)b[1];
-42            int j = R[i]; // The current right neighbor of i
-43
-44            // 1. Validation: Skip if i is removed, j is out of bounds, 
-45            // or if the heap entry is stale (sum doesn't match current reality)
-46            if(remove[i] || j == n) continue;
-47            if(sum != num[i] + num[j]) continue;
-48
-49            // 2. Remove contribution of old connections to 'bad' count
-50            if(L[i] != -1 && num[L[i]] > num[i]) bad--;
-51            if(num[i] > num[j]) bad--;
-52            if(R[j] != n && num[j] > num[R[j]]) bad--;
-53
-54            // 3. Perform Merge
-55            remove[j] = true; // Delete j
-56            
-57            // Re-link: i connects to R[j]
-58            if(R[j] != n && L[R[j]] != -1) L[R[j]] = i; 
-59            R[i] = R[j];
-60            
-61            num[i] = sum; // Update value of i
-62
-63            // 4. Add contribution of new connections to 'bad' count
-64            if(L[i] != -1 && num[L[i]] > num[i]) bad++;
-65            if(R[j] != n && num[i] > num[R[j]]) bad++; // Check i vs new right neighbor
-66
-67            // 5. Add new potential pairs to Heap
-68            if(L[i] != -1) pq.offer(new long[]{num[L[i]]+num[i], L[i]});
-69            if(R[i] != n) pq.offer(new long[]{num[i]+num[R[i]], i});
-70
-71            op++;
-72        }
-73
-74        return op;
-75    }
-76}
+2    public int minimumPairRemoval(int[] arr) {
+3        int n = arr.length, count = 0, res = 0;
+4        long[] nums = new long[n];
+5        for (int i = 0; i < n; i++) {
+6            nums[i] = arr[i];
+7        }
+8        int[] l = new int[n+1], r = new int[n+1];
+9        for (int i = 0; i < n; i++) {
+10            l[i] = i - 1;
+11            r[i] = i + 1;
+12        }
+13        // Min-Heap: Stores {sum, index}
+14        // Orders by smallest sum, ties broken by smallest index (leftmost)
+15        PriorityQueue<long[]> pq = new PriorityQueue<>((a, b) -> a[0] != b[0] 
+16        ? Long.compare(a[0], b[0]) : Long.compare(a[1], b[1]));
+17        boolean[] visited = new boolean[n];
+18        for(int i = 0; i < n - 1; i++) {
+19            pq.offer(new long[]{nums[i] + nums[i + 1], i});
+20            count += nums[i] > nums[i + 1] ? 1 : 0;
+21        }
+22        if (count == 0) {
+23            return 0;
+24        } // If already sorted, 0 ops
+25        while (count > 0) {
+26            long[] b = pq.poll();
+27            long sum = b[0];
+28            int i = (int) b[1], j = r[i]; // j == right neighbor of i
+29            if (visited[i] || j == n) continue;
+30            if (sum != nums[i] + nums[j]) continue;
+31            if (l[i] >= 0 && nums[l[i]] > nums[i]) {
+32                count--;
+33            }
+34            if (nums[i] > nums[j]) {
+35                count--;
+36            }
+37            if (r[j] < n && nums[j] > nums[r[j]]) {
+38                count--;
+39            }
+40            visited[j] = true;            
+41            if (r[j] != n && l[r[j]] != -1) {
+42                l[r[j]] = i;
+43            }
+44            r[i] = r[j];
+45            nums[i] = sum;
+46            if (l[i] >= 0 && nums[l[i]] > nums[i]) {
+47                count++;
+48            }
+49            if (r[j] < n && nums[i] > nums[r[j]]) {
+50                count++;
+51            }
+52            if (l[i] >= 0) {
+53                pq.offer(new long[]{nums[l[i]] + nums[i], l[i]});
+54            }
+55            if (r[i] < n) {
+56                pq.offer(new long[]{nums[i] + nums[r[i]], i});
+57            }
+58            res++;
+59        }
+60        return res;
+61    }
+62}
