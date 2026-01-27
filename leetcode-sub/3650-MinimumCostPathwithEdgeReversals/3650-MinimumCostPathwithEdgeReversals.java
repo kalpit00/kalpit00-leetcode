@@ -1,34 +1,51 @@
-// Last updated: 1/26/2026, 9:15:08 PM
-1class Solution {
-2    public int minCost(int n, int[][] edges) {
-3        List<List<int[]>> adj = new ArrayList<>();
-4        for (int i = 0; i < n; i++) {
-5            adj.add(new ArrayList<>());
-6        }
-7        for (int[] edge : edges) {
-8            int u = edge[0], v = edge[1], wt = edge[2];
-9            adj.get(u).add(new int[]{v, wt});
-10            adj.get(v).add(new int[]{u, 2 * wt});
-11        }
-12        int[] dist = new int[n];
-13        Arrays.fill(dist, Integer.MAX_VALUE);
-14        dist[0] = 0;
-15        PriorityQueue<int[]> pq = new PriorityQueue<>((a, b) -> a[1] - b[1]);
-16        pq.offer(new int[]{0, 0});
-17        while (!pq.isEmpty()) {
-18            int[] info = pq.poll();
-19            int parent = info[0], parentDist = info[1];
-20            // if (parentDist > dist[parent]) {
-21            //     continue;
-22            // }
-23            for (int[] neighbor : adj.get(parent)) {
-24                int child = neighbor[0], childDist = neighbor[1];
-25                if (dist[child] > parentDist + childDist) {
-26                    dist[child] = parentDist + childDist;
-27                    pq.offer(new int[]{child, dist[child]});
-28                }
-29            }
-30        }
-31        return (dist[n - 1] == Integer.MAX_VALUE) ? -1 : dist[n - 1];
-32    }
-33}
+// Last updated: 1/26/2026, 9:16:56 PM
+class Solution {
+    static class Edge {
+        int to;
+        int weight;
+        Edge(int to, int weight) {
+            this.to = to;
+            this.weight = weight;
+        }
+    }
+    public int minCost(int n, int[][] edges) {
+        List<Edge>[] graph = new ArrayList[n];
+
+        for(int i = 0; i < n; i++) {
+            graph[i] = new ArrayList<>();
+        }
+
+        for(int[] edge : edges) {
+            int u = edge[0];
+            int v = edge[1];
+            int w = edge[2];
+            graph[u].add(new Edge(v, w));
+            graph[v].add(new Edge(u, 2*w));
+        }
+
+        int[] dist = new int[n]; //najkraci put do svakog cvora od pocetnog
+        Arrays.fill(dist, Integer.MAX_VALUE);
+        dist[0] = 0;
+
+        PriorityQueue<int[]> pq = new PriorityQueue<>((a, b) -> a[1] - b[1]);
+        pq.add(new int[]{0, 0});//dodajemo cvor sa distancom do njega
+        
+        while(!pq.isEmpty()) {
+            int[] current = pq.poll();
+            int currentNode = current[0];
+            int distanceToCurrentNode = current[1];
+            //if(currentNode == n - 1) return dist[currentNode];
+            if(currentNode == n - 1) return distanceToCurrentNode;
+            for(Edge edge : graph[currentNode]) {
+                int nextNode = edge.to;
+                int weight = edge.weight;
+                if(dist[nextNode] > distanceToCurrentNode + weight) {
+                    dist[nextNode] = distanceToCurrentNode + weight;
+                    pq.add(new int[]{nextNode, dist[nextNode]});
+                }
+            }
+        }
+        //return dist[n - 1] == Integer.MAX_VALUE ? -1 : dist[n - 1] ;
+        return -1;
+    }
+}
