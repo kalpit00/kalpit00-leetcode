@@ -1,4 +1,4 @@
-// Last updated: 1/28/2026, 1:30:38 PM
+// Last updated: 1/28/2026, 1:31:01 PM
 1class Solution {
 2    public int minPathSum(int[][] grid) {
 3        int m = grid.length, n = grid[0].length;
@@ -13,9 +13,9 @@
 12        while (!pq.isEmpty()) {
 13            int[] node = pq.poll();
 14            int r = node[0], c = node[1], parentCost = node[2];
-15            if (parentCost > dist[r][c]) {
-16                continue;
-17            }
+15            // if (parentCost > dist[r][c]) {
+16            //     continue;
+17            // }
 18            if (r == m - 1 && c == n - 1) {
 19                return parentCost;
 20            }            
