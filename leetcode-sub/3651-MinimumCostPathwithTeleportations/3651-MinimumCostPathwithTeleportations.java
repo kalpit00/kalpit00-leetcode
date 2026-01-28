@@ -1,4 +1,4 @@
-// Last updated: 1/27/2026, 11:23:38 PM
+// Last updated: 1/27/2026, 11:24:11 PM
 class Solution {
     public int minCost(int[][] grid, int k) {
         int n = grid.length, m = grid[0].length, max = 0;
