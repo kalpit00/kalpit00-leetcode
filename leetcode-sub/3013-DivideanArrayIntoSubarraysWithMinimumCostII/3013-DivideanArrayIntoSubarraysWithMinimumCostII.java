@@ -1,41 +1,46 @@
-// Last updated: 5/20/2025, 6:50:22 PM
-import java.math.BigInteger;
-class Solution {
-    int mod = 1000000007;
-    public int countSteppingNumbers(String low, String high) {
-        String a = new BigInteger(low).subtract(BigInteger.ONE).toString();
-        String b = high;
-        int m = a.equals("0") ? 0 : a.length(), n = b.length();
-        Long[][][] dp2 = new Long[n][2][11];
-        long res2 = solve(b, n, 0, 1, -1, dp2);
-        if (m == 0) {
-            return (int) res2 % mod;
-        }
-        Long[][][] dp1 = new Long[m][2][11];
-        long res1 = solve(a, m, 0, 1, -1, dp1);
-        return (int) ((res2 - res1 + mod) % mod);
-    }
-        private long solve(String num, int m, int idx, int tight, int prev,
-        Long[][][] dp) {
-        if (idx == m) {
-            return prev != -1 ? 1 : 0;
-        }
-        if (dp[idx][tight][prev + 1] != null) {
-            return dp[idx][tight][prev + 1];
-        }
-        int limit = tight == 1 ? num.charAt(idx) - '0' : 9;
-        long count = 0;
-        for (int i = 0; i <= limit; i++) {
-            int newTight = tight == 1 && i == limit ? 1 : 0;
-            if (prev == -1 && i == 0) { // skip leading zeros
-                count = (count + solve(num, m, idx + 1, newTight, prev,
-                dp)) % mod;
-            } // dfs, passing 'i' instead of prev
-            else if (prev == -1 || Math.abs(i - prev) == 1) {
-                count = (count + solve(num, m, idx + 1, newTight, i,
-                dp)) % mod;
-            }
-        }
-        return dp[idx][tight][prev + 1] = count % mod;
-    }
-}
+// Last updated: 2/1/2026, 9:48:33 PM
+1class Solution {
+2    public long minimumCost(int[] nums, int k, int dist) {
+3        int n = nums.length;
+4        long min = Long.MAX_VALUE, sum = 0;
+5        TreeSet<Integer> maxHeap = new TreeSet<>((a, b) -> 
+6            nums[a] == nums[b] ? b - a : nums[b] - nums[a]);
+7        TreeSet<Integer> minHeap = new TreeSet<>((a, b) -> 
+8            nums[a] == nums[b] ? a - b : nums[a] - nums[b]);
+9        for (int i = 1; i < Math.min(1 + dist, n); i++) {
+10            minHeap.add(i);
+11        }
+12        for (int i = 1; i < n; i++) {
+13            if (maxHeap.contains(i)) {
+14                sum -= nums[i];
+15                maxHeap.remove(i);
+16            } else {
+17                minHeap.remove(i);
+18            }
+19            if (i + dist < n) {
+20                minHeap.add(i + dist);
+21            }
+22            while (maxHeap.size() < k - 2 && !minHeap.isEmpty()) {
+23                int val = minHeap.first();
+24                minHeap.remove(val);
+25                maxHeap.add(val);
+26                sum += nums[val];
+27            }
+28            while (!maxHeap.isEmpty() && !minHeap.isEmpty() && 
+29                   nums[maxHeap.first()] > nums[minHeap.first()]) {
+30                int temp = maxHeap.first();
+31                maxHeap.remove(temp);
+32                sum -= nums[temp];
+33                int temp1 = minHeap.first();
+34                minHeap.remove(temp1);
+35                sum += nums[temp1];
+36                maxHeap.add(temp1);
+37                minHeap.add(temp);
+38            }
+39            if (maxHeap.size() == k - 2) {
+40                min = Math.min(min, nums[0] + nums[i] + sum);
+41            }
+42        }
+43        return min;
+44    }
+45}
