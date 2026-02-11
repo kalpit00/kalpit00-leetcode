@@ -1,4 +1,4 @@
-// Last updated: 2/11/2026, 3:58:32 PM
+// Last updated: 2/11/2026, 4:02:53 PM
 1class Solution {
 2    public ListNode reverseKGroup(ListNode head, int k) {
 3        int n = 0;
@@ -11,24 +11,23 @@
 10        }     
 11        while (curr != null && n > 0) {
 12            if (k > n) break;
-13            temp = curr;
-14            ListNode ans = reverse(temp, k);
-15            prev.next = ans;
-16            prev = temp;
-17            curr = temp.next;
-18            n -= k;
-19        }
-20        return dummy.next;   
-21    }
-22    private ListNode reverse(ListNode head, int k) {
-23        ListNode prev = null, curr = head;
-24        for (int i = 0; i < k && curr != null; i++) {
-25            ListNode next = curr.next;
-26            curr.next = prev;
-27            prev = curr;
-28            curr = next;
-29        }
-30        head.next = curr;
-31        return prev;
-32    }
-33}
+13            ListNode ans = reverse(curr, k);
+14            prev.next = ans;
+15            prev = curr;
+16            curr = curr.next;
+17            n -= k;
+18        }
+19        return dummy.next;   
+20    }
+21    private ListNode reverse(ListNode head, int k) {
+22        ListNode prev = null, curr = head;
+23        for (int i = 0; i < k && curr != null; i++) {
+24            ListNode next = curr.next;
+25            curr.next = prev;
+26            prev = curr;
+27            curr = next;
+28        }
+29        head.next = curr;
+30        return prev;
+31    }
+32}
