@@ -1,8 +1,8 @@
-// Last updated: 2/11/2026, 3:18:33 PM
+// Last updated: 2/11/2026, 3:23:35 PM
 1class Solution {
 2    public ListNode reverseEvenLengthGroups(ListNode head) {
-3        int n = -1, i = 2;
-4        ListNode temp = head, prev = head, curr = head.next;
+3        int n = 0, i = 1;
+4        ListNode temp = head, prev = null, curr = head;
 5        while (temp != null) {
 6            temp = temp.next;
 7            n++;
@@ -27,7 +27,7 @@
 26        return head;
 27    }
 28    private ListNode reverse(ListNode head, int k) {
-29        ListNode prev = null, curr = head; // use for-k loop instead of while
+29        ListNode prev = null, curr = head;
 30        for (int i = 0; i < k && curr != null; i++) {
 31            ListNode next = curr.next;
 32            curr.next = prev;
