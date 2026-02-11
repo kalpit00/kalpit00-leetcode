@@ -1,4 +1,4 @@
-// Last updated: 2/11/2026, 3:18:19 PM
+// Last updated: 2/11/2026, 3:18:33 PM
 1class Solution {
 2    public ListNode reverseEvenLengthGroups(ListNode head) {
 3        int n = -1, i = 2;
@@ -9,33 +9,32 @@
 8        }
 9        while (curr != null && n > 0) {
 10            int k = Math.min(i, n);
-11            temp = curr;
-12            if (k % 2 == 0) {
-13                ListNode ans = reverse(temp, k);
-14                prev.next = ans;
-15                prev = curr;
-16                curr = curr.next;
-17            }
-18            else {
-19                for (int j = 0; j < k; j++) {
-20                    prev = curr;
-21                    curr = curr.next;
-22                }
-23            }
-24            n -= k;
-25            i++;
-26        }
-27        return head;
-28    }
-29    private ListNode reverse(ListNode head, int k) {
-30        ListNode prev = null, curr = head; // use for-k loop instead of while
-31        for (int i = 0; i < k && curr != null; i++) {
-32            ListNode next = curr.next;
-33            curr.next = prev;
-34            prev = curr;
-35            curr = next;
-36        }
-37        head.next = curr;
-38        return prev;
-39    }
-40}
+11            if (k % 2 == 0) {
+12                ListNode ans = reverse(curr, k);
+13                prev.next = ans;
+14                prev = curr;
+15                curr = curr.next;
+16            }
+17            else {
+18                for (int j = 0; j < k; j++) {
+19                    prev = curr;
+20                    curr = curr.next;
+21                }
+22            }
+23            n -= k;
+24            i++;
+25        }
+26        return head;
+27    }
+28    private ListNode reverse(ListNode head, int k) {
+29        ListNode prev = null, curr = head; // use for-k loop instead of while
+30        for (int i = 0; i < k && curr != null; i++) {
+31            ListNode next = curr.next;
+32            curr.next = prev;
+33            prev = curr;
+34            curr = next;
+35        }
+36        head.next = curr;
+37        return prev;
+38    }
+39}
