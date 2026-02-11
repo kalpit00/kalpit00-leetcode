@@ -1,4 +1,4 @@
-// Last updated: 2/10/2026, 11:36:25 PM
+// Last updated: 2/11/2026, 3:18:19 PM
 1class Solution {
 2    public ListNode reverseEvenLengthGroups(ListNode head) {
 3        int n = -1, i = 2;
@@ -13,8 +13,8 @@
 12            if (k % 2 == 0) {
 13                ListNode ans = reverse(temp, k);
 14                prev.next = ans;
-15                prev = temp;
-16                curr = temp.next;
+15                prev = curr;
+16                curr = curr.next;
 17            }
 18            else {
 19                for (int j = 0; j < k; j++) {
