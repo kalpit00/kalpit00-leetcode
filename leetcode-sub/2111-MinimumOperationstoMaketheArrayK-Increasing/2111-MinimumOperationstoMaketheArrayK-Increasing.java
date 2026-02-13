@@ -1,4 +1,4 @@
-// Last updated: 2/12/2026, 9:21:01 PM
+// Last updated: 2/12/2026, 11:37:14 PM
 1class Solution {
 2    public int kIncreasing(int[] arr, int k) {
 3        int n = arr.length, res = 0;
