@@ -1,4 +1,4 @@
-// Last updated: 2/12/2026, 11:37:14 PM
+// Last updated: 2/12/2026, 11:38:24 PM
 1class Solution {
 2    public int kIncreasing(int[] arr, int k) {
 3        int n = arr.length, res = 0;
@@ -14,19 +14,28 @@
 13        return res;
 14    }
 15    public int lengthOfLIS(Integer[] nums) {            
-16        int[] dp = new int[nums.length];
-17        int len = 0;
-18        for (int x : nums) {
-19            int i = Arrays.binarySearch(dp, 0, len, x);
-20            if (i < 0) {
-21                i = -(i + 1);
-22            } else {
-23                i = Arrays.binarySearch(dp, i, len, x + 1);
-24                i = i < 0 ? -(i + 1) : i;
-25            }
-26            dp[i] = x;
-27            len += (i == len) ? 1 : 0;
-28        }
-29        return len;
-30    }
-31}
+16        int n = nums.length, len = 0;
+17        int[] lis = new int[n], dp = new int[n];
+18        for (int i = 0; i < n; i++) {
+19            int idx = upperBound(dp, len, nums[i]);
+20            dp[idx] = nums[i];
+21            len += (idx == len) ? 1 : 0;
+22            lis[i] = idx + 1;
+23        }
+24        return len;
+25    }
+26    private int upperBound(int[] dp, int n, int x) {
+27        int start = 0, end = n, ans = n;
+28        while (start <= end) {
+29            int mid = start + (end - start) / 2;
+30            if (dp[mid] > x) {
+31                ans = mid;
+32                end = mid - 1;
+33            }                
+34            else {
+35                start = mid + 1;
+36            }
+37        }
+38        return ans;
+39    }
+40}
