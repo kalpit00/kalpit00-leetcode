@@ -1,4 +1,4 @@
-// Last updated: 2/14/2026, 8:46:57 PM
+// Last updated: 2/14/2026, 8:54:17 PM
 1class Solution {
 2    public long maxAlternatingSum(int[] arr) {
 3        int n = arr.length;
