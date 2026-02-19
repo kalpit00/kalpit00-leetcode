@@ -1,34 +1,29 @@
-// Last updated: 2/19/2026, 2:45:38 AM
+// Last updated: 2/19/2026, 3:14:01 AM
 1class Solution {
-2    public long[] distance(int[] arr) {
-3        long[] output = new long[arr.length];
-4        Map<Integer, Long> sumMap = new HashMap<>();
-5        Map<Integer, Integer> countMap = new HashMap<>();
-6        for (int i = 0; i < arr.length; ++i) {
-7            if (!sumMap.containsKey(arr[i])) {
-8                sumMap.put(arr[i], 0l);
-9                countMap.put(arr[i], 0);
-10            }
-11
-12            output[i] += i * (long) countMap.get(arr[i]) - sumMap.get(arr[i]);
-13            sumMap.put(arr[i], sumMap.get(arr[i]) + i);
-14            countMap.put(arr[i], countMap.get(arr[i]) + 1);
-15        }
-16
-17        sumMap = new HashMap<>();
-18        countMap = new HashMap<>();
-19        int len = arr.length;
-20        for (int i = len - 1; i >= 0; --i) {
-21            if (!sumMap.containsKey(arr[i])) {
-22                sumMap.put(arr[i], 0l);
-23                countMap.put(arr[i], 0);
+2    public long[] distance(int[] nums) {
+3        int n = nums.length;
+4        long[] arr = new long[n];
+5        Map<Integer, List<Integer>> map = new HashMap<>();
+6        for (int i = 0; i < n; i++) {
+7            map.putIfAbsent(nums[i], new ArrayList<>());
+8            map.get(nums[i]).add(i);
+9        }
+10        for (List<Integer> group : map.values()) {
+11            int m = group.size();
+12            long[] pre = new long[m], suf = new long[m];
+13            for (int i = 1; i < m; i++) {
+14                pre[i] = pre[i-1] + group.get(i-1);
+15            }
+16            for (int i = m - 2; i >= 0; i--) {
+17                suf[i] = suf[i+1] + group.get(i+1);
+18            }
+19            for (int i = 0; i < m; i++) {
+20                long idx = group.get(i);
+21                long right = suf[i] - (long) (m - i - 1) * idx;
+22                long left  = (long) i * idx - pre[i];
+23                arr[group.get(i)] = right + left;
 24            }
-25
-26            output[i] += (len - i - 1) * (long) countMap.get(arr[i]) - sumMap.get(arr[i]);
-27            sumMap.put(arr[i], sumMap.get(arr[i]) + (len - i - 1));
-28            countMap.put(arr[i], countMap.get(arr[i]) + 1);
-29        }
-30
-31        return output;
-32    }
-33}
+25        }
+26        return arr;
+27    }
+28}
