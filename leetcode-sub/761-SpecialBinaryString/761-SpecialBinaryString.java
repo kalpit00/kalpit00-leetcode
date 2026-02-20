@@ -1,17 +1,19 @@
-// Last updated: 2/19/2026, 8:59:04 PM
+// Last updated: 2/19/2026, 9:17:08 PM
 1class Solution {
-2    public String makeLargestSpecial(String S) {
-3        int count = 0, i = 0;
-4        List<String> res = new ArrayList<String>();
-5        for (int j = 0; j < S.length(); ++j) {
-6          if (S.charAt(j) == '1') count++;
-7          else count--;
-8          if (count == 0) {
-9            res.add('1' + makeLargestSpecial(S.substring(i + 1, j)) + '0');
-10            i = j + 1;
-11          }
-12        }
-13        Collections.sort(res, Collections.reverseOrder());
-14        return String.join("", res);
-15    }
-16}
+2    public String makeLargestSpecial(String s) {
+3        return dfs(s.toCharArray(), 0, s.length());
+4    }
+5    private String dfs(char[] arr, int start, int end) {
+6        List<String> res = new ArrayList<>();
+7        int count = 0, i = start;
+8        for (int j = start; j < end; j++) {
+9            count += arr[j] == '1' ? 1 : -1;
+10            if (count == 0) {
+11                res.add('1' + dfs(arr, i + 1, j) + '0');
+12                i = j + 1;
+13            }
+14        }
+15        Collections.sort(res, Collections.reverseOrder());
+16        return String.join("", res);
+17    }
+18}
