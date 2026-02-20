@@ -1,4 +1,4 @@
-// Last updated: 2/19/2026, 7:05:09 PM
+// Last updated: 2/19/2026, 7:05:18 PM
 1class Solution {
 2    public boolean checkSubarraySum(int[] nums, int k) {
 3        int n = nums.length;
@@ -9,7 +9,7 @@
 8        Map<Integer, Integer> map = new HashMap<>();
 9        map.put(0, 0);
 10        for (int i = 1; i <= n; i++) {
-11            int pre_i = ((pre[i] % k) + k) % k; // avoids negative pre[i]
+11            int pre_i = pre[i] % k;
 12            if (map.containsKey(pre_i) && i - map.get(pre_i) > 1) {
 13                return true;
 14            }
