@@ -1,10 +1,17 @@
-// Last updated: 2/28/2026, 7:24:58 PM
-1class Solution {
-2    public int minPartitions(String n) {
-3        int max = 0;
-4        for (char c : n.toCharArray()) {
-5            max = Math.max(max, c - '0');
-6        }
-7        return max;
-8    }
-9}
+// Last updated: 2/28/2026, 7:38:51 PM
+class Solution {
+    public int minPartitions(String n) {
+        int maxDigit = 0;
+        
+        for (char c : n.toCharArray()) {
+            maxDigit = Math.max(maxDigit, c - '0');
+            
+            // Early stop if we reach 9 (maximum possible)
+            if (maxDigit == 9) {
+                return 9;
+            }
+        }
+        
+        return maxDigit;
+    }
+}
