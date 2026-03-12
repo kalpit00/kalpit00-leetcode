@@ -1,4 +1,4 @@
-// Last updated: 3/12/2026, 1:37:03 AM
+// Last updated: 3/12/2026, 2:03:05 AM
 1class Solution {
 2    public int maxStability(int n, int[][] edges, int k) {
 3        DSU dsu = new DSU(n);
@@ -22,13 +22,13 @@
 21                list.add(edge[2]);
 22            } // union the largest 0-edges until MST formed!
 23        }
-24        for (int i = list.size() - 1; i >= 0 && k > 0; i--) {
-25            list.set(i, 2 * list.get(i));
-26            k--; 
-27        } // of those who made the MST, double the 'k' smallest ones
-28        for (int i : list) {
-29            min = Math.min(min, i);
-30        }
+24        for (int i = list.size() - 1; i >= 0; i--) {
+25            if (k > 0) {
+26                list.set(i, 2 * list.get(i));
+27                k--;
+28            }
+29            min = Math.min(min, list.get(i));
+30        } // of those who made the MST, double the 'k' smallest ones
 31        return dsu.componentCount != 1 ? -1 : min;
 32    }
 33    class DSU {
