@@ -1,4 +1,4 @@
-// Last updated: 3/11/2026, 9:12:47 PM
+// Last updated: 3/12/2026, 1:23:26 AM
 1class Solution {
 2    public int maxStability(int n, int[][] edges, int k) {
 3        DSU dsu = new DSU(n);
@@ -15,7 +15,7 @@
 14            }
 15            min = Math.min(min, edge[2]);
 16        }
-17        while (!pq.isEmpty() && dsu.componentCount > 1) {
+17        while (!pq.isEmpty()) {
 18            int[] edge = pq.poll();
 19            if (dsu.union(edge[0], edge[1])) {
 20                list.add(edge[2]);
