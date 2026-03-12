@@ -1,4 +1,4 @@
-// Last updated: 3/12/2026, 2:03:05 AM
+// Last updated: 3/12/2026, 2:06:06 AM
 1class Solution {
 2    public int maxStability(int n, int[][] edges, int k) {
 3        DSU dsu = new DSU(n);
