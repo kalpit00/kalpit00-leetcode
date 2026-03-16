@@ -1,23 +1,23 @@
-// Last updated: 3/16/2026, 7:38:47 PM
+// Last updated: 3/16/2026, 7:47:08 PM
 1class Solution {
 2    public int[] findRedundantDirectedConnection(int[][] edges) {
-3        int n = edges.length, parent = -1;
+3        int n = edges.length, node = -1;
 4        int[] indegree = new int[n + 1];
 5        for (int[] edge : edges) {
 6            int u = edge[0], v = edge[1];
 7            indegree[v]++;
 8            if (indegree[v] == 2) {
-9                parent = v;
-10                break;
+9                node = v; // there's only one node with 2 incoming edges
+10                break; // as there are 'n' edges and 'n' nodes!
 11            }
-12        }
-13        if (parent == -1) {
-14            return findRedundantConnection(edges, new int[2]);
-15        }
+12        } // if no such node found, its same as #684
+13        if (node == -1) {
+14            return findRedundantConnection(edges, new int[]{-1, -1});
+15        } // else, try to find the last edge that is redundant!
 16        for (int i = n - 1; i >= 0; i--) {
 17            int[] edge = edges[i];
 18            int u = edge[0], v = edge[1];
-19            if (v == parent) {
+19            if (v == node) {
 20                int[] ans = findRedundantConnection(edges, edge);
 21                if (ans == null) {
 22                    return edge;
