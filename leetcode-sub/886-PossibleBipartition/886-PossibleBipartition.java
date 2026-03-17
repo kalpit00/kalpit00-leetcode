@@ -1,50 +1,42 @@
-// Last updated: 3/17/2026, 4:10:19 AM
+// Last updated: 3/17/2026, 4:11:48 AM
 1class Solution {
 2    public boolean possibleBipartition(int n, int[][] dislikes) {
-3        int[][] graph = new int[n + 1][];
-4        List<List<Integer>> adj = new ArrayList<>();
-5        for (int i = 0; i <= n; i++) {
-6            adj.add(i, new ArrayList<>());
-7        }
-8        for (int[] edge : dislikes) {
-9            int u = edge[0], v = edge[1];
-10            adj.get(u).add(v);
-11            adj.get(v).add(u);
-12        }
-13        for (int i = 0; i <= n; i++) {
-14            List<Integer> list = adj.get(i);
-15            int k = list.size();
-16            graph[i] = new int[k];
-17            for (int j = 0; j < k; j++) {
-18                graph[i][j] = list.get(j);
-19            }
-20        }
-21        return isBipartite(graph);
-22    }
-23    public boolean isBipartite(int[][] graph) {
-24        int n = graph.length;
-25        int[] visited = new int[n];
-26        for (int i = 0; i < n; i++) {
-27            if (visited[i] == 0) { // If white, start a DFS
-28                if (!dfs(i, visited, graph, 1)) {
-29                    return false;
-30                }
-31            }
-32        }
-33        return true;
-34    }
-35    private boolean dfs(int node, int[] visited, int[][] graph, int color) {
-36        visited[node] = color;
-37        for (int neighbor : graph[node]) {
-38            if (visited[neighbor] == color) { 
-39                return false;
-40            }
-41            else if (visited[neighbor] == 0) {
-42                if (!dfs(neighbor, visited, graph, -color)) {
-43                    return false;
-44                }
-45            }
-46        }
-47        return true;
-48    }
-49}
+3        List<List<Integer>> adj = new ArrayList<>();
+4        for (int i = 0; i <= n; i++) {
+5            adj.add(i, new ArrayList<>());
+6        }
+7        for (int[] edge : dislikes) {
+8            int u = edge[0], v = edge[1];
+9            adj.get(u).add(v);
+10            adj.get(v).add(u);
+11        }
+12        return isBipartite(adj);
+13    }
+14    public boolean isBipartite(List<List<Integer>> adj) {
+15        int n = adj.size();
+16        int[] visited = new int[n];
+17        for (int i = 0; i < n; i++) {
+18            if (visited[i] == 0) { // If white, start a DFS
+19                if (!dfs(i, visited, adj, 1)) {
+20                    return false;
+21                }
+22            }
+23        }
+24        return true;
+25    }
+26    private boolean dfs(int node, int[] visited, List<List<Integer>> adj,
+27    int color) {
+28        visited[node] = color;
+29        for (int neighbor : adj.get(node)) {
+30            if (visited[neighbor] == color) { 
+31                return false;
+32            }
+33            else if (visited[neighbor] == 0) {
+34                if (!dfs(neighbor, visited, adj, -color)) {
+35                    return false;
+36                }
+37            }
+38        }
+39        return true;
+40    }
+41}
