@@ -1,0 +1,51 @@
+// Last updated: 3/17/2026, 3:50:53 AM
+1class Solution {
+2    public boolean isBipartite(int[][] graph) {
+3        int n = graph.length;
+4        DSU dsu = new DSU(n);
+5        for (int i = 0; i < n; i++) {
+6            for (int j : graph[i]) {
+7                if (dsu.findParent(i) == dsu.findParent(j)) {
+8                    return false;
+9                }
+10                dsu.union(graph[i][0], j);
+11            }
+12        }
+13        return true;
+14    }
+15    public class DSU {
+16        int componentCount;
+17        int[] size, parent;
+18        public DSU(int n) {
+19            size = new int[n];
+20            parent = new int[n];
+21            componentCount = n;
+22            for (int i = 0; i < n; i++) {
+23                size[i] = 1;
+24                parent[i] = i;
+25            }
+26        }
+27        public int findParent(int node) {
+28            if (node == parent[node]) {
+29                return node;
+30            }
+31            return findParent(parent[node]);
+32        }
+33        public boolean union(int u, int v) {
+34            int pu = findParent(u), pv = findParent(v);
+35            if (pu == pv) {
+36                return false;
+37            }
+38            if (size[pu] < size[pv]) {
+39                parent[pu] = pv;
+40                size[pv] += size[pu];
+41            }
+42            else {
+43                parent[pv] = pu;
+44                size[pu] += size[pv];
+45            }
+46            componentCount--;
+47            return true;
+48        }
+49    }
+50}
