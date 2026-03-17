@@ -1,18 +1,18 @@
-// Last updated: 3/17/2026, 4:05:46 AM
+// Last updated: 3/17/2026, 4:10:19 AM
 1class Solution {
 2    public boolean possibleBipartition(int n, int[][] dislikes) {
 3        int[][] graph = new int[n + 1][];
-4        Map<Integer, List<Integer>> map = new HashMap<>();
+4        List<List<Integer>> adj = new ArrayList<>();
 5        for (int i = 0; i <= n; i++) {
-6            map.put(i, new ArrayList<>());
+6            adj.add(i, new ArrayList<>());
 7        }
 8        for (int[] edge : dislikes) {
 9            int u = edge[0], v = edge[1];
-10            map.get(u).add(v);
-11            map.get(v).add(u);
+10            adj.get(u).add(v);
+11            adj.get(v).add(u);
 12        }
 13        for (int i = 0; i <= n; i++) {
-14            List<Integer> list = map.get(i);
+14            List<Integer> list = adj.get(i);
 15            int k = list.size();
 16            graph[i] = new int[k];
 17            for (int j = 0; j < k; j++) {
