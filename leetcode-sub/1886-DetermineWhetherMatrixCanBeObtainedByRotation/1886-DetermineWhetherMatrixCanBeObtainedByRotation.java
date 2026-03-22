@@ -1,35 +1,16 @@
-// Last updated: 3/21/2026, 8:16:57 PM
+// Last updated: 3/21/2026, 8:19:27 PM
 1class Solution {
 2    public boolean findRotation(int[][] mat, int[][] target) {
-3        for (int i = 0; i < 4; i++) {
-4            if (isEqual(mat, target)) {
-5                return true;
-6            }
-7            mat = rotate(mat);
-8        }
-9        return false;
-10    }
-11    
-12    public boolean isEqual(int[][] mat, int[][] res) {
-13        int m = mat.length, n = mat[0].length;        
-14        for (int i = 0; i < m; i++) {
-15            for (int j = 0; j < n; j++) {
-16                if (mat[i][j] != res[i][j]) {
-17                    return false;
-18                }
-19            }
-20        }
-21        return true;
-22    }
-23    
-24    public int[][] rotate (int[][] mat) {
-25        int m = mat.length, n = mat[0].length;
-26        int[][] res = new int[m][n];
-27        for (int i = 0; i < m; i++) {
-28            for (int j = 0; j < n; j++) {
-29                res[j][n - i - 1] = mat[i][j];
-30            }
-31        }
-32        return res;
-33    }
-34}
+3        int n = mat.length;
+4        boolean r90 = true, r180 = true, r270 = true, r360 = true;
+5        for (int i = 0; i < n; i++) {
+6            for (int j = 0; j < n; j++) {
+7                r90 &= mat[i][j] == target[n - 1 - j][i];
+8                r180 &= mat[i][j] == target[n - 1 - i][n - 1 - j];
+9                r270 &= mat[i][j] == target[j][n - 1 - i];
+10                r360 &= mat[i][j] == target[i][j];
+11            }
+12        }
+13        return r90 || r180 || r270 || r360;
+14    }
+15}
