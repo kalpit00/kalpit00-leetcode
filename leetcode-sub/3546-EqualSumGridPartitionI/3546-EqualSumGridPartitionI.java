@@ -1,4 +1,4 @@
-// Last updated: 1/19/2026, 11:26:36 PM
+// Last updated: 3/24/2026, 10:29:45 PM
 1class Solution {
 2    public boolean canPartitionGrid(int[][] grid) {
 3        int m = grid.length, n = grid[0].length;
