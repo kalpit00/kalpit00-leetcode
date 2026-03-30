@@ -1,4 +1,4 @@
-// Last updated: 3/29/2026, 11:11:10 PM
+// Last updated: 3/30/2026, 4:18:52 PM
 1class Solution {
 2    public boolean checkStrings(String s, String t) {
 3        int[] oddMap1 = new int[26], evenMap1 = new int[26];
@@ -15,15 +15,14 @@
 14                oddMap2[s2[i] - 'a']++;
 15            }
 16        }
-17        return helper(oddMap1, evenMap1, oddMap2, evenMap2);
+17        return helper(oddMap1, oddMap2) && helper(evenMap1, evenMap2);
 18    }
-19    private boolean helper(int[] oddMap1, int[] evenMap1, 
-20    int[] oddMap2, int[] evenMap2) {
-21        for (int i = 0; i < 26; i++) {
-22            if (oddMap1[i] != oddMap2[i] || evenMap1[i] != evenMap2[i]) {
-23                return false;
-24            }
-25        }
-26        return true;
-27    }
-28}
+19    private boolean helper(int[] map1, int[] map2) {
+20        for (int i = 0; i < 26; i++) {
+21            if (map1[i] != map2[i]) {
+22                return false;
+23            }
+24        }
+25        return true;
+26    }
+27}
