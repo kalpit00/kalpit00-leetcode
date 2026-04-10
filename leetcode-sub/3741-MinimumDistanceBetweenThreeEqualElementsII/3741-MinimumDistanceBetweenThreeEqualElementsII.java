@@ -1,4 +1,4 @@
-// Last updated: 4/9/2026, 9:22:37 PM
+// Last updated: 4/9/2026, 9:23:44 PM
 1class Solution {
 2    public int minimumDistance(int[] nums) {
 3        int n = nums.length, min = Integer.MAX_VALUE;
