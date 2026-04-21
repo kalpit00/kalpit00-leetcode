@@ -1,4 +1,4 @@
-// Last updated: 4/21/2026, 2:48:12 AM
+// Last updated: 4/21/2026, 6:06:22 AM
 1class Solution {
 2    public int minimumHammingDistance(int[] source, int[] target, int[][] allowedSwaps) {
 3        int n = source.length;
