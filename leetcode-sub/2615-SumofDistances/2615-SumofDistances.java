@@ -1,4 +1,4 @@
-// Last updated: 2/19/2026, 3:17:44 AM
+// Last updated: 4/23/2026, 1:48:40 AM
 1class Solution {
 2    public long[] distance(int[] nums) {
 3        int n = nums.length;
@@ -29,9 +29,8 @@
 28        }
 29        for (int i = 0; i < n; i++) {
 30            long val = nums.get(i);
-31            res[i] = (suf[i] - (n - i - 1) * val) - 
-32            (pre[i] - i * val);
-33        }
-34        return res;
-35    }
-36}
+31            res[i] = (suf[i] - (n - i - 1) * val) + (i * val - pre[i]);
+32        }
+33        return res;
+34    }
+35}
