@@ -1,4 +1,4 @@
-// Last updated: 4/25/2026, 9:39:38 PM
+// Last updated: 4/25/2026, 9:40:05 PM
 1class Solution {
 2    int[][] dir = new int[][]{{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
 3    public boolean containsCycle(char[][] grid) {
