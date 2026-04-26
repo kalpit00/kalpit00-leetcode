@@ -1,36 +1,68 @@
-// Last updated: 4/25/2026, 9:41:51 PM
-1class Solution {
-2    int[][] dir = new int[][]{{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
-3    public boolean containsCycle(char[][] grid) {
-4        int m = grid.length, n = grid[0].length;
-5        boolean[][] visited = new boolean[m][n];
-6        for (int i = 0; i < m; i++) {
-7            for (int j = 0; j < n; j++) {
-8                if (!visited[i][j]) {
-9                    if (dfs(i, j, m, n, visited, grid, new int[]{-1, -1}, 0)) {
-10                        return true;
-11                    }
-12                }
-13            }
-14        }
-15        return false;
-16    }
-17    private boolean dfs(int i, int j, int m, int n, boolean[][] visited,
-18    char[][] grid, int[] parent, int steps) {
-19        if (visited[i][j]) {
-20            return steps >= 4;
-21        }
-22        visited[i][j] = true;
-23        for (int[] d : dir) {
-24            int r = i + d[0], c = j + d[1];
-25            if (r < 0 || r >= m || c < 0 || c >= n) continue;
-26            if (r == parent[0] && c == parent[1]) continue;
-27            if (grid[r][c] == grid[i][j]) {
-28                if (dfs(r, c, m, n, visited, grid, new int[]{i, j}, steps+1)) {
-29                    return true;
-30                }
-31            }
-32        }
-33        return false;
-34    }
-35}
+// Last updated: 4/25/2026, 9:47:28 PM
+class Solution {
+    public boolean containsCycle(char[][] grid) {
+        int rows = grid.length;
+        int cols = grid[0].length;
+
+        // every node is its own group
+        int[] groups = new int[rows * cols];
+
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                groups[i * cols + j] = i * cols + j;
+            }
+        }
+
+        // we merge n1 and n2 if they are neighbours (adjacent + same value)
+        // if they already in the same group, then we found a cycle!
+
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+
+                int id = i * cols + j;
+                char c = grid[i][j];
+
+                // find all neighbours, get all neighbour groups
+                // if already. merged --> cycle!
+
+
+                if (i + 1 < rows && grid[i+1][j] == c) {
+                    int aGroup = find(id, groups);
+                    int bGroup = find( (i + 1) * cols + j, groups);
+
+                    if (aGroup == bGroup) return true;
+                    groups[aGroup] = bGroup;
+                }
+
+                if (j + 1 < cols && grid[i][j+1] == c) {
+                    int aGroup = find(id, groups);
+                    int bGroup = find( i * cols + j + 1, groups);
+
+                    if (aGroup == bGroup) return true;
+                    groups[aGroup] = bGroup;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    private int find(int id, int[] groups) {
+        if (id == groups[id]) return id;
+        groups[id] = find(groups[id], groups);
+        return groups[id];
+    }
+}
+
+/**
+
+undirecte dgraph --> union find
+
+each node starts in its own group
+
+then we keep merging neighbouring nodes 
+
+if we find that 2 nodes are already in the same group --> it means we've found a cycle
+
+
+ */
