@@ -1,4 +1,4 @@
-// Last updated: 4/25/2026, 9:38:19 PM
+// Last updated: 4/25/2026, 9:39:38 PM
 1class Solution {
 2    int[][] dir = new int[][]{{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
 3    public boolean containsCycle(char[][] grid) {
@@ -6,30 +6,31 @@
 5        boolean[][] visited = new boolean[m][n];
 6        for (int i = 0; i < m; i++) {
 7            for (int j = 0; j < n; j++) {
-8                if (!visited[i][j] && 
-9                dfs(grid, i, j, m, n, -1, -1, 0, visited)) {
-10                    return true;
-11                }
-12            }
-13        }
-14        return false;
-15    }
-16    
-17    private boolean dfs(char[][] grid, int x, int y, int m, int n, int px, int py, int steps, boolean[][] visited) {
-18        if (visited[x][y]) {
-19            return steps >= 4;
-20        }
-21        visited[x][y] = true;
-22        for (int[] d : dir) {
-23            int nx = x + d[0], ny = y + d[1];
-24            if (nx < 0 || nx >= m || ny < 0 || ny >= n) continue;
-25            if (nx == px && ny == py) continue;
-26            if (grid[nx][ny] == grid[x][y]) {
-27                if (dfs(grid, nx, ny, m, n, x, y, steps + 1, visited)) {
-28                    return true;
-29                }
-30            }
-31        }
-32        return false;
-33    }
-34}
+8                if (!visited[i][j]) {
+9                    if (dfs(i, j, m, n, visited, grid, -1, -1, 0)) {
+10                        return true;
+11                    }
+12                }
+13            }
+14        }
+15        return false;
+16    }
+17    private boolean dfs(int i, int j, int m, int n, boolean[][] visited,
+18    char[][] grid, int px, int py, int steps) {
+19        if (visited[i][j]) {
+20            return steps >= 4;
+21        }
+22        visited[i][j] = true;
+23        for (int[] d : dir) {
+24            int r = i + d[0], c = j + d[1];
+25            if (r < 0 || r >= m || c < 0 || c >= n) continue;
+26            if (r == px && c == py) continue;
+27            if (grid[r][c] == grid[i][j]) {
+28                if (dfs(r, c, m, n, visited, grid, i, j, steps + 1)) {
+29                    return true;
+30                }
+31            }
+32        }
+33        return false;
+34    }
+35}
