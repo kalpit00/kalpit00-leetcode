@@ -1,4 +1,4 @@
-// Last updated: 12/24/2025, 5:33:20 PM
+// Last updated: 5/16/2026, 8:54:47 PM
 1class Solution {
 2    public boolean canReach(int[] arr, int src) {
 3        int n = arr.length;
