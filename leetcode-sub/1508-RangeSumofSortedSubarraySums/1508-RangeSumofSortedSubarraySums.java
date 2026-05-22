@@ -1,4 +1,4 @@
-// Last updated: 5/22/2026, 7:01:28 AM
+// Last updated: 5/22/2026, 8:41:05 AM
 1public class Solution {
 2    int mod = 1000000007;
 3    public int rangeSum(int[] nums, int n, int left, int right) {
@@ -37,17 +37,16 @@
 36        int count = 0, left = 0, right = 0;
 37        while (right < n) {
 38            sum += nums[right];
-39            windowSum += nums[right] * (right - left + 1);
-40            right++;
-41            while (sum > target) {
-42                windowSum -= sum;
-43                sum -= nums[left];
-44                left++;
-45            } // count subarrays with sum <= target
-46            count += right - left;
-47            total += windowSum;
-48        } // total = total sum of all subarrays with sum <= target
-49        return new long[]{count, total};
-50    }
-51}
-52
+39            windowSum += nums[right++] * (right - left);
+40            while (sum > target) {
+41                windowSum -= sum;
+42                sum -= nums[left];
+43                left++;
+44            } // count subarrays with sum <= target
+45            count += right - left;
+46            total += windowSum;
+47        } // total = total sum of all subarrays with sum <= target
+48        return new long[]{count, total};
+49    }
+50}
+51
