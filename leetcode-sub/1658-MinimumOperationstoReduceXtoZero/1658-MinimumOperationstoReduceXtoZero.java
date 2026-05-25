@@ -1,21 +1,17 @@
-// Last updated: 2/19/2026, 7:18:56 PM
+// Last updated: 5/25/2026, 5:32:32 AM
 1class Solution {
 2    public int minOperations(int[] nums, int x) {
-3        int n = nums.length, max = -1;
-4        int[] pre = new int[n + 1];
-5        for (int i = 0; i < n; i++) {
-6            pre[i + 1] = pre[i] + nums[i];
-7        }
-8        Map<Integer, Integer> map = new HashMap<>();
-9        map.put(0, 0);
-10        int k = pre[n] - x;
-11        if (k == 0) return n;
-12        for (int i = 1; i <= n; i++) {
-13            if (map.containsKey(pre[i] - k)) {
-14                max = Math.max(max, i - map.get(pre[i] - k));
-15            }
-16            map.putIfAbsent(pre[i], i);
-17        }
-18        return max == -1 ? max : n - max;
-19    }
-20}
+3        int n = nums.length, left = 0, right = 0, sum = 0, max = -1, total = 0;
+4        for (int num : nums) {
+5            total += num;
+6        }
+7        while (right < n) {
+8            sum += nums[right++];
+9            while (left < n && sum > total - x) {
+10                sum -= nums[left++];
+11            }
+12            max = sum == total - x ? Math.max(max, right - left) : max;
+13        }
+14        return max == -1 ? -1 : n - max;
+15    }
+16}
