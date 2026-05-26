@@ -1,31 +1,21 @@
-// Last updated: 5/25/2026, 10:07:37 PM
-class Solution {
-    public int minSumOfLengths(int[] arr, int target) {
-       int[] min_len = new int[arr.length];
-        Arrays.fill(min_len, Integer.MAX_VALUE);
-        
-        int sum = 0;
-        int start = 0;
-        int res = Integer.MAX_VALUE;
-        int min = Integer.MAX_VALUE;
-        
-        for(int end = 0; end < arr.length; end++){
-            sum += arr[end];
-            
-            while(sum > target){
-                sum -= arr[start++];
-            }
-            
-            if(sum == target){
-                int cur_len = end-start+1;
-                if(start > 0 && min_len[start-1] != Integer.MAX_VALUE){
-                    res = Math.min(res, cur_len + min_len[start-1]);
-                }
-                min = Math.min(min, cur_len);
-            }
-            min_len[end] = min;
-        }
-        
-        return res == Integer.MAX_VALUE ? -1 : res; 
-    }
-}
+// Last updated: 5/26/2026, 4:48:01 AM
+1class Solution {
+2    public boolean checkZeroOnes(String s) {
+3        char[] nums = s.toCharArray();
+4        return maxStreak(nums, '1') > maxStreak(nums, '0');
+5    }
+6    public int maxStreak(char[] nums, char c) {
+7        int n = nums.length, max = 0;
+8        boolean flag = false;
+9        for (int i = 0; i < n; i++) {
+10            int m = 1; // m = streak length
+11            flag = nums[i] == c ? true : flag;
+12            while (i < n - 1 && nums[i] == c && nums[i] == nums[i + 1]) {
+13                i++;
+14                m++;
+15            }
+16            max = Math.max(max, m);
+17        }
+18        return flag ? max : 0;
+19    }
+20}
