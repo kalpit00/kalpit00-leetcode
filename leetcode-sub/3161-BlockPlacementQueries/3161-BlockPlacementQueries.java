@@ -1,63 +1,64 @@
-// Last updated: 5/29/2026, 9:50:39 PM
+// Last updated: 5/29/2026, 9:50:53 PM
 1class Solution {
 2
-3    private int[] seg;
+3    private int[] bt;
 4
-5    private void update(int idx, int val, int p, int l, int r) {
-6        if (l == r) {
-7            seg[p] = val;
-8            return;
-9        }
-10        int mid = (l + r) >> 1;
-11        if (idx <= mid) {
-12            update(idx, val, p << 1, l, mid);
-13        } else {
-14            update(idx, val, (p << 1) | 1, mid + 1, r);
+5    private void update(int x, int v) {
+6        for (; x < bt.length; x += x & -x) {
+7            bt[x] = Math.max(bt[x], v);
+8        }
+9    }
+10
+11    private int query(int x) {
+12        int res = 0;
+13        for (; x > 0; x -= x & -x) {
+14            res = Math.max(res, bt[x]);
 15        }
-16        seg[p] = Math.max(seg[p << 1], seg[(p << 1) | 1]);
+16        return res;
 17    }
 18
-19    private int query(int L, int R, int p, int l, int r) {
-20        if (L <= l && r <= R) {
-21            return seg[p];
-22        }
-23        int mid = (l + r) >> 1;
-24        int res = 0;
-25        if (L <= mid) {
-26            res = Math.max(res, query(L, R, p << 1, l, mid));
-27        }
-28        if (R > mid) {
-29            res = Math.max(res, query(L, R, (p << 1) | 1, mid + 1, r));
+19    public List<Boolean> getResults(int[][] queries) {
+20        int mx = 50000;
+21
+22        TreeSet<Integer> st = new TreeSet<>();
+23        st.add(0);
+24        st.add(mx);
+25
+26        for (int[] q : queries) {
+27            if (q[0] == 1) {
+28                st.add(q[1]);
+29            }
 30        }
-31        return res;
-32    }
+31
+32        bt = new int[mx + 1];
 33
-34    public List<Boolean> getResults(int[][] queries) {
-35        int mx = 50000;
-36        seg = new int[mx << 2];
-37        TreeSet<Integer> st = new TreeSet<>();
-38        st.add(0);
-39        st.add(mx);
-40        update(mx, mx, 1, 0, mx);
+34        int pre = 0;
+35        for (int x : st) {
+36            if (x == 0) continue;
+37            update(x, x - pre);
+38            pre = x;
+39        }
+40
 41        List<Boolean> ans = new ArrayList<>();
-42
-43        for (int[] q : queries) {
-44            if (q[0] == 1) {
+42        for (int i = queries.length - 1; i >= 0; i--) {
+43            int[] q = queries[i];
+44            if (q[0] == 2) {
 45                int x = q[1];
-46                int r = Optional.ofNullable(st.ceiling(x + 1)).orElse(mx);
-47                int l = Optional.ofNullable(st.floor(x - 1)).orElse(0);
-48                update(x, x - l, 1, 0, mx);
-49                update(r, r - x, 1, 0, mx);
-50                st.add(x);
+46                int sz = q[2];
+47                int preVal = Optional.ofNullable(st.floor(x)).orElse(0);
+48                int maxSpace = query(preVal);
+49                maxSpace = Math.max(maxSpace, x - preVal);
+50                ans.add(maxSpace >= sz);
 51            } else {
 52                int x = q[1];
-53                int sz = q[2];
-54                int pre = Optional.ofNullable(st.floor(x)).orElse(0);
-55                int max_space = query(0, pre, 1, 0, mx);
-56                max_space = Math.max(max_space, x - pre);
-57                ans.add(max_space >= sz);
-58            }
-59        }
-60        return ans;
-61    }
-62}
+53                int preVal = Optional.ofNullable(st.lower(x)).orElse(0);
+54                int nxt = Optional.ofNullable(st.higher(x)).orElse(mx);
+55                update(nxt, nxt - preVal);
+56                st.remove(x);
+57            }
+58        }
+59
+60        Collections.reverse(ans);
+61        return ans;
+62    }
+63}
