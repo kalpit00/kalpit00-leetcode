@@ -1,4 +1,4 @@
-// Last updated: 6/1/2026, 10:23:54 PM
+// Last updated: 6/1/2026, 10:24:22 PM
 1class Solution {
 2    public int earliestFinishTime(int[] landStartTime, int[] landDuration, int[] waterStartTime, int[] waterDuration) {
 3        int land_water = solve(landStartTime, landDuration, waterStartTime,waterDuration);
@@ -12,11 +12,9 @@
 11        }
 12        int finish2 = Integer.MAX_VALUE;
 13        for (int i = 0; i < start2.length; i++) {
-14            finish2 = Math.min(
-15                finish2,
-16                Math.max(start2[i], finish1) + duration2[i]
-17            );
-18        }
-19        return finish2;
-20    }
-21}
+14            finish2 = Math.min(finish2, Math.max(start2[i], finish1) + 
+15            duration2[i]);
+16        }
+17        return finish2;
+18    }
+19}
