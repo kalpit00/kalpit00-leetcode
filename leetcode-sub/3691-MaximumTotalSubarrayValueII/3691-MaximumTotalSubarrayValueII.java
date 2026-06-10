@@ -1,4 +1,4 @@
-// Last updated: 1/12/2026, 1:19:14 PM
+// Last updated: 6/10/2026, 3:19:56 AM
 1class Solution {
 2    public long maxTotalValue(int[] nums, int k) {
 3        SparseTable table = new SparseTable(nums);
