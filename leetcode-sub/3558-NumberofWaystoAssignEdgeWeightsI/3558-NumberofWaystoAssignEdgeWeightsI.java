@@ -1,7 +1,7 @@
-// Last updated: 6/11/2026, 5:29:14 AM
+// Last updated: 6/11/2026, 5:30:18 AM
 1class Solution {
 2    public int assignEdgeWeights(int[][] edges) {
-3        int n = edges.length+1, mod = 1000000007, max = 0, count = 1, level = 0;
+3        int n = edges.length+1, mod = 1000000007, count = 1, level = 0;
 4        List<List<Integer>> adj = new ArrayList<>(n + 1);
 5        for (int i = 0; i <= n; i++) adj.add(new ArrayList<>());
 6        for (int[] edge : edges) {
@@ -20,17 +20,16 @@
 19                for (int neighbor : adj.get(node)) {
 20                    if (!visited[neighbor]) {
 21                        visited[neighbor] = true;
-22                        max = Math.max(max, level + 1);
-23                        queue.offer(neighbor);
-24                    }
-25                }
-26            }
-27            level++;
-28        } // 2^(max - 2)
-29        for (int i = 0; i < max - 1; i++) {
-30            count = (count * 2) % mod;
-31        }
-32        return count;
-33    }
-34}
-35
+22                        queue.offer(neighbor);
+23                    }
+24                }
+25            }
+26            level++;
+27        } // 2^(level - 2)
+28        for (int i = 0; i < level - 2; i++) {
+29            count = (count * 2) % mod;
+30        }
+31        return count;
+32    }
+33}
+34
