@@ -1,7 +1,7 @@
-// Last updated: 6/11/2026, 5:30:18 AM
+// Last updated: 6/12/2026, 5:17:29 AM
 1class Solution {
 2    public int assignEdgeWeights(int[][] edges) {
-3        int n = edges.length+1, mod = 1000000007, count = 1, level = 0;
+3        int n = edges.length + 1, mod = 1000000007, count = 1;
 4        List<List<Integer>> adj = new ArrayList<>(n + 1);
 5        for (int i = 0; i <= n; i++) adj.add(new ArrayList<>());
 6        for (int[] edge : edges) {
@@ -9,27 +9,20 @@
 8            adj.get(u).add(v);
 9            adj.get(v).add(u);
 10        }
-11        Queue<Integer> queue = new LinkedList<>();
-12        boolean[] visited = new boolean[n + 1];
-13        queue.offer(1);
-14        visited[1] = true;
-15        while (!queue.isEmpty()) {
-16            int size = queue.size();
-17            for (int i = 0; i < size; i++) {
-18                int node = queue.poll();
-19                for (int neighbor : adj.get(node)) {
-20                    if (!visited[neighbor]) {
-21                        visited[neighbor] = true;
-22                        queue.offer(neighbor);
-23                    }
-24                }
-25            }
-26            level++;
-27        } // 2^(level - 2)
-28        for (int i = 0; i < level - 2; i++) {
-29            count = (count * 2) % mod;
-30        }
-31        return count;
-32    }
-33}
-34
+11        int depth = dfs(1, 0, adj);
+12        for (int i = 0; i < depth - 2; i++) {
+13            count = (count * 2) % mod;
+14        }
+15        return count;
+16    }
+17    private int dfs(int node, int parent, List<List<Integer>> adj) {
+18        int max = 0;
+19        for (int child : adj.get(node)) {
+20            if (child != parent) {
+21                max = Math.max(max, dfs(child, node, adj));
+22            }
+23        }
+24        return max + 1;
+25    }
+26}
+27
