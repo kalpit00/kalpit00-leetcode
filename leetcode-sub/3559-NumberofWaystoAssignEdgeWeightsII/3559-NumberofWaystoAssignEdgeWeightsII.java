@@ -1,4 +1,4 @@
-// Last updated: 6/12/2026, 5:57:21 AM
+// Last updated: 6/12/2026, 5:59:33 AM
 1class Solution { // offline tarjan + unionFind
 2    int mod = 1000000007;
 3    public int[] assignEdgeWeights(int[][] edges, int[][] queries) {
@@ -25,9 +25,9 @@
 24        tarjan(1, 0, parent, visited, depth, lca, adj, q);
 25        for (int i = 0; i < m; i++) {
 26            int u = queries[i][0], v = queries[i][1];
-27            int dist = depth[u] + depth[v] - 2 * depth[lca[i]];
-28            ans[i] = dist == 0 ? 0 : modPow(2, dist - 1);
-29        }
+27            int d = depth[u] + depth[v] - 2 * depth[lca[i]];
+28            ans[i] = d == 0 ? 0 : modPow(2, d - 1);
+29        } // 2^(d - 1), where d = shortest path length between u - v 
 30        return ans;
 31    }
 32    private void tarjan(int node, int d, int[] parent, int[] visited,
@@ -52,7 +52,7 @@
 51            return node;
 52        }
 53        return parent[node] = findParent(parent[node], parent);
-54    }
+54    } // 2^x in logN
 55    private int modPow(int base, int exp) {
 56        long res = 1, b = base;
 57        while (exp > 0) {
