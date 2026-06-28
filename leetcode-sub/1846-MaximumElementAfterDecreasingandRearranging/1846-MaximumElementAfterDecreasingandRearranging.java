@@ -1,18 +1,15 @@
-// Last updated: 6/27/2026, 11:31:31 PM
+// Last updated: 6/28/2026, 2:56:12 AM
 1class Solution {
 2    public int maximumElementAfterDecrementingAndRearranging(int[] arr) {
-3        int n = arr.length;
-4        int[] counts = new int[n + 1];
-5        
-6        for (int num : arr) {
-7            counts[Math.min(num, n)]++;
+3        int n = arr.length, min = 1;
+4        int[] map = new int[n + 1];
+5        for (int num : arr) {
+6            num = num > n ? n : num;
+7            map[num]++;
 8        }
-9        
-10        int ans = 1;
-11        for (int num = 2; num <= n; num++) {
-12            ans = Math.min(ans + counts[num], num);
-13        }
-14        
-15        return ans;
-16    }
-17}
+9        for (int i = 2; i <= n; i++) {
+10            min = Math.min(min + map[i], i);
+11        }
+12        return min;
+13    }
+14}
