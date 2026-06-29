@@ -1,4 +1,4 @@
-// Last updated: 6/29/2026, 2:57:14 AM
+// Last updated: 6/29/2026, 2:58:35 AM
 1class StreamChecker {
 2    Trie trie;
 3    StringBuilder sb;
@@ -40,12 +40,12 @@
 39                if (node.child[ch - 'a'] == null) {
 40                    return false;
 41                }
-42                if (node.child[ch - 'a'].isEnd) {
-43                    return true;
-44                }
-45                node = node.child[ch - 'a'];
+42                node = node.child[ch - 'a'];
+43                if (node.isEnd) {
+44                    return true;
+45                }
 46            }
-47            return false;
+47            return node.isEnd;
 48        }
 49        class TrieNode {
 50            TrieNode[] child = new TrieNode[26];
