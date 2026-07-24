@@ -1,4 +1,4 @@
-// Last updated: 7/24/2026, 8:43:11 AM
+// Last updated: 7/24/2026, 8:46:17 AM
 1class Solution {
 2    public long countSubarrays(int[] nums, int k) {
 3        int n = nums.length;
