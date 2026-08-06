@@ -1,4 +1,4 @@
-// Last updated: 8/6/2026, 12:44:20 AM
+// Last updated: 8/6/2026, 12:45:53 AM
 1class Solution {
 2    public int firstUniqueFreq(int[] nums) {
 3        int[] map = new int[100001], buckets = new int[100001];
